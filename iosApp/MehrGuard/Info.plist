@@ -20,9 +20,9 @@
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.0</string>
+    <string>$(MARKETING_VERSION)</string>
     <key>CFBundleVersion</key>
-    <string>1</string>
+    <string>$(CURRENT_PROJECT_VERSION)</string>
     
     <!-- ============================================ -->
     <!-- iOS MINIMUM DEPLOYMENT (iOS 17+)             -->
@@ -40,7 +40,7 @@
         <key>UIColorName</key>
         <string>LaunchScreenBackground</string>
         <key>UIImageName</key>
-        <string>LaunchLogo</string>
+        <string>Logo</string>
     </dict>
     
     <!-- ============================================ -->
@@ -67,14 +67,19 @@
     <string>Mehr Guard needs photo library access to scan QR codes from saved images.</string>
     
     <!-- ============================================ -->
-    <!-- iOS 17+ PRIVACY MANIFEST REQUIREMENTS        -->
+    <!-- URL SCHEMES (Deep Links)                     -->
     <!-- ============================================ -->
-    <key>NSPrivacyTracking</key>
-    <false/>
-    <key>NSPrivacyTrackingUsageDescription</key>
-    <string>Mehr Guard does not track users.</string>
-    <key>NSPrivacyCollectedDataTypes</key>
-    <array/>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.raouf.mehrguard.ios.deeplink</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>mehrguard</string>
+            </array>
+        </dict>
+    </array>
     
     <!-- ============================================ -->
     <!-- APP TRANSPORT SECURITY                       -->

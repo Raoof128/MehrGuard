@@ -75,7 +75,6 @@ final class LanguageManager: ObservableObject {
             // Set specific language for next launch
             UserDefaults.standard.set([code], forKey: "AppleLanguages")
         }
-        UserDefaults.standard.synchronize()
     }
     
     /// Get display name for a language code

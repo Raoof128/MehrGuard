@@ -22,6 +22,7 @@
 
 import Foundation
 
+#if os(iOS)
 #if canImport(common)
 import common
 
@@ -154,5 +155,7 @@ class KMPAnalyzer: ObservableObject {
         }
     }
 }
+
+#endif
 
 #endif

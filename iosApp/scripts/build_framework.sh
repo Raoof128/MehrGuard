@@ -6,14 +6,37 @@ set -e
 
 echo "🔨 Building KMP iOS Framework for Simulator..."
 
-cd "$(dirname "$0")/.."
+IOSAPP_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+
+# Discover gradle root (supports running from iOS-only checkout or monorepo)
+if [ -f "$IOSAPP_ROOT/gradlew" ]; then
+  GRADLE_ROOT="$IOSAPP_ROOT"
+elif [ -f "$IOSAPP_ROOT/../gradlew" ]; then
+  GRADLE_ROOT="$(cd "$IOSAPP_ROOT/.." && pwd)"
+else
+  echo "❌ gradlew not found."
+  echo "   Expected at:"
+  echo "   - $IOSAPP_ROOT/gradlew"
+  echo "   - $IOSAPP_ROOT/../gradlew"
+  echo "   This repository appears to be iOS-only. Build the shared KMP framework in the full monorepo first."
+  exit 1
+fi
 
 # Build the debug framework for iOS Simulator (Apple Silicon)
-./gradlew :common:linkDebugFrameworkIosSimulatorArm64 --no-daemon
+(
+  cd "$GRADLE_ROOT"
+  ./gradlew :common:linkDebugFrameworkIosSimulatorArm64 --no-daemon
+)
 
 # Copy framework to iosApp directory for Xcode linking
-FRAMEWORK_SRC="common/build/bin/iosSimulatorArm64/debugFramework/common.framework"
-FRAMEWORK_DST="iosApp/Frameworks"
+FRAMEWORK_SRC="$GRADLE_ROOT/common/build/bin/iosSimulatorArm64/debugFramework/common.framework"
+FRAMEWORK_DST="$IOSAPP_ROOT/Frameworks"
+
+if [ ! -d "$FRAMEWORK_SRC" ]; then
+  echo "❌ Build finished but framework was not found at:"
+  echo "   $FRAMEWORK_SRC"
+  exit 1
+fi
 
 mkdir -p "$FRAMEWORK_DST"
 rm -rf "$FRAMEWORK_DST/common.framework"

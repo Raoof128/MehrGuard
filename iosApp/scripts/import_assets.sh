@@ -8,8 +8,9 @@
 
 set -e
 
-SOURCE_DIR="${1:-/Users/raoof.r12/Desktop/Raouf/K/Assets}"
-TARGET_DIR="/Users/raoof.r12/Desktop/Raouf/K/mehr-guard/iosApp/MehrGuard/Assets.xcassets"
+IOSAPP_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SOURCE_DIR="${1:-$IOSAPP_ROOT/../Assets}"
+TARGET_DIR="$IOSAPP_ROOT/MehrGuard/Assets.xcassets"
 
 echo "🎨 Mehr Guard Asset Importer"
 echo "=========================="
@@ -18,9 +19,13 @@ echo "Target: $TARGET_DIR"
 echo ""
 
 # Check if ImageMagick is installed
-if ! command -v convert &> /dev/null; then
-    echo "⚠️  ImageMagick not found. Installing via Homebrew..."
-    brew install imagemagick
+if command -v magick &> /dev/null; then
+    IMAGEMAGICK_BIN="magick"
+elif command -v convert &> /dev/null; then
+    IMAGEMAGICK_BIN="convert"
+else
+    echo "❌ ImageMagick not found. Install it first (e.g. brew install imagemagick)."
+    exit 1
 fi
 
 # Function to resize and copy image
@@ -30,7 +35,7 @@ resize_image() {
     local size="$3"
     
     if [ -f "$source" ]; then
-        convert "$source" -resize "${size}x${size}" -background none "$target"
+        "$IMAGEMAGICK_BIN" "$source" -resize "${size}x${size}" -background none "$target"
         echo "  ✓ Created $target (${size}x${size})"
     else
         echo "  ⚠ Source not found: $source"
@@ -70,7 +75,7 @@ if [ -f "$SOURCE_DIR/ic_launcher.png" ]; then
     # Create dark variant (same as regular for now)
     cp "$APP_ICON_DIR/app-icon-1024.png" "$APP_ICON_DIR/app-icon-1024-dark.png"
     # Create tinted variant (grayscale)
-    convert "$SOURCE_DIR/ic_launcher.png" -resize 1024x1024 -colorspace Gray "$APP_ICON_DIR/app-icon-1024-tinted.png"
+    "$IMAGEMAGICK_BIN" "$SOURCE_DIR/ic_launcher.png" -resize 1024x1024 -colorspace Gray "$APP_ICON_DIR/app-icon-1024-tinted.png"
     echo "  ✓ Created tinted variant (grayscale)"
 fi
 

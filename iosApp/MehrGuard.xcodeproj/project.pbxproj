@@ -35,6 +35,11 @@
 		A100001C00000000000001C /* Localization+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001C00000000000001C /* Localization+Extension.swift */; };
 		A100001D00000000000001D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B100001D00000000000001D /* Localizable.strings */; };
 		A1000024000000000000024 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000024000000000000024 /* LanguageManager.swift */; };
+		A1000031000000000000031 /* KMPBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000031000000000000031 /* KMPBridge.swift */; };
+		A1000032000000000000032 /* KMPDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000032000000000000032 /* KMPDemoView.swift */; };
+		A1000033000000000000033 /* ComposeInterop.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000033000000000000033 /* ComposeInterop.swift */; };
+		A1000034000000000000034 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B1000034000000000000034 /* PrivacyInfo.xcprivacy */; };
+		A2000001000000000000001 /* SmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000001000000000000001 /* SmokeTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,11 +89,24 @@
 		B100002E00000000000002E /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B100002F00000000000002F /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1000030000000000000030 /* fa */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B1000031000000000000031 /* KMPBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMPBridge.swift; sourceTree = "<group>"; };
+		B1000032000000000000032 /* KMPDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMPDemoView.swift; sourceTree = "<group>"; };
+		B1000033000000000000033 /* ComposeInterop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeInterop.swift; sourceTree = "<group>"; };
+		B1000034000000000000034 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		B2000001000000000000001 /* SmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
+		B2000002000000000000002 /* MehrGuardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MehrGuardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1000001000000000000001 /* MehrGuard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MehrGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		D1000001000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2000001000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -102,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				E1000002000000000000002 /* MehrGuard */,
+				E2000001000000000000001 /* MehrGuardTests */,
 				E1000003000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -113,7 +132,9 @@
 				E100000C00000000000000C /* Models */,
 				E1000005000000000000005 /* Extensions */,
 				E1000006000000000000006 /* UI */,
+				B1000033000000000000033 /* ComposeInterop.swift */,
 				B1000002000000000000002 /* Assets.xcassets */,
+				B1000034000000000000034 /* PrivacyInfo.xcprivacy */,
 				B100000E00000000000000E /* Info.plist */,
 				B100001D00000000000001D /* Localizable.strings */,
 			);
@@ -124,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				C1000001000000000000001 /* MehrGuard.app */,
+				B2000002000000000000002 /* MehrGuardTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -160,6 +182,7 @@
 				E1000010000000000000010 /* Export */,
 				E1000011000000000000011 /* Results */,
 				E1000012000000000000012 /* Navigation */,
+				E1000013000000000000013 /* Demo */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -218,6 +241,7 @@
 				B1000011000000000000011 /* HistoryStore.swift */,
 				B1000019000000000000019 /* UnifiedAnalysisService.swift */,
 				B1000024000000000000024 /* LanguageManager.swift */,
+				B1000031000000000000031 /* KMPBridge.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -270,7 +294,33 @@
 			path = Navigation;
 			sourceTree = "<group>";
 		};
+		E1000013000000000000013 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				B1000032000000000000032 /* KMPDemoView.swift */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		E2000001000000000000001 /* MehrGuardTests */ = {
+			isa = PBXGroup;
+			children = (
+				B2000001000000000000001 /* SmokeTests.swift */,
+			);
+			path = MehrGuardTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXContainerItemProxy section */
+		J2000001000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = H1000001000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1000001000000000000001;
+			remoteInfo = MehrGuard;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXNativeTarget section */
 		F1000001000000000000001 /* MehrGuard */ = {
@@ -290,7 +340,33 @@
 			productReference = C1000001000000000000001 /* MehrGuard.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F2000001000000000000001 /* MehrGuardTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = G2000001000000000000001 /* Build configuration list for PBXNativeTarget "MehrGuardTests" */;
+			buildPhases = (
+				F2000003000000000000003 /* Sources */,
+				D2000001000000000000001 /* Frameworks */,
+				F2000002000000000000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				K2000001000000000000001 /* PBXTargetDependency */,
+			);
+			name = MehrGuardTests;
+			productName = MehrGuardTests;
+			productReference = B2000002000000000000002 /* MehrGuardTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
+
+/* Begin PBXTargetDependency section */
+		K2000001000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1000001000000000000001 /* MehrGuard */;
+			targetProxy = J2000001000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXProject section */
 		H1000001000000000000001 /* Project object */ = {
@@ -302,6 +378,10 @@
 				TargetAttributes = {
 					F1000001000000000000001 = {
 						CreatedOnToolsVersion = 26.1;
+					};
+					F2000001000000000000001 = {
+						CreatedOnToolsVersion = 26.1;
+						TestTargetID = F1000001000000000000001;
 					};
 				};
 			};
@@ -336,6 +416,7 @@
 			projectRoot = "";
 			targets = (
 				F1000001000000000000001 /* MehrGuard */,
+				F2000001000000000000001 /* MehrGuardTests */,
 			);
 		};
 /* End PBXProject section */
@@ -347,6 +428,14 @@
 			files = (
 				A1000002000000000000002 /* Assets.xcassets in Resources */,
 				A100001D00000000000001D /* Localizable.strings in Resources */,
+				A1000034000000000000034 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F2000002000000000000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,6 +472,17 @@
 				A1000019000000000000019 /* UnifiedAnalysisService.swift in Sources */,
 				A100001B00000000000001B /* BrainVisualizer.swift in Sources */,
 				A1000024000000000000024 /* LanguageManager.swift in Sources */,
+				A1000031000000000000031 /* KMPBridge.swift in Sources */,
+				A1000032000000000000032 /* KMPDemoView.swift in Sources */,
+				A1000033000000000000033 /* ComposeInterop.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F2000003000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2000001000000000000001 /* SmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -606,6 +706,52 @@
 			};
 			name = Release;
 		};
+		I2000001000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 26;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.20.33;
+				PRODUCT_BUNDLE_IDENTIFIER = com.raouf.mehrguard.ios.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MehrGuard.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MehrGuard";
+			};
+			name = Debug;
+		};
+		I2000002000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 26;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.20.33;
+				PRODUCT_BUNDLE_IDENTIFIER = com.raouf.mehrguard.ios.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MehrGuard.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MehrGuard";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -623,6 +769,15 @@
 			buildConfigurations = (
 				I1000003000000000000003 /* Debug */,
 				I1000004000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		G2000001000000000000001 /* Build configuration list for PBXNativeTarget "MehrGuardTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				I2000001000000000000001 /* Debug */,
+				I2000002000000000000002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

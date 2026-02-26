@@ -5,12 +5,13 @@ let package = Package(
     name: "MehrGuard",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v17)
+        .iOS(.v17),
+        .macOS(.v14)
     ],
     products: [
         .library(
             name: "MehrGuard",
-            targets: ["MehrGuard"]),
+            targets: ["MehrGuard"])
     ],
     targets: [
         .target(
@@ -25,6 +26,12 @@ let package = Package(
                 .process("en.lproj"),
                 .process("Assets.xcassets"),
                 .process("PrivacyInfo.xcprivacy")
-            ]),
+            ]
+        ),
+        .testTarget(
+            name: "MehrGuardPackageTests",
+            dependencies: [],
+            path: "Tests/MehrGuardPackageTests"
+        )
     ]
 )

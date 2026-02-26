@@ -22,6 +22,8 @@
 
 import SwiftUI
 
+#if os(iOS)
+
 // MARK: - Brain Node
 
 struct BrainNode: Identifiable {
@@ -274,4 +276,6 @@ struct BrainVisualizer_Previews: PreviewProvider {
         .background(Color.bgMain)
     }
 }
+#endif
+
 #endif

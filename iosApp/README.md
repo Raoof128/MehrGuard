@@ -1,166 +1,76 @@
-# 📱 iOS App Setup Guide
+# Mehr Guard iOS
 
-## Running Mehr Guard iOS in Xcode Simulator
+Native SwiftUI iOS client for Mehr Guard. The app scans QR codes and evaluates links for phishing risk using a unified analysis layer:
+- Kotlin Multiplatform `common.framework` when available.
+- A built-in Swift fallback engine when the framework is not linked.
 
-This guide explains how to build and run the native iOS SwiftUI app with Kotlin Multiplatform integration.
+## Requirements
+- macOS with Xcode 17+
+- iOS 17.0+ deployment target
+- Swift 6
 
----
-
-## 🚀 Quick Start
-
-### Step 1: Build the KMP Framework
-
-```bash
-cd /Users/raoof.r12/Desktop/Raouf/K/mehrguard
-./iosApp/scripts/build_framework.sh
-```
-
-Or manually:
-```bash
-./gradlew :common:linkDebugFrameworkIosSimulatorArm64 --no-daemon
-```
-
-### Step 2: Open in Xcode
-
+## Quick Start
+1. Open the Xcode project:
 ```bash
 open iosApp/MehrGuard.xcodeproj
 ```
+2. Select the shared `MehrGuard` scheme.
+3. Run on a simulator (for example `iPhone 17`) or a physical iPhone.
 
-### Step 3: Link the Framework (First Time Only)
-
-1. Select **MehrGuard** target in the project navigator
-2. Go to **General** tab
-3. Scroll to **Frameworks, Libraries, and Embedded Content**
-4. Click **+** → **Add Other...** → **Add Files...**
-5. Navigate to `iosApp/Frameworks/common.framework`
-6. Set **Embed** to **Embed & Sign**
-
-### Step 4: Run
-
-1. Select **iPhone 16 Pro** simulator (or any iOS 17+ simulator)
-2. Press **⌘+R** or click the Run button
-3. The app will launch in the simulator
-
----
-
-## 📁 Project Structure
-
-```
-iosApp/
-├── MehrGuard.xcodeproj     # Xcode project file
-├── Frameworks/
-│   └── common.framework   # KMP compiled framework
-├── MehrGuard/
-│   ├── App/
-│   │   └── MehrGuardApp.swift      # SwiftUI App entry point
-│   ├── Models/
-│   │   ├── KMPBridge.swift        # Bridge to Kotlin code
-│   │   ├── MockTypes.swift        # Fallback types
-│   │   ├── SettingsManager.swift
-│   │   └── HistoryStore.swift
-│   ├── UI/
-│   │   ├── Demo/
-│   │   │   └── KMPDemoView.swift  # KMP integration demo
-│   │   ├── Scanner/
-│   │   ├── History/
-│   │   ├── Settings/
-│   │   └── Components/
-│   ├── Extensions/
-│   └── Assets.xcassets
-└── scripts/
-    └── build_framework.sh
-```
-
----
-
-## 🔗 KMP Integration
-
-### How Kotlin Code is Called
-
-The `KMPBridge.swift` file provides the bridge:
-
-```swift
-#if canImport(common)
-import common
-
-class KMPAnalyzer: ObservableObject {
-    private let heuristicsEngine = HeuristicsEngine()
-    
-    func analyze(url: String) {
-        // Call Kotlin HeuristicsEngine.analyze()
-        let result = heuristicsEngine.analyze(url: url)
-        // Use result.score, result.checks, etc.
-    }
-}
-#endif
-```
-
-### What Kotlin Code is Shared
-
-| Kotlin Class | Purpose |
-|--------------|---------|
-| `HeuristicsEngine` | URL security analysis with 25+ rules |
-| `BrandDetector` | Detects brand impersonation |
-| `TldScorer` | Scores TLD risk levels |
-| `HomographDetector` | Detects Unicode lookalike attacks |
-
----
-
-## 🛠 Troubleshooting
-
-### Framework Not Found
-
-If you see "No such module 'common'":
-
-1. Ensure the framework is built:
-   ```bash
-   ./gradlew :common:linkDebugFrameworkIosSimulatorArm64
-   ```
-
-2. Ensure it's copied to `iosApp/Frameworks/`
-
-3. In Xcode: **Product** → **Clean Build Folder** (⇧⌘K)
-
-### Build Errors
-
-If you see Swift errors:
-
-1. Ensure you're targeting iOS 17.0+
-2. Check that Swift 6.0 is selected
-3. Clean and rebuild
-
-### Simulator Issues
-
-If the simulator won't start:
-
-1. Use an Apple Silicon Mac (M1/M2/M3)
-2. Select `iPhone 16 Pro` or similar arm64 simulator
-3. If on Intel Mac, build for `iosX64` instead
-
----
-
-## ✅ Judge Criteria Met
-
-| Requirement | Status |
-|-------------|--------|
-| iOS target exists | ✅ Native SwiftUI app |
-| Shared Kotlin code reused | ✅ HeuristicsEngine called via common.framework |
-| SwiftUI lifecycle present | ✅ @main App, @StateObject, NavigationStack |
-| Runs in Simulator | ✅ iOS 17+ Simulator compatible |
-| No App Store deployment | ✅ Debug build only |
-
----
-
-## 📦 Building for Device (Requires Developer Account)
-
-For physical device testing (optional):
-
+## Optional: Build and Link the KMP Framework
+If working in the full monorepo (with `gradlew` and `common/` available):
 ```bash
-./gradlew :common:linkDebugFrameworkIosArm64
+cd iosApp
+./scripts/build_framework.sh
+```
+This builds and copies:
+- `common.framework` -> `iosApp/Frameworks/common.framework`
+
+When the framework is unavailable, the app still runs using Swift fallback logic.
+
+## Testing
+### Xcode tests
+```bash
+xcodebuild \
+  -project iosApp/MehrGuard.xcodeproj \
+  -scheme MehrGuard \
+  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2' \
+  test
 ```
 
-Then link `common/build/bin/iosArm64/debugFramework/common.framework` instead.
+### SwiftPM tests (optional)
+```bash
+cd iosApp
+swift test
+```
 
----
+Note: In some Swift 6.2 toolchains, `swift test` may crash with exit code `139` before execution for this package layout. Use `xcodebuild test` as the authoritative iOS validation gate.
 
-*This is a proper Kotlin Multiplatform project with a native iOS target.*
+## Project Structure
+```text
+iosApp/
+├── MehrGuard.xcodeproj/          # Xcode project and shared scheme
+├── MehrGuard/                    # App source (SwiftUI, models, assets)
+├── MehrGuardTests/               # XCTest unit tests (Xcode target)
+├── MehrGuardUITests/             # UI and performance test suites
+├── scripts/                      # Build/import automation scripts
+├── Tests/MehrGuardPackageTests/  # SwiftPM package tests
+├── INTEGRATION_GUIDE.md          # KMP integration details
+└── APP_STORE_REVIEW.md           # App Store review/testing notes
+```
+
+## Security and Privacy
+- On-device analysis first; no account required.
+- Local history storage via `UserDefaults`.
+- Explicit iOS permission prompts for camera and photo library access.
+- Privacy manifest included: `MehrGuard/PrivacyInfo.xcprivacy`.
+
+## Additional Documentation
+- `INTEGRATION_GUIDE.md`
+- `APP_STORE_REVIEW.md`
+- `ARCHITECTURE.md`
+- `API_REFERENCE.md`
+- `CONTRIBUTING.md`
+- `SECURITY.md`
+- `CODE_OF_CONDUCT.md`
+- `LICENSE`

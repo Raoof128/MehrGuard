@@ -1,0 +1,48 @@
+name: ios app ci
+
+on:
+  pull_request:
+    paths:
+      - 'iosApp/**'
+      - '.github/workflows/ios-app-ci.yml'
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'iosApp/**'
+      - '.github/workflows/ios-app-ci.yml'
+
+jobs:
+  ios-tests:
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select simulator
+        id: sim
+        shell: bash
+        run: |
+          set -euo pipefail
+          SIM_ID=$(xcrun simctl list devices available | grep -E "iPhone (17|16|15)" | head -n 1 | awk -F '[()]' '{print $2}')
+          if [[ -z "${SIM_ID}" ]]; then
+            echo "No suitable iPhone simulator found" >&2
+            exit 1
+          fi
+          echo "sim_id=${SIM_ID}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and test (Xcode)
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project iosApp/MehrGuard.xcodeproj \
+            -scheme MehrGuard \
+            -destination "id=${{ steps.sim.outputs.sim_id }}" \
+            test
+
+      - name: SwiftPM build smoke
+        working-directory: iosApp
+        run: |
+          set -euo pipefail
+          swift build

@@ -373,7 +373,7 @@ struct SettingsView: View {
                         
                         Spacer()
                         
-                        Text(developerModeEnabled ? "1.20.26 (DEV)" : "1.20.26")
+                        Text(appVersionText)
                             .foregroundColor(.textMuted)
                     }
                     .padding(.vertical, 4)
@@ -561,6 +561,14 @@ struct SettingsView: View {
                 .font(.subheadline)
         }
         .padding(.vertical, 4)
+    }
+    
+    private var appVersionText: String {
+        let info = Bundle.main.infoDictionary
+        let version = info?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        let build = info?["CFBundleVersion"] as? String ?? "1"
+        let base = "\(version) (\(build))"
+        return developerModeEnabled ? "\(base) (DEV)" : base
     }
     
     private func clearHistory() {
@@ -907,13 +915,13 @@ struct RestartRequiredView: View {
             
             // Buttons
             VStack(spacing: 12) {
-                // Close App Button - Uses proper app suspension
+                // Acknowledge restart instructions; avoid private APIs or forced termination.
                 Button {
-                    closeApp()
+                    acknowledgeRestartInstructions()
                 } label: {
                     HStack(spacing: 8) {
-                        Image(systemName: "arrow.counterclockwise")
-                        Text(NSLocalizedString("settings.close_app", comment: "Close App"))
+                        Image(systemName: "checkmark.circle.fill")
+                        Text(NSLocalizedString("common.done", comment: "Done"))
                             .fontWeight(.semibold)
                     }
                     .frame(maxWidth: .infinity)
@@ -975,32 +983,13 @@ struct RestartRequiredView: View {
         }
     }
     
-    /// Properly suspends the app following Apple guidelines.
-    /// Uses UIApplication.shared.perform to trigger app suspension.
-    private func closeApp() {
+    /// Dismiss restart guidance and return to settings.
+    /// The user manually closes/reopens the app when convenient.
+    private func acknowledgeRestartInstructions() {
         SettingsManager.shared.triggerHaptic(.success)
-        
-        // Apple-approved method: Suspend the app to home screen
-        // This is equivalent to pressing the home button - the app goes to background
-        // and iOS may terminate it, or it will restart fresh when user reopens
-        Task { @MainActor in
-            // Small delay for haptic feedback
-            try? await Task.sleep(nanoseconds: 200_000_000)
-            
-            // Suspend app to home screen (Apple-approved method)
-            // This simulates the user pressing the home button
-            UIApplication.shared.perform(NSSelectorFromString("suspend"))
-            
-            // After returning to background, we can terminate gracefully
-            // This gives time for the suspend to complete
-            try? await Task.sleep(nanoseconds: 500_000_000)
-            
-            // Now terminate - since we're already suspended, this is graceful
-            // Darwin.exit is wrapped to ensure proper cleanup
-            Darwin.exit(0)
-        }
+        onDismiss()
     }
+    
 }
 
 #endif
-

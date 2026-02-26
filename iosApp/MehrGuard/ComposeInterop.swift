@@ -18,6 +18,8 @@
 //
 
 import SwiftUI
+
+#if canImport(common)
 import common
 
 // MARK: - Compose Multiplatform iOS Integration
@@ -287,3 +289,5 @@ extension SharedResultCardView {
  * ```
  */
 private struct IntegrationDocumentation {}
+
+#endif
