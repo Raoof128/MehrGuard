@@ -5,8 +5,8 @@ Mehr Guard is an iOS utility that scans QR payloads and evaluates URL phishing r
 
 ## Build Metadata
 - Bundle identifier: `com.raouf.mehrguard.ios`
-- Marketing version: `$(MARKETING_VERSION)`
-- Build number: `$(CURRENT_PROJECT_VERSION)`
+- Marketing version: `1.20.33`
+- Build number: `26`
 - Minimum iOS: 17.0
 
 ## Permissions

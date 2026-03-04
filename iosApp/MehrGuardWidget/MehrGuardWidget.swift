@@ -81,6 +81,23 @@ struct MehrGuardWidgetEntryView: View {
 
 // MARK: - Lock Screen Widgets (iOS 16+)
 
+/// Shared circular background for lock-screen accessory styles.
+struct AccessoryWidgetBackground: View {
+    var body: some View {
+        Circle()
+            .fill(
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.24, green: 0.29, blue: 0.68),
+                        Color(red: 0.14, green: 0.17, blue: 0.42)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+    }
+}
+
 /// Circular Lock Screen widget - just the shield icon
 struct AccessoryCircularView: View {
     var body: some View {

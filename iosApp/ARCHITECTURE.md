@@ -18,6 +18,7 @@ flowchart LR
 - Domain/service: analysis and compatibility models under `MehrGuard/Models`.
 - Platform integration: camera, notifications, and deep-link handling in app/runtime components.
 - Persistence: lightweight state and history via `UserDefaults`.
+- Extension surface: WidgetKit extension under `MehrGuardWidget/` for quick scanner entry points.
 
 ## Key Design Decisions
 - Compile-time guards around optional modules (`canImport(common)`) keep iOS-only builds functional.
@@ -27,3 +28,4 @@ flowchart LR
 ## Operational Notes
 - Primary deployment path is Xcode project + simulator/device.
 - SwiftPM support is retained for lightweight static checks and package tests.
+- Shared scheme runs stable baseline tests; UI tests are executed via explicit `-only-testing:MehrGuardUITests...` invocations.

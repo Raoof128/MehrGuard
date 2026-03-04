@@ -17,6 +17,7 @@
 import XCTest
 
 /// Performance and launch tests for Mehr Guard iOS
+@MainActor
 final class PerformanceUITests: XCTestCase {
     
     var app: XCUIApplication!

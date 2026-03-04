@@ -18,6 +18,7 @@ import XCTest
 
 /// History screen UI tests for Mehr Guard iOS
 /// Tests the history view functionality including filtering, search, and delete operations
+@MainActor
 final class HistoryFlowUITests: XCTestCase {
     
     var app: XCUIApplication!

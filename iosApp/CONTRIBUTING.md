@@ -13,12 +13,16 @@
 
 ## Required Checks
 - Build: `xcodebuild -project iosApp/MehrGuard.xcodeproj -scheme MehrGuard -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2' build`
-- Tests: `xcodebuild ... test` (same destination)
+- Baseline tests: `xcodebuild ... test` (same destination; shared-scheme stable gate)
+- UI smoke: `xcodebuild ... test -only-testing:MehrGuardUITests/MehrGuardUITests/testAppLaunches`
+- Optional full UI suite: `xcodebuild ... test -only-testing:MehrGuardUITests`
 - SwiftPM checks: `cd iosApp && swift build`
 - Optional SwiftPM test smoke: `cd iosApp && swift test` (may be affected by Swift toolchain issue; Xcode tests are the required gate)
+- Lint (if installed): `swiftlint --strict`
 
 ## Coding Standards
 - Keep code Swift 6 compatible.
 - Use meaningful names and concise comments for non-obvious logic.
 - Guard iOS-only APIs with `#if os(iOS)` where applicable.
 - Guard optional shared framework imports with `#if canImport(common)`.
+- Keep `AGENT.md` and `CHANGELOG.md` updated for every repository change.

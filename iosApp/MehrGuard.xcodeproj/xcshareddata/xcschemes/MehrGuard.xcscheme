@@ -41,6 +41,17 @@
                ReferencedContainer = "container:MehrGuard.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F3000001000000000000001"
+               BuildableName = "MehrGuardUITests.xctest"
+               BlueprintName = "MehrGuardUITests"
+               ReferencedContainer = "container:MehrGuard.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

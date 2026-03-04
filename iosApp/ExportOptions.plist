@@ -8,7 +8,7 @@
     
     <!-- Your Apple Developer Team ID (replace with actual) -->
     <key>teamID</key>
-    <string>TEAM_ID_HERE</string>
+    <string>3L5A4R7JNY</string>
     
     <!-- Bitcode is deprecated in Xcode 14+ -->
     <key>uploadBitcode</key>
@@ -22,19 +22,12 @@
     <key>destination</key>
     <string>upload</string>
     
-    <!-- Signing style -->
+    <!-- Signing style: matches Xcode project CODE_SIGN_STYLE = Automatic -->
     <key>signingStyle</key>
-    <string>manual</string>
-    
+    <string>automatic</string>
+
     <!-- Signing certificate name -->
     <key>signingCertificate</key>
     <string>Apple Distribution</string>
-    
-    <!-- Provisioning profiles by bundle ID -->
-    <key>provisioningProfiles</key>
-    <dict>
-        <key>com.raouf.mehrguard</key>
-        <string>MehrGuard AppStore Profile</string>
-    </dict>
 </dict>
 </plist>

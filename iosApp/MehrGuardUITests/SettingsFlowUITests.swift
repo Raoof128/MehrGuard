@@ -18,6 +18,7 @@ import XCTest
 
 /// Settings screen UI tests for Mehr Guard iOS
 /// Tests all settings toggles, buttons, and persistence
+@MainActor
 final class SettingsFlowUITests: XCTestCase {
     
     var app: XCUIApplication!

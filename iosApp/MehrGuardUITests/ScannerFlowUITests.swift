@@ -17,6 +17,7 @@
 import XCTest
 
 /// Scanner flow UI tests for Mehr Guard iOS
+@MainActor
 final class ScannerFlowUITests: XCTestCase {
     
     var app: XCUIApplication!
@@ -169,11 +170,11 @@ final class ScannerFlowUITests: XCTestCase {
     
     private func findScanButton() -> XCUIElement? {
         // Try different selectors for scan button
-        let selectors = [
+        let selectors: [XCUIElement] = [
             app.buttons["Scan QR"],
             app.buttons["Scan"],
             app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'scan'")).firstMatch,
-            app.buttons.matching(identifier: "scanButton")
+            app.buttons.matching(identifier: "scanButton").firstMatch
         ]
         
         for selector in selectors {

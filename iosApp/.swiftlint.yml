@@ -1,0 +1,30 @@
+included:
+  - MehrGuard
+  - MehrGuardTests
+  - MehrGuardUITests
+
+excluded:
+  - .build
+  - MehrGuard.xcodeproj
+  - Tests/MehrGuardPackageTests
+
+opt_in_rules:
+  - empty_count
+  - explicit_init
+  - force_unwrapping
+  - sorted_imports
+
+disabled_rules:
+  - file_length
+  - type_body_length
+
+line_length:
+  warning: 140
+  error: 200
+
+identifier_name:
+  min_length:
+    warning: 2
+    error: 1
+
+reporter: "xcode"

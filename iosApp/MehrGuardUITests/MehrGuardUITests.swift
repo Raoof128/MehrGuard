@@ -20,6 +20,7 @@ import XCTest
 ///
 /// Tests the main user flows using XCUITest.
 /// Run with: `xcodebuild test -scheme MehrGuard -destination 'platform=iOS Simulator,name=iPhone 15'`
+@MainActor
 final class MehrGuardUITests: XCTestCase {
     
     var app: XCUIApplication!

@@ -38,6 +38,28 @@ xcodebuild \
   test
 ```
 
+This shared-scheme gate runs the stable baseline test set (unit tests).
+
+### UI smoke test
+```bash
+xcodebuild \
+  -project iosApp/MehrGuard.xcodeproj \
+  -scheme MehrGuard \
+  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2' \
+  test \
+  -only-testing:MehrGuardUITests/MehrGuardUITests/testAppLaunches
+```
+
+### Full UI suite (optional)
+```bash
+xcodebuild \
+  -project iosApp/MehrGuard.xcodeproj \
+  -scheme MehrGuard \
+  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2' \
+  test \
+  -only-testing:MehrGuardUITests
+```
+
 ### SwiftPM tests (optional)
 ```bash
 cd iosApp
@@ -49,10 +71,12 @@ Note: In some Swift 6.2 toolchains, `swift test` may crash with exit code `139` 
 ## Project Structure
 ```text
 iosApp/
+├── .github/workflows/            # CI pipelines (build/tests + UI smoke)
 ├── MehrGuard.xcodeproj/          # Xcode project and shared scheme
 ├── MehrGuard/                    # App source (SwiftUI, models, assets)
 ├── MehrGuardTests/               # XCTest unit tests (Xcode target)
-├── MehrGuardUITests/             # UI and performance test suites
+├── MehrGuardUITests/             # UI and performance test suites (dedicated run path)
+├── MehrGuardWidget/              # Widget extension source/metadata
 ├── scripts/                      # Build/import automation scripts
 ├── Tests/MehrGuardPackageTests/  # SwiftPM package tests
 ├── INTEGRATION_GUIDE.md          # KMP integration details
@@ -64,6 +88,12 @@ iosApp/
 - Local history storage via `UserDefaults`.
 - Explicit iOS permission prompts for camera and photo library access.
 - Privacy manifest included: `MehrGuard/PrivacyInfo.xcprivacy`.
+
+## CI/CD
+- GitHub Actions workflow: `.github/workflows/ios-ci.yml`
+- Jobs:
+  - Build + shared-scheme tests (required baseline)
+  - UI smoke test (non-blocking signal)
 
 ## Additional Documentation
 - `INTEGRATION_GUIDE.md`
