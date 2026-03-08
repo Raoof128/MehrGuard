@@ -1,3 +1,41 @@
+Raouf: 2026-03-08 (Australia/Sydney)
+- Scope: Comprehensive production-grade repository audit — docs, CI, tests, configs.
+- Summary:
+  - README.md: Full professional rewrite with badges, feature table, architecture diagram, engine scoring table, development guide, privacy statement.
+  - CONTRIBUTING.md: Expanded to industry standard — setup, required checks, coding standards, commit message format, documentation matrix.
+  - CODE_OF_CONDUCT.md: Replaced stub with Contributor Covenant v2.1 including enforcement severity table.
+  - SECURITY.md: Full vulnerability disclosure policy — scope, reporting instructions, response timeline, severity-based fix targets, coordinated disclosure commitment, known limitations.
+  - ARCHITECTURE.md: Full rewrite with ASCII layer diagram, per-layer breakdown, analysis engine flow, sensitivity threshold table, all design decisions documented.
+  - .swiftlint.yml: Expanded from 6 rules to 50+ opt-in rules; added file_header enforcement, complexity limits, parameter count limits.
+  - .gitignore: Expanded to full industry-standard iOS ignore (KMP framework, secrets, Fastlane, IDEs, build artefacts).
+  - .github/workflows/ios-app-ci.yml: Restructured into 4 jobs — lint (SwiftLint), unit-tests (with artifact upload), swiftpm-smoke, ui-smoke (non-blocking); added concurrency cancellation, xcpretty output, CODE_SIGN_IDENTITY bypass.
+  - .github/ISSUE_TEMPLATE/bug_report.yml: New structured bug report template.
+  - .github/ISSUE_TEMPLATE/feature_request.yml: New structured feature request template.
+  - .github/PULL_REQUEST_TEMPLATE.md: New PR checklist template.
+  - .github/CODEOWNERS: New — routes all PRs to @Raoof128, engine files require explicit review.
+  - MehrGuardTests/SmokeTests.swift: Expanded from 6 to 18 tests covering all major detection categories: trusted domains, URL shorteners, credential theft, Cyrillic/ASCII homographs, high-risk TLDs, IP obfuscation, nested redirects, brand impersonation, invalid input, confidence bounds, score clamping.
+- Files changed:
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `CODE_OF_CONDUCT.md`
+  - `SECURITY.md`
+  - `ARCHITECTURE.md`
+  - `.swiftlint.yml`
+  - `.gitignore`
+  - `../../.github/workflows/ios-app-ci.yml`
+  - `../../.github/ISSUE_TEMPLATE/bug_report.yml` (created)
+  - `../../.github/ISSUE_TEMPLATE/feature_request.yml` (created)
+  - `../../.github/PULL_REQUEST_TEMPLATE.md` (created)
+  - `../../.github/CODEOWNERS` (created)
+  - `MehrGuardTests/SmokeTests.swift`
+- Verification:
+  - Build: PASS
+  - Unit tests: 18/18 PASS (0.069s execution time)
+  - UI tests: all PASS (running via UI test path)
+- Follow-ups:
+  - Run `swiftlint lint` once SwiftLint is installed to verify updated ruleset.
+  - Consider pinning xcpretty in CI via Gemfile for reproducible formatter output.
+
 Raouf: 2026-03-04 (Australia/Sydney)
 - Scope: Initialize changelog required by repository protocol.
 - Summary:

@@ -1,13 +1,65 @@
-# SwiftPM build artifacts
+# ── SwiftPM ──────────────────────────────────────────────────────────────────────
 .build/
+.swiftpm/
+Package.resolved
 
-# Xcode user state
+# ── Xcode ────────────────────────────────────────────────────────────────────────
 *.xcuserstate
 xcuserdata/
-
-# Simulator and local logs
 DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# ── Build artefacts ──────────────────────────────────────────────────────────────
+build/
+*.ipa
+*.dSYM/
+*.dSYM.zip
+*.app.dSYM/
+
+# ── Test results ─────────────────────────────────────────────────────────────────
+*.xcresult
 logs/
 
-# macOS metadata
+# ── KMP framework (built locally, not committed) ─────────────────────────────────
+Frameworks/common.framework/
+Frameworks/common.xcframework/
+
+# ── macOS metadata ───────────────────────────────────────────────────────────────
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# ── JetBrains IDEs ───────────────────────────────────────────────────────────────
+.idea/
+*.iml
+
+# ── VS Code ──────────────────────────────────────────────────────────────────────
+.vscode/
+*.code-workspace
+
+# ── Environment / secrets ────────────────────────────────────────────────────────
+.env
+.env.local
+*.p12
+*.mobileprovision
+AuthKey_*.p8
+ExportOptions.plist
+
+# ── Fastlane ─────────────────────────────────────────────────────────────────────
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output

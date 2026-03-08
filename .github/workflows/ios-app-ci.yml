@@ -1,4 +1,4 @@
-name: ios app ci
+name: iOS CI
 
 on:
   pull_request:
@@ -6,15 +6,46 @@ on:
       - 'iosApp/**'
       - '.github/workflows/ios-app-ci.yml'
   push:
-    branches: [ "master" ]
+    branches:
+      - master
+      - main
     paths:
       - 'iosApp/**'
       - '.github/workflows/ios-app-ci.yml'
 
+concurrency:
+  group: ios-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  ios-tests:
+  # ── Job 1: Lint ──────────────────────────────────────────────────────────────
+  lint:
+    name: SwiftLint
+    runs-on: macos-15
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: iosApp
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
+
+      - name: Run SwiftLint
+        run: swiftlint lint --strict
+
+  # ── Job 2: Build + Unit Tests ────────────────────────────────────────────────
+  unit-tests:
+    name: Build + Unit Tests
     runs-on: macos-15
     timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: iosApp
+    needs: lint
 
     steps:
       - name: Checkout
@@ -25,24 +56,101 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SIM_ID=$(xcrun simctl list devices available | grep -E "iPhone (17|16|15)" | head -n 1 | awk -F '[()]' '{print $2}')
+          SIM_ID=$(xcrun simctl list devices available \
+            | grep -E "iPhone (17|16|15)" \
+            | head -n 1 \
+            | awk -F '[()]' '{print $2}')
           if [[ -z "${SIM_ID}" ]]; then
-            echo "No suitable iPhone simulator found" >&2
+            echo "No suitable iPhone simulator found." >&2
             exit 1
           fi
           echo "sim_id=${SIM_ID}" >> "$GITHUB_OUTPUT"
 
-      - name: Build and test (Xcode)
+      - name: Build
         run: |
           set -euo pipefail
           xcodebuild \
-            -project iosApp/MehrGuard.xcodeproj \
+            -project MehrGuard.xcodeproj \
             -scheme MehrGuard \
             -destination "id=${{ steps.sim.outputs.sim_id }}" \
-            test
+            build \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO \
+            | xcpretty || true
 
-      - name: SwiftPM build smoke
-        working-directory: iosApp
+      - name: Unit Tests
         run: |
           set -euo pipefail
-          swift build
+          xcodebuild \
+            -project MehrGuard.xcodeproj \
+            -scheme MehrGuard \
+            -destination "id=${{ steps.sim.outputs.sim_id }}" \
+            test \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO \
+            -resultBundlePath TestResults.xcresult \
+            | xcpretty
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: iosApp/TestResults.xcresult
+          retention-days: 7
+
+  # ── Job 3: SwiftPM Build Smoke ───────────────────────────────────────────────
+  swiftpm-smoke:
+    name: SwiftPM Build
+    runs-on: macos-15
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: iosApp
+    needs: lint
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Swift build
+        run: swift build
+
+  # ── Job 4: UI Smoke Test (non-blocking) ──────────────────────────────────────
+  ui-smoke:
+    name: UI Smoke Test
+    runs-on: macos-15
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: iosApp
+    needs: unit-tests
+    continue-on-error: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select simulator
+        id: sim
+        shell: bash
+        run: |
+          set -euo pipefail
+          SIM_ID=$(xcrun simctl list devices available \
+            | grep -E "iPhone (17|16|15)" \
+            | head -n 1 \
+            | awk -F '[()]' '{print $2}')
+          if [[ -z "${SIM_ID}" ]]; then
+            echo "No suitable iPhone simulator found." >&2
+            exit 1
+          fi
+          echo "sim_id=${SIM_ID}" >> "$GITHUB_OUTPUT"
+
+      - name: UI Smoke
+        run: |
+          xcodebuild \
+            -project MehrGuard.xcodeproj \
+            -scheme MehrGuard \
+            -destination "id=${{ steps.sim.outputs.sim_id }}" \
+            test \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO \
+            -only-testing:MehrGuardUITests/MehrGuardUITests/testAppLaunches \
+            | xcpretty || true

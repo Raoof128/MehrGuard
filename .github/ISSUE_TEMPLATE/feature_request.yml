@@ -1,0 +1,61 @@
+name: Feature Request
+description: Propose a new feature or improvement
+labels: ["enhancement", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement! Before submitting, please search existing issues to avoid duplicates.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or motivation
+      description: What problem does this feature solve? Who is affected?
+      placeholder: "As a user scanning QR codes in low-light environments, I often..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe the feature you'd like. Be as specific as possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Have you considered any alternative approaches? Why would your proposed solution be better?
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature area
+      options:
+        - Detection engine (heuristics / scoring)
+        - Scanner (camera / QR parsing)
+        - UI / UX
+        - Accessibility
+        - Localisation
+        - Widget
+        - Export / reporting
+        - Privacy / Trust Centre
+        - Performance
+        - Developer tooling / CI
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I am willing to help implement this feature via a pull request.

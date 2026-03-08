@@ -1,106 +1,298 @@
-# Mehr Guard iOS
+<div align="center">
 
-Native SwiftUI iOS client for Mehr Guard. The app scans QR codes and evaluates links for phishing risk using a unified analysis layer:
-- Kotlin Multiplatform `common.framework` when available.
-- A built-in Swift fallback engine when the framework is not linked.
+<img src="MehrGuard/Assets.xcassets/Logo.imageset/logo.png" alt="Mehr Guard Logo" width="96" height="96" />
+
+# Mehr Guard
+
+**Offline phishing and QR-code threat detection for iOS**
+
+[![Build](https://github.com/Raoof128/MehrGuard/actions/workflows/ios-app-ci.yml/badge.svg)](https://github.com/Raoof128/MehrGuard/actions/workflows/ios-app-ci.yml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-iOS%2017%2B-lightgrey.svg)](https://developer.apple.com/ios/)
+[![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
+[![Xcode](https://img.shields.io/badge/Xcode-17%2B-blue.svg)](https://developer.apple.com/xcode/)
+[![Languages](https://img.shields.io/badge/languages-18-green.svg)](#localization)
+
+Mehr Guard scans QR codes and evaluates URLs for phishing risk — entirely on your device, with no data ever leaving it. Built with SwiftUI and a Kotlin Multiplatform detection engine.
+
+</div>
+
+---
+
+## Contents
+
+- [Features](#features)
+- [Detection Engine](#detection-engine)
+- [Architecture](#architecture)
+- [Requirements](#requirements)
+- [Getting Started](#getting-started)
+- [Development](#development)
+- [Testing](#testing)
+- [Localization](#localization)
+- [Privacy](#privacy)
+- [Contributing](#contributing)
+- [Security](#security)
+- [License](#license)
+
+---
+
+## Features
+
+| | Feature |
+|---|---|
+| 📷 | **QR Code Scanner** — Real-time camera scanning with AVFoundation, plus gallery image import |
+| 🔗 | **URL Analysis** — Heuristic scoring across 25+ threat signals with explainable results |
+| 🛡️ | **Offline First** — All analysis runs on-device; no network calls, no accounts |
+| 🎓 | **Beat the Bot** — Gamified phishing-detection training with live engine feedback |
+| 📊 | **History & Export** — Full scan history with PDF/CSV export |
+| 🔔 | **Widget** — Lock-screen and home-screen WidgetKit extension |
+| 🌍 | **18 Languages** — Runtime language switching with full localization |
+| ♿ | **Accessibility** — VoiceOver, Dynamic Type, and high-contrast support throughout |
+| 🔒 | **Trust Centre** — User-controlled domain allow/block lists, sensitivity slider |
+
+---
+
+## Detection Engine
+
+Mehr Guard uses a **unified analysis layer** that selects the best available engine at compile time:
+
+```
+URL Input
+   │
+   ▼
+UnifiedAnalysisService
+   ├── #if canImport(common)
+   │       KMP HeuristicsEngine (Kotlin Multiplatform)
+   │       25+ heuristics · ReasonCode enum · PublicSuffixList
+   └── #else
+           Swift Fallback Engine
+           Homograph detection · TLD scoring · Brand impersonation
+           IP obfuscation · Redirect detection · Typosquatting
+```
+
+**Scoring thresholds** (configurable via Trust Centre sensitivity slider):
+
+| Sensitivity | Suspicious | Malicious |
+|-------------|-----------|-----------|
+| Low         | ≥ 50      | ≥ 85      |
+| Balanced *(default)* | ≥ 31 | ≥ 71  |
+| Paranoia    | ≥ 20      | ≥ 50      |
+
+See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the full layer breakdown and [`API_REFERENCE.md`](API_REFERENCE.md) for type documentation.
+
+---
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────┐
+│              SwiftUI Presentation           │
+│  ScannerView · DashboardView · HistoryView  │
+│  SettingsView · TrustCentreView · Widgets   │
+├─────────────────────────────────────────────┤
+│           ViewModels / State Objects        │
+│  ScannerViewModel (@Observable, @MainActor) │
+├─────────────────────────────────────────────┤
+│           Domain / Service Layer            │
+│  UnifiedAnalysisService · HistoryStore      │
+│  SettingsManager · LanguageManager          │
+├────────────────┬────────────────────────────┤
+│  KMP Engine    │   Swift Fallback Engine    │
+│  (common.fw)   │   (always available)       │
+├────────────────┴────────────────────────────┤
+│               Persistence                  │
+│           UserDefaults · FileManager        │
+└─────────────────────────────────────────────┘
+```
+
+---
 
 ## Requirements
-- macOS with Xcode 17+
-- iOS 17.0+ deployment target
-- Swift 6
 
-## Quick Start
-1. Open the Xcode project:
+| Requirement | Version |
+|-------------|---------|
+| macOS | Ventura 13+ |
+| Xcode | 17+ |
+| Swift | 6.0 |
+| iOS deployment target | 17.0+ |
+
+---
+
+## Getting Started
+
 ```bash
-open iosApp/MehrGuard.xcodeproj
-```
-2. Select the shared `MehrGuard` scheme.
-3. Run on a simulator (for example `iPhone 17`) or a physical iPhone.
+# 1. Clone
+git clone https://github.com/Raoof128/MehrGuard.git
+cd MehrGuard/iosApp
 
-## Optional: Build and Link the KMP Framework
-If working in the full monorepo (with `gradlew` and `common/` available):
+# 2. Open in Xcode
+open MehrGuard.xcodeproj
+
+# 3. Select the MehrGuard scheme → choose an iPhone 17 simulator → Run
+```
+
+The app builds and runs without any additional dependencies. The Swift fallback analysis engine is always available.
+
+### Optional: Link the Kotlin Multiplatform Framework
+
+If you have the full monorepo with Gradle available:
+
 ```bash
 cd iosApp
 ./scripts/build_framework.sh
+# Copies common.framework → iosApp/Frameworks/common.framework
 ```
-This builds and copies:
-- `common.framework` -> `iosApp/Frameworks/common.framework`
 
-When the framework is unavailable, the app still runs using Swift fallback logic.
+When the framework is linked, the app automatically uses the KMP `HeuristicsEngine`. Without it, the Swift fallback engine activates transparently. See [`INTEGRATION_GUIDE.md`](INTEGRATION_GUIDE.md) for details.
+
+---
+
+## Development
+
+### Project Structure
+
+```
+iosApp/
+├── MehrGuard/                   # App source
+│   ├── App/                     # Entry point, scene lifecycle
+│   ├── Models/                  # Services and data models
+│   │   ├── UnifiedAnalysisService.swift
+│   │   ├── KMPBridge.swift
+│   │   ├── HistoryStore.swift
+│   │   ├── SettingsManager.swift
+│   │   └── MockTypes.swift
+│   ├── Extensions/              # Color theme, localization helpers
+│   ├── UI/                      # All SwiftUI screens
+│   │   ├── Scanner/             # Camera + ViewModel
+│   │   ├── Dashboard/           # Home screen
+│   │   ├── Results/             # Threat result detail
+│   │   ├── History/             # Scan history
+│   │   ├── Training/            # Beat the Bot game
+│   │   ├── Settings/            # App preferences
+│   │   ├── Trust/               # Trust Centre + domain lists
+│   │   ├── Export/              # PDF/CSV report export
+│   │   ├── Onboarding/          # First-run flow
+│   │   └── Components/          # Shared UI components
+│   └── [18 locale folders]      # Localized strings
+├── MehrGuardWidget/             # WidgetKit extension
+├── MehrGuardTests/              # Unit tests (XCTest)
+├── MehrGuardUITests/            # UI and accessibility tests
+├── Tests/MehrGuardPackageTests/ # SwiftPM package-level tests
+├── scripts/                     # build_framework.sh, import_assets.sh
+├── ARCHITECTURE.md
+├── API_REFERENCE.md
+├── INTEGRATION_GUIDE.md
+└── CONTRIBUTING.md
+```
+
+### Linting
+
+```bash
+# Install SwiftLint (first time)
+brew install swiftlint
+
+# Run
+cd iosApp
+swiftlint lint
+```
+
+Configuration: [`.swiftlint.yml`](.swiftlint.yml)
+
+### Formatting
+
+EditorConfig is enforced in all IDEs that support it. Configuration: [`.editorconfig`](.editorconfig)
+
+---
 
 ## Testing
-### Xcode tests
+
+### Unit Tests (required gate)
+
 ```bash
 xcodebuild \
-  -project iosApp/MehrGuard.xcodeproj \
+  -project MehrGuard.xcodeproj \
   -scheme MehrGuard \
-  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2' \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
   test
 ```
 
-This shared-scheme gate runs the stable baseline test set (unit tests).
+Runs `MehrGuardTests` (analysis engine, scoring logic, edge cases). This is the CI gate — all PRs must pass.
 
-### UI smoke test
+### UI Smoke Test
+
 ```bash
 xcodebuild \
-  -project iosApp/MehrGuard.xcodeproj \
+  -project MehrGuard.xcodeproj \
   -scheme MehrGuard \
-  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2' \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
   test \
   -only-testing:MehrGuardUITests/MehrGuardUITests/testAppLaunches
 ```
 
-### Full UI suite (optional)
+### Full UI Test Suite
+
 ```bash
 xcodebuild \
-  -project iosApp/MehrGuard.xcodeproj \
+  -project MehrGuard.xcodeproj \
   -scheme MehrGuard \
-  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2' \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
   test \
   -only-testing:MehrGuardUITests
 ```
 
-### SwiftPM tests (optional)
+Includes scanner flow, history flow, settings flow, accessibility compliance, and performance tests.
+
+### SwiftPM Tests
+
 ```bash
 cd iosApp
-swift test
+swift build   # package-level smoke
+swift test    # may exit 139 on some Swift 6.2 toolchains — use xcodebuild as the authoritative gate
 ```
 
-Note: In some Swift 6.2 toolchains, `swift test` may crash with exit code `139` before execution for this package layout. Use `xcodebuild test` as the authoritative iOS validation gate.
+---
 
-## Project Structure
-```text
-iosApp/
-├── .github/workflows/            # CI pipelines (build/tests + UI smoke)
-├── MehrGuard.xcodeproj/          # Xcode project and shared scheme
-├── MehrGuard/                    # App source (SwiftUI, models, assets)
-├── MehrGuardTests/               # XCTest unit tests (Xcode target)
-├── MehrGuardUITests/             # UI and performance test suites (dedicated run path)
-├── MehrGuardWidget/              # Widget extension source/metadata
-├── scripts/                      # Build/import automation scripts
-├── Tests/MehrGuardPackageTests/  # SwiftPM package tests
-├── INTEGRATION_GUIDE.md          # KMP integration details
-└── APP_STORE_REVIEW.md           # App Store review/testing notes
-```
+## Localization
 
-## Security and Privacy
-- On-device analysis first; no account required.
-- Local history storage via `UserDefaults`.
-- Explicit iOS permission prompts for camera and photo library access.
-- Privacy manifest included: `MehrGuard/PrivacyInfo.xcprivacy`.
+Mehr Guard ships with full localization in **18 languages**:
 
-## CI/CD
-- GitHub Actions workflow: `.github/workflows/ios-ci.yml`
-- Jobs:
-  - Build + shared-scheme tests (required baseline)
-  - UI smoke test (non-blocking signal)
+Arabic · German · English · Spanish · Persian · French · Hebrew · Hindi · Indonesian · Italian · Japanese · Korean · Portuguese · Russian · Thai · Turkish · Vietnamese · Simplified Chinese
 
-## Additional Documentation
-- `INTEGRATION_GUIDE.md`
-- `APP_STORE_REVIEW.md`
-- `ARCHITECTURE.md`
-- `API_REFERENCE.md`
-- `CONTRIBUTING.md`
-- `SECURITY.md`
-- `CODE_OF_CONDUCT.md`
-- `LICENSE`
+Language can be switched at runtime from the Settings screen without restarting the app.
+
+---
+
+## Privacy
+
+- **No account required** — analysis is entirely local.
+- **No network calls** — even in strict offline mode, no data leaves the device.
+- **Local history only** — scan history is stored in `UserDefaults` on-device and can be cleared at any time.
+- **Camera/photo access** — requested at first use; used only to read QR codes, never stored.
+- **Privacy manifest** — `MehrGuard/PrivacyInfo.xcprivacy` declares all required reasons for API use.
+- **Anonymous telemetry** — opt-in only; aggregated and anonymized.
+
+---
+
+## Contributing
+
+Contributions are welcome. Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) before opening a pull request.
+
+**Quick checklist:**
+- [ ] Build passes (`xcodebuild build`)
+- [ ] Unit tests pass (`xcodebuild test`)
+- [ ] SwiftLint passes (`swiftlint lint`)
+- [ ] AGENT.md and CHANGELOG.md updated
+
+---
+
+## Security
+
+To report a security vulnerability, please follow the process in [`SECURITY.md`](SECURITY.md). Do **not** open a public GitHub issue for security reports.
+
+---
+
+## License
+
+Copyright 2025–2026 Mehr Guard Contributors.
+
+Licensed under the [Apache License, Version 2.0](LICENSE). You may not use the files in this repository except in compliance with the License.

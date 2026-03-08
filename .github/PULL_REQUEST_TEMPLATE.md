@@ -1,89 +1,57 @@
-## Pull Request
+## Summary
 
-### Description
-<!-- Provide a brief description of the changes in this PR -->
+<!-- A concise description of what this PR does and why. -->
 
-### Related Issue
-<!-- Link to the issue this PR addresses (if applicable) -->
-Fixes #
+Closes #<!-- issue number -->
 
-### Type of Change
-<!-- Mark the appropriate option with an 'x' -->
+---
 
-- [ ] 🐛 Bug fix (non-breaking change that fixes an issue)
-- [ ] ✨ New feature (non-breaking change that adds functionality)
-- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] 📚 Documentation update
-- [ ] 🔧 Refactoring (no functional changes)
-- [ ] 🧪 Test addition or update
-- [ ] 🎨 UI/UX improvement
-- [ ] 🔒 Security improvement
-- [ ] ⚡ Performance improvement
+## Type of change
 
-### Changes Made
-<!-- List the main changes made in this PR -->
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Refactor / code quality
+- [ ] Documentation
+- [ ] Test coverage
+- [ ] CI / tooling
+- [ ] Performance improvement
 
-- Change 1
-- Change 2
-- Change 3
+---
 
-### Testing
-<!-- Describe the testing performed -->
+## Changes made
 
-- [ ] Unit tests added/updated
-- [ ] Integration tests added/updated
-- [ ] Manual testing performed on:
-  - [ ] Android
-  - [ ] iOS
-  - [ ] Desktop
-  - [ ] Web
+<!-- List the files changed and what was done. Be specific. -->
 
-### Test Commands
-```bash
-# Commands used to test
-./gradlew :common:allTests
-./gradlew :androidApp:testDebugUnitTest
-```
+- `File.swift` — …
+- `CHANGELOG.md` — added Raouf: entry
+- `AGENT.md` — added Raouf: entry
 
-### Screenshots (if applicable)
-<!-- Add screenshots to demonstrate UI changes -->
+---
 
-| Before | After |
-|--------|-------|
-| image  | image |
+## Testing
 
-### Checklist
-<!-- Mark completed items with an 'x' -->
+<!-- Describe how you tested these changes. -->
 
-#### Code Quality
-- [ ] My code follows the project's coding standards
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code where necessary
-- [ ] My changes generate no new warnings
-- [ ] I have run `./gradlew detekt` and fixed any issues
+- [ ] `xcodebuild build` — passes (zero errors, zero warnings)
+- [ ] `xcodebuild test` — all unit tests pass
+- [ ] `swiftlint lint` — zero errors
+- [ ] UI smoke test passes (`testAppLaunches`)
+- [ ] Full UI suite tested (for UI-impacting changes)
+- [ ] Tested on device (if camera / hardware involved)
 
-#### Documentation
-- [ ] I have updated the documentation accordingly
-- [ ] I have added/updated KDoc comments for public APIs
+---
 
-#### Security
-- [ ] I have considered the security implications of my changes
-- [ ] No sensitive data (API keys, passwords) is committed
-- [ ] Input validation is performed where applicable
+## Screenshots / recordings
 
-#### Breaking Changes
-- [ ] This PR introduces breaking changes
-- [ ] I have documented the breaking changes
-- [ ] Migration guide provided (if applicable)
+<!-- For UI changes, include before/after screenshots or a screen recording. -->
 
-### Additional Notes
-<!-- Add any additional context about the PR here -->
+---
 
-### Reviewer Checklist
-<!-- For reviewers to complete -->
+## Checklist
 
-- [ ] Code follows coding standards
-- [ ] Tests are adequate
-- [ ] Documentation is updated
-- [ ] No security concerns
-- [ ] Ready to merge
+- [ ] My code follows the coding standards in `CONTRIBUTING.md`
+- [ ] I have added or updated tests for any changed behaviour
+- [ ] I have updated documentation where needed
+- [ ] `AGENT.md` and `CHANGELOG.md` include a `Raouf:` entry for this change
+- [ ] I have not introduced any force-unwraps or private APIs
+- [ ] This PR is scoped to a single logical change

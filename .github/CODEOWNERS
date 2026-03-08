@@ -1,0 +1,19 @@
+# CODEOWNERS
+# Automatically requests review from these owners when the matching paths are changed.
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+* @Raoof128
+
+# Detection engine — highest sensitivity, requires careful review
+iosApp/MehrGuard/Models/UnifiedAnalysisService.swift @Raoof128
+iosApp/MehrGuard/Models/KMPBridge.swift @Raoof128
+
+# CI/CD configuration
+.github/workflows/ @Raoof128
+
+# Security policy
+iosApp/SECURITY.md @Raoof128
+
+# License
+iosApp/LICENSE @Raoof128

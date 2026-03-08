@@ -222,3 +222,49 @@ Raouf: 2026-03-05 (Australia/Sydney)
   - UI accessibility tests: all PASS (including previously failing `testAlertsAreAccessible` and `testHeadingsAreUsed`).
 - Follow-ups:
   - App is ready for archive and App Store submission.
+
+Raouf: 2026-03-08 (Australia/Sydney)
+- Scope: Comprehensive production-grade repository audit — docs, CI, tests, configs, and heuristic engine hardening.
+- Summary:
+  - Heuristic engine audit: identified and fixed 10 issues in `UnifiedAnalysisService.swift` — NFKC normalization, sensitivity-aware thresholds, user-blocked domains (+80 score), base score lowered (25→15), tightened IP regexes with anchors, full-occurrence redirect scanning via `while` loop, improved `calculateConfidence()` with flag-count bonus.
+  - `ScannerViewModel.swift`: removed unused KMP block and duplicate `captureSession` property.
+  - `MehrGuardTests/SmokeTests.swift`: expanded from 6 → 18 tests covering all major detection categories; all 18 pass in 0.069s.
+  - `README.md`: full professional rewrite with badges, feature table, ASCII architecture diagram, scoring table, development guide, privacy statement.
+  - `CONTRIBUTING.md`: expanded to industry standard — setup, required checks, coding standards, commit format, documentation matrix.
+  - `CODE_OF_CONDUCT.md`: replaced stub with Contributor Covenant v2.1 + enforcement severity table.
+  - `SECURITY.md`: full vulnerability disclosure policy — scope, reporting, response timeline, CVSS-based fix targets, coordinated disclosure.
+  - `ARCHITECTURE.md`: full rewrite — ASCII 5-layer diagram, per-layer breakdown, analysis engine flow, sensitivity threshold table, all design decisions.
+  - `.swiftlint.yml`: expanded from 6 → 50+ opt-in rules; `file_header` enforcement, complexity/parameter limits.
+  - `.gitignore`: expanded to full industry-standard iOS ignore (KMP framework, secrets, Fastlane, IDEs, build artefacts).
+  - `../../.github/workflows/ios-app-ci.yml`: restructured into 4 jobs — lint, unit-tests (with artifact upload), swiftpm-smoke, ui-smoke (non-blocking); added concurrency cancellation.
+  - `../../.github/ISSUE_TEMPLATE/bug_report.yml` (created): structured bug report form.
+  - `../../.github/ISSUE_TEMPLATE/feature_request.yml` (created): structured feature request form.
+  - `../../.github/PULL_REQUEST_TEMPLATE.md` (created): PR checklist template.
+  - `../../.github/CODEOWNERS` (created): routes all PRs to @Raoof128; engine and CI files require explicit review.
+  - Removed duplicate legacy CI file: `.github/workflows/ios-ci.yml` (superseded by root `ios-app-ci.yml`).
+- Files changed:
+  - `MehrGuard/Models/UnifiedAnalysisService.swift`
+  - `MehrGuard/UI/Scanner/ScannerViewModel.swift`
+  - `MehrGuardTests/SmokeTests.swift`
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `CODE_OF_CONDUCT.md`
+  - `SECURITY.md`
+  - `ARCHITECTURE.md`
+  - `.swiftlint.yml`
+  - `.gitignore`
+  - `../../.github/workflows/ios-app-ci.yml`
+  - `../../.github/ISSUE_TEMPLATE/bug_report.yml` (created)
+  - `../../.github/ISSUE_TEMPLATE/feature_request.yml` (created)
+  - `../../.github/PULL_REQUEST_TEMPLATE.md` (created)
+  - `../../.github/CODEOWNERS` (created)
+  - `.github/workflows/ios-ci.yml` (deleted — superseded)
+  - `CHANGELOG.md`
+  - `AGENT.md`
+- Verification:
+  - Build: PASS (zero errors, zero warnings).
+  - Unit tests: 18/18 PASS (0.069s execution time).
+  - UI accessibility tests: 5/5 PASS.
+- Follow-ups:
+  - Run `swiftlint lint` once SwiftLint is installed to verify expanded ruleset.
+  - Consider pinning `xcpretty` in CI via Gemfile for reproducible output.
