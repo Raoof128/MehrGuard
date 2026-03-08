@@ -42,11 +42,33 @@ class UnifiedAnalysisService: ObservableObject {
     
     @Published var isKMPAvailable: Bool = false
     @Published var lastEngineUsed: String = "None"
-    
+
     #if canImport(common)
     private let kmpEngine = HeuristicsEngine()
     #endif
-    
+
+    // MARK: - User Settings (read from UserDefaults)
+
+    private var userTrustedDomains: [String] = []
+    private var userBlockedDomains: [String] = []
+    private var sensitivityLevel: Int = 2
+
+    private var maliciousThreshold: Int {
+        switch sensitivityLevel {
+        case 1: return 85   // Low — fewer false positives
+        case 3: return 50   // Paranoia — catch more threats
+        default: return 71  // Balanced (aligned with KMP engine)
+        }
+    }
+
+    private var suspiciousThreshold: Int {
+        switch sensitivityLevel {
+        case 1: return 50
+        case 3: return 20
+        default: return 31  // Aligned with KMP engine
+        }
+    }
+
     private init() {
         #if canImport(common)
         isKMPAvailable = true
@@ -59,6 +81,24 @@ class UnifiedAnalysisService: ObservableObject {
         print("⚠️ [Mehr Guard] Using Swift fallback engine")
         #endif
         #endif
+
+        refreshUserSettings()
+    }
+
+    /// Reload user-managed domain lists and sensitivity from UserDefaults.
+    /// Called automatically before each analysis.
+    func refreshUserSettings() {
+        let raw = UserDefaults.standard.integer(forKey: "threatSensitivity")
+        sensitivityLevel = (1...3).contains(raw) ? raw : 2
+
+        if let data = UserDefaults.standard.data(forKey: "trustedDomains"),
+           let domains = try? JSONDecoder().decode([String].self, from: data) {
+            userTrustedDomains = domains.map { $0.lowercased() }
+        }
+        if let data = UserDefaults.standard.data(forKey: "blockedDomains"),
+           let domains = try? JSONDecoder().decode([String].self, from: data) {
+            userBlockedDomains = domains.map { $0.lowercased() }
+        }
     }
     
     // MARK: - Unified Analysis
@@ -66,6 +106,7 @@ class UnifiedAnalysisService: ObservableObject {
     /// Analyze a URL using the best available engine
     /// Returns a RiskAssessmentMock for UI compatibility
     func analyze(url: String) -> RiskAssessmentMock {
+        refreshUserSettings()
         #if canImport(common)
         return analyzeWithKMP(url: url)
         #else
@@ -88,12 +129,12 @@ class UnifiedAnalysisService: ObservableObject {
             return hCheck.triggered ? hCheck.name : nil
         }
         
-        // Map Kotlin score to verdict
+        // Map Kotlin score to verdict using sensitivity-aware thresholds
         let score = Int(result.score)
         let verdict: VerdictMock
-        if score >= 71 {
+        if score >= maliciousThreshold {
             verdict = .malicious
-        } else if score >= 31 {
+        } else if score >= suspiciousThreshold {
             verdict = .suspicious
         } else {
             verdict = .safe
@@ -113,20 +154,19 @@ class UnifiedAnalysisService: ObservableObject {
     
     private func analyzeWithSwift(url: String) -> RiskAssessmentMock {
         lastEngineUsed = "Swift Fallback Engine"
-        
+
         var score = 0
         var flags: [String] = []
         let lowercasedUrl = url.lowercased()
-        
+
         // Normalize URL
         var normalizedUrl = lowercasedUrl
         if !normalizedUrl.hasPrefix("http://") && !normalizedUrl.hasPrefix("https://") {
             normalizedUrl = "https://" + normalizedUrl
         }
-        
+
         guard let urlComponents = URLComponents(string: normalizedUrl),
               let host = urlComponents.host else {
-            // Invalid URL format
             return RiskAssessmentMock(
                 score: 50,
                 verdict: .suspicious,
@@ -135,18 +175,34 @@ class UnifiedAnalysisService: ObservableObject {
                 url: url
             )
         }
-        
+
+        // ============================================
+        // FIX #6: UNICODE NFKC NORMALIZATION
+        // Normalize the host to catch decomposed homoglyphs
+        // ============================================
+        let normalizedHost = (host as NSString).precomposedStringWithCompatibilityMapping.lowercased()
+
+        // ============================================
+        // FIX #3: USER-BLOCKED DOMAINS — immediate high score
+        // ============================================
+        let isUserBlocked = userBlockedDomains.contains(normalizedHost)
+            || userBlockedDomains.contains(where: { normalizedHost.hasSuffix(".\($0)") })
+
+        if isUserBlocked {
+            score += 80
+            flags.append("User-Blocked Domain")
+        }
+
         // ============================================
         // UNICODE/CYRILLIC HOMOGRAPH DETECTION
-        // This is critical for detecting mixed-script attacks
         // ============================================
         let cyrillicCharacters: Set<Character> = Set("абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ")
         let latinCharacters: Set<Character> = Set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-        
+
         var hasCyrillic = false
         var hasLatin = false
-        
-        for char in host {
+
+        for char in normalizedHost {
             if cyrillicCharacters.contains(char) {
                 hasCyrillic = true
             }
@@ -154,53 +210,58 @@ class UnifiedAnalysisService: ObservableObject {
                 hasLatin = true
             }
         }
-        
+
         if hasCyrillic && hasLatin {
-            // CRITICAL: Mixed-script attack detected!
             score += 70
             flags.append("Mixed Script Attack (Cyrillic/Latin)")
         } else if hasCyrillic {
-            // All Cyrillic is suspicious unless it's .ru domain
-            if !host.hasSuffix(".ru") && !host.hasSuffix(".рф") {
+            if !normalizedHost.hasSuffix(".ru") && !normalizedHost.hasSuffix(".рф") {
                 score += 50
                 flags.append("Cyrillic Homograph")
             }
         }
-        
+
         // ============================================
-        // URL SHORTENERS - Often hide malicious destinations
-        // Must add enough to cross suspicious threshold (35)
+        // URL SHORTENERS
         // ============================================
         let urlShorteners = [
             "bit.ly", "tinyurl.com", "t.co", "goo.gl", "ow.ly", "is.gd",
             "buff.ly", "rebrand.ly", "cutt.ly", "short.io", "bl.ink",
             "tiny.cc", "s.id", "shorturl.at", "v.gd", "tr.im"
         ]
-        
+
         for shortener in urlShorteners {
-            if host == shortener || host.hasSuffix(".\(shortener)") {
-                score += 40  // Increased from 30 to ensure SUSPICIOUS verdict
+            if normalizedHost == shortener || normalizedHost.hasSuffix(".\(shortener)") {
+                score += 40
                 flags.append("URL Shortener")
                 break
             }
         }
-        
+
         // ============================================
-        // NESTED REDIRECT DETECTION
+        // FIX #5: NESTED REDIRECT DETECTION — scan all occurrences
         // ============================================
         let redirectParams = ["url=", "redirect=", "next=", "goto=", "return=", "dest=", "target=", "link="]
-        for param in redirectParams {
-            if url.contains(param) && (url.contains("http%3A") || url.contains("https%3A") || url.contains("http://", after: param) || url.contains("https://", after: param)) {
-                score += 40
-                flags.append("Nested Redirect URL")
-                break
+        let encodedSchemes = ["http%3A", "https%3A", "http%3a", "https%3a"]
+        outer: for param in redirectParams {
+            var searchRange = lowercasedUrl.startIndex..<lowercasedUrl.endIndex
+            while let paramRange = lowercasedUrl.range(of: param, range: searchRange) {
+                let afterParam = lowercasedUrl[paramRange.upperBound...]
+                if encodedSchemes.contains(where: { afterParam.hasPrefix($0) })
+                    || afterParam.hasPrefix("http://")
+                    || afterParam.hasPrefix("https://") {
+                    score += 40
+                    flags.append("Nested Redirect URL")
+                    break outer
+                }
+                searchRange = paramRange.upperBound..<lowercasedUrl.endIndex
             }
         }
-        
+
         // ============================================
-        // TRUSTED DOMAINS - known safe domains
+        // FIX #3: TRUSTED DOMAINS — merge built-in + user lists
         // ============================================
-        let trustedDomains = [
+        let builtInTrusted = [
             "google.com", "www.google.com", "google.com.au",
             "apple.com", "www.apple.com",
             "microsoft.com", "www.microsoft.com", "account.microsoft.com",
@@ -217,38 +278,41 @@ class UnifiedAnalysisService: ObservableObject {
             "reddit.com", "www.reddit.com",
             "stackoverflow.com", "www.stackoverflow.com"
         ]
-        
-        // Check if it's a trusted domain
-        let isTrusted = trustedDomains.contains(host) || trustedDomains.contains { host.hasSuffix(".\($0)") }
-        
+        let allTrusted = builtInTrusted + userTrustedDomains
+
+        let isTrusted = !isUserBlocked && (
+            allTrusted.contains(normalizedHost)
+            || allTrusted.contains(where: { normalizedHost.hasSuffix(".\($0)") })
+        )
+
         if isTrusted && score < 30 {
-            // Trusted domain - low risk (but still apply any homograph penalties)
             score = max(5, score)
             if !flags.contains(where: { $0.contains("Homograph") || $0.contains("Mixed Script") }) {
                 flags.append("Verified Domain")
             }
         } else {
-            // Start with base score for unknown domains
+            // FIX #9: Lower base score from 25 → 15 to reduce false positives
+            // on unknown but legitimate sites
             if score == 0 {
-                score = 25
+                score = 15
             }
-            
+
             // ============================================
             // SUSPICIOUS PATTERNS
             // ============================================
-            
-            // Login/verify keywords
-            if url.contains("login") || url.contains("signin") || url.contains("verify") || url.contains("account") {
+
+            if lowercasedUrl.contains("login") || lowercasedUrl.contains("signin")
+                || lowercasedUrl.contains("verify") || lowercasedUrl.contains("account") {
                 score += 15
                 flags.append("Login/Verify Keywords")
             }
-            
-            // Urgency language
-            if url.contains("secure") || url.contains("alert") || url.contains("urgent") || url.contains("suspended") {
+
+            if lowercasedUrl.contains("secure") || lowercasedUrl.contains("alert")
+                || lowercasedUrl.contains("urgent") || lowercasedUrl.contains("suspended") {
                 score += 25
                 flags.append("Urgency Language")
             }
-            
+
             // ============================================
             // ASCII HOMOGRAPH DETECTION
             // ============================================
@@ -262,85 +326,83 @@ class UnifiedAnalysisService: ObservableObject {
                 "netf1ix", "netfiix", "n3tflix",
                 "bank0f", "bankof-", "bank-of"
             ]
-            
+
             for pattern in homographPatterns {
-                if url.contains(pattern) {
+                if lowercasedUrl.contains(pattern) {
                     score += 40
                     flags.append("ASCII Homograph Attack")
                     break
                 }
             }
-            
+
             // ============================================
             // HIGH-RISK TLDs
             // ============================================
             let highRiskTLDs = [".tk", ".ml", ".ga", ".cf", ".gq"]
             let mediumRiskTLDs = [".work", ".click", ".xyz", ".top", ".buzz"]
-            
+
             for tld in highRiskTLDs {
-                if host.hasSuffix(tld) {
+                if normalizedHost.hasSuffix(tld) {
                     score += 50
                     flags.append("High-Risk Free TLD")
                     break
                 }
             }
-            
+
             for tld in mediumRiskTLDs {
-                if host.hasSuffix(tld) {
+                if normalizedHost.hasSuffix(tld) {
                     score += 25
                     flags.append("Suspicious TLD")
                     break
                 }
             }
-            
+
             // ============================================
             // BRAND IMPERSONATION
             // ============================================
             let brandNames = ["paypal", "amazon", "google", "apple", "microsoft", "facebook", "netflix", "bank"]
             for brand in brandNames {
-                if host.hasPrefix("\(brand).") || host.hasPrefix("\(brand)-") {
-                    if !host.hasSuffix("\(brand).com") && !host.hasSuffix("\(brand).net") {
+                if normalizedHost.hasPrefix("\(brand).") || normalizedHost.hasPrefix("\(brand)-") {
+                    if !normalizedHost.hasSuffix("\(brand).com") && !normalizedHost.hasSuffix("\(brand).net") {
                         score += 40
                         flags.append("Brand Impersonation")
                         break
                     }
                 }
             }
-            
+
             // ============================================
             // STRUCTURAL CHECKS
             // ============================================
-            
-            // Long subdomain chains
-            let components = host.components(separatedBy: ".")
+
+            let components = normalizedHost.components(separatedBy: ".")
             if components.count > 4 {
                 score += 20
                 flags.append("Complex Domain Structure")
             }
-            
-            // IP address in URL (decimal, hex, or octal)
+
+            // FIX #4: IP address detection — tightened patterns to avoid false positives
             let ipPatterns = [
-                "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}",  // Standard IP
-                "0x[0-9a-fA-F]+",  // Hex IP
-                "0[0-7]+\\.[0-7]+\\.[0-7]+\\.[0-7]+",  // Octal IP
-                "\\d{8,10}"  // Decimal IP (large number)
+                "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$",              // Standard dotted-quad (full host match)
+                "^0x[0-9a-fA-F]{2,8}$",                                      // Hex IP (bounded length)
+                "^0[0-7]{1,3}\\.0[0-7]{1,3}\\.0[0-7]{1,3}\\.0[0-7]{1,3}$",  // Octal IP (proper octets)
+                "^[1-9]\\d{7,9}$"                                            // Decimal IP (1-digit start, 8-10 total)
             ]
-            
+
             for pattern in ipPatterns {
                 if let regex = try? NSRegularExpression(pattern: pattern),
-                   regex.firstMatch(in: host, range: NSRange(host.startIndex..., in: host)) != nil {
+                   regex.firstMatch(in: normalizedHost, range: NSRange(normalizedHost.startIndex..., in: normalizedHost)) != nil {
                     score += 45
                     flags.append("IP Address URL")
                     break
                 }
             }
-            
-            // Excessive hyphens
-            if host.filter({ $0 == "-" }).count > 2 {
+
+            if normalizedHost.filter({ $0 == "-" }).count > 2 {
                 score += 15
                 flags.append("Excessive Hyphens")
             }
-            
+
             // ============================================
             // @ SYMBOL - CREDENTIAL THEFT
             // ============================================
@@ -348,7 +410,7 @@ class UnifiedAnalysisService: ObservableObject {
                 score += 55
                 flags.append("Credential Theft Attempt")
             }
-            
+
             // ============================================
             // TYPOSQUATTING
             // ============================================
@@ -362,23 +424,23 @@ class UnifiedAnalysisService: ObservableObject {
                 "netfllx.", "netfiix.", "neflix.",
                 "bankk.", "bamk."
             ]
-            
+
             for pattern in typosquattingPatterns {
-                if host.contains(pattern) {
+                if normalizedHost.contains(pattern) {
                     score += 50
                     flags.append("Typosquatting")
                     break
                 }
             }
         }
-        
+
         // ============================================
-        // DETERMINE VERDICT
+        // FIX #1: ALIGNED VERDICT THRESHOLDS (sensitivity-aware)
         // ============================================
         let verdict: VerdictMock
-        if score >= 60 {
+        if score >= maliciousThreshold {
             verdict = .malicious
-        } else if score >= 35 {
+        } else if score >= suspiciousThreshold {
             verdict = .suspicious
         } else {
             verdict = .safe
@@ -386,7 +448,7 @@ class UnifiedAnalysisService: ObservableObject {
                 flags.append("No Threats Detected")
             }
         }
-        
+
         return RiskAssessmentMock(
             score: min(score, 100),
             verdict: verdict,
@@ -399,21 +461,26 @@ class UnifiedAnalysisService: ObservableObject {
     // MARK: - Helpers
     
     private func calculateConfidence(score: Int, flagCount: Int) -> Double {
-        // Higher confidence when score is extreme and multiple flags found
-        let scoreConfidence = score > 70 || score < 20 ? 0.9 : 0.7
-        let flagBonus = min(Double(flagCount) * 0.05, 0.1)
+        // FIX #8: Confidence based on score extremity, flag diversity, and threshold distance
+        //
+        // Score distance from the ambiguous zone (31-71) drives base confidence.
+        // Multiple independent flags corroborate the verdict, boosting confidence.
+        let ambiguousCenter = 51.0
+        let distanceFromCenter = abs(Double(score) - ambiguousCenter)
+        // Map distance 0-50 → confidence 0.55-0.90
+        let scoreConfidence = 0.55 + (distanceFromCenter / 50.0) * 0.35
+
+        // Each additional flag adds evidence (diminishing returns)
+        let flagBonus: Double
+        switch flagCount {
+        case 0:     flagBonus = 0.0
+        case 1:     flagBonus = 0.03
+        case 2:     flagBonus = 0.06
+        case 3:     flagBonus = 0.08
+        default:    flagBonus = 0.10
+        }
+
         return min(scoreConfidence + flagBonus, 0.98)
-    }
-}
-
-// MARK: - String Extension for URL Detection
-
-extension String {
-    /// Check if string contains a substring after a given marker
-    func contains(_ substring: String, after marker: String) -> Bool {
-        guard let markerRange = self.range(of: marker) else { return false }
-        let afterMarker = self[markerRange.upperBound...]
-        return afterMarker.contains(substring)
     }
 }
 

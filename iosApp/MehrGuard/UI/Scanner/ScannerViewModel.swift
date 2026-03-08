@@ -55,10 +55,9 @@ final class ScannerViewModel {
     var errorMessage: String?
     var cameraPermissionStatus: CameraPermissionStatus = .unknown
     var scanCount: Int = 0
-    
+
     // MARK: - Private Properties
-    
-    private var captureSession: AVCaptureSession?
+
     private var videoOutput: AVCaptureMetadataOutput?
     private var metadataDelegate: QRCodeMetadataDelegate?
     private var lastScannedCode: String?
@@ -73,10 +72,7 @@ final class ScannerViewModel {
     // Debounce configuration
     private let scanDebounceInterval: TimeInterval = 2.0
     
-    // KMP Dependencies
-    #if canImport(common)
-    private let engine: PhishingEngine = PhishingEngine()
-    #endif
+    // Analysis is delegated to UnifiedAnalysisService (handles KMP/Swift engine selection)
     
     // MARK: - Initialization
     
@@ -221,7 +217,6 @@ final class ScannerViewModel {
             // Focus on center of screen
             metadataOutput.rectOfInterest = CGRect(x: 0.2, y: 0.2, width: 0.6, height: 0.6)
             
-            self.captureSession = session
             self.session = session
             self.videoOutput = metadataOutput
             
@@ -302,25 +297,25 @@ final class ScannerViewModel {
             return
         }
         
-        guard let session = captureSession else {
+        guard let session else {
             Task { await checkCameraPermission() }
             return
         }
-        
+
         guard !session.isRunning else { return }
-        
+
         // Swift 6: Use dedicated queue for session work
         sessionQueue.async { [weak self] in
             session.startRunning()
-            
+
             Task { @MainActor [weak self] in
                 self?.isScanning = true
             }
         }
     }
-    
+
     func stopCamera() {
-        guard let session = captureSession, session.isRunning else { return }
+        guard let session, session.isRunning else { return }
         
         sessionQueue.async { [weak self] in
             session.stopRunning()
