@@ -40,7 +40,7 @@
     <ID>ClassOrdering:OrgPolicy.kt$OrgPolicy$Companion</ID>
     <ID>ClassOrdering:OtaUpdateManager.kt$OtaUpdateManager$Companion</ID>
     <ID>ClassOrdering:PhishingEngine.kt$PhishingEngine$Companion</ID>
-    <ID>ClassOrdering:PrivacyPreservingAnalytics.kt$PrivacyPreservingAnalytics$// Curve25519 ECDH for secure aggregation (production-ready) private val ecdhKeyPair = com.raouf.mehrguard.crypto.SecureECDH.generateKeyPair()</ID>
+    <ID>ClassOrdering:PrivacyPreservingAnalytics.kt$PrivacyPreservingAnalytics$// Curve25519 ECDH for secure aggregation private val ecdhKeyPair = com.raouf.mehrguard.crypto.SecureECDH.generateKeyPair()</ID>
     <ID>ClassOrdering:QrPayloadType.kt$QrPayloadType.Companion$fun detect(content: String): QrPayloadType</ID>
     <ID>ClassOrdering:QrPayloadType.kt$QrPayloadType.Companion$private fun looksLikeUrl(content: String): Boolean</ID>
     <ID>ClassOrdering:RedTeamScenarios.kt$RedTeamScenarios$/** * Get all categories in display order. */ val categories: List&lt;String&gt; get() = SCENARIOS.map { it.category }.distinct()</ID>

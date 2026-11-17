@@ -1312,7 +1312,7 @@ Tests that verify invariants hold for ANY valid input.
 ```bash
 # Individual verification tasks
 ./gradlew :common:verifyAccuracy    # Precision/Recall/F1
-./gradlew :common:verifyOffline     # No network dependency
+./gradlew :common:verifyOffline     # Desktop tests, including the no-network-API source scan
 ./gradlew :common:verifyThreatModel # Threat → test mapping
 
 # Run all verification
