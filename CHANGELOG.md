@@ -98,4 +98,4 @@
   - AGENT.md
   - CHANGELOG.md
 - **Verification:** `actionlint` reports no errors on all seven workflow files (it reported three before). No application code changed.
-- **Follow-ups:** The workflows trigger on `main` but the default branch is `master`, so the build and test jobs do not run on pushes to the default branch.
+- **Follow-ups:** The workflows trigger on `main` but the default branch is `master`, so the build and test jobs do not run on pushes to the default branch. A trial run of `ci.yml` against `master` (pull request #1) compiled every target but stopped at `:common:lintDebug` with 4 Android lint errors, the first being `MissingPermission` for `Vibrator.vibrate` at `AndroidPlatformAbstractions.kt:128`. Those need fixing before the trigger is extended to `master`.
