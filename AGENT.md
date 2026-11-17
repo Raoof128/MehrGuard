@@ -40,3 +40,9 @@
 - **Scope:** iOS Audit Remediation Final Verification
 - **Summary:** Verified Xcode simulator test pass on shared scheme and confirmed SwiftPM build success; documented persistent SwiftPM test crash (exit 139) as environment/toolchain limitation.
 - **Status:** Primary iOS validation gate (xcodebuild test) is green.
+
+### 2026-11-17 (Australia/Sydney)
+**Raouf:**
+- **Scope:** CI workflow validity and licence text
+- **Summary:** Fixed the two workflow files GitHub rejected on every push (`ci.yml` used the `secrets` context in step-level `if:`; `performance.yml` used double-quoted strings inside an expression), and replaced the abridged `LICENSE` with the full canonical Apache License 2.0 text so the licence is detected correctly.
+- **Status:** Workflow files validate with actionlint; no application code changed.

@@ -108,7 +108,7 @@ jobs:
             try {
               report += fs.readFileSync('performance-results/summary.md', 'utf8');
             } catch (e) {
-              report += '${{ env.PERFORMANCE_STATUS == "pass" && "✅ All performance tests passed!" || "❌ Performance regression detected!" }}';
+              report += '${{ env.PERFORMANCE_STATUS == 'pass' && '✅ All performance tests passed!' || '❌ Performance regression detected!' }}';
             }
             
             github.rest.issues.createComment({
