@@ -42,7 +42,6 @@ import kotlin.test.assertTrue
  * - Input validation properly sanitizes all inputs
  * - Homograph detection handles Unicode correctly
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class PropertyBasedTests {

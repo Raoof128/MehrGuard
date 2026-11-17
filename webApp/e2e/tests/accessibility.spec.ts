@@ -3,7 +3,6 @@
  * 
  * Tests for WCAG 2.1 AA compliance and accessibility features.
  * 
- * @author Mehr Guard Team
  * @license Apache-2.0
  */
 

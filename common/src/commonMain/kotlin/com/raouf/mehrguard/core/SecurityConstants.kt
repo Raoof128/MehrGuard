@@ -31,7 +31,6 @@ package com.raouf.mehrguard.core
  * - Why this value was chosen
  * - Impact on detection accuracy
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 object SecurityConstants {

@@ -1,6 +1,6 @@
 # 🧑‍⚖️ Mehr Guard — Judge Summary Card
 
-> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](../README.md#summary) and [EVALUATION.md](../docs/EVALUATION.md).
+> **Contest-era document, kept as a record.** Written for the KotlinConf 2025–26 student contest. Figures in it could not all be reproduced; the [corrections table](README.md#corrections) lists what is wrong and what is true.
 
 > **30-second pitch:** Mehr Guard is a Kotlin Multiplatform security app that detects phishing in QR codes across Android, iOS, Desktop, and Web—entirely offline, with a single shared detection engine using an ensemble ML architecture.
 
@@ -95,11 +95,11 @@ open https://raoof128.github.io/?demo=true
 | Resource | Link |
 |----------|------|
 | **Live Demo** | [raoof128.github.io](https://raoof128.github.io) |
-| **Full README** | [README.md](../README.md) |
-| **Essay** | [ESSAY.md](../ESSAY.md) |
-| **ML Model** | [docs/ML_MODEL.md](ML_MODEL.md) |
-| **Architecture** | [docs/ARCHITECTURE.md](ARCHITECTURE.md) |
-| **Security Model** | [SECURITY_MODEL.md](../SECURITY_MODEL.md) |
+| **Full README** | [README.md](../../README.md) |
+| **Essay** | [ESSAY.md](ESSAY.md) |
+| **ML Model** | [docs/ML_MODEL.md](../ML_MODEL.md) |
+| **Architecture** | [docs/ARCHITECTURE.md](../ARCHITECTURE.md) |
+| **Security Model** | [SECURITY_MODEL.md](../../SECURITY_MODEL.md) |
 
 ---
 

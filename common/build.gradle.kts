@@ -259,7 +259,7 @@ android {
 }
 
 // ================================================================
-// Judge-Proof Verification Tasks
+// Verification Tasks
 // ================================================================
 
 tasks.register("verifyAccuracy") {
@@ -274,11 +274,11 @@ tasks.register("verifyAccuracy") {
 
 tasks.register("verifyOffline") {
     group = "verification"
-    description = "Verify all analysis runs offline without network calls"
+    description = "Run the desktop tests, which include the no-network-API source scan and a timing sanity check"
     dependsOn("desktopTest")
     doFirst {
-        println("🔒 Running Offline Verification...")
-        println("   This test proves no network calls occur during analysis.")
+        println("🔒 Running the no-network-API source scan and the timing sanity check...")
+        println("   The scan is a text check of the analysis packages; it is not a network monitor.")
     }
 }
 
@@ -294,16 +294,16 @@ tasks.register("verifyThreatModel") {
 
 tasks.register("verifyAll") {
     group = "verification"
-    description = "Run all judge-proof verification tests"
+    description = "Run all verification tests"
     dependsOn("verifyAccuracy", "verifyOffline", "verifyThreatModel")
     doLast {
         println("""
             |
             |╔══════════════════════════════════════════════════════════════╗
-            |║          MEHR GUARD JUDGE-PROOF VERIFICATION COMPLETE        ║
+            |║          MEHR GUARD VERIFICATION TASKS COMPLETE              ║
             |╠══════════════════════════════════════════════════════════════╣
             |║  ✅ Accuracy Verification (precision/recall/F1)             ║
-            |║  ✅ Offline Verification (no network dependency)            ║
+            |║  ✅ No-network-API source scan and timing check             ║
             |║  ✅ Threat Model Verification (threat → test mapping)       ║
             |╚══════════════════════════════════════════════════════════════╝
             |

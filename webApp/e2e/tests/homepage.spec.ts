@@ -3,7 +3,6 @@
  * 
  * Tests the main landing page and URL analysis functionality.
  * 
- * @author Mehr Guard Team
  * @license Apache-2.0
  */
 

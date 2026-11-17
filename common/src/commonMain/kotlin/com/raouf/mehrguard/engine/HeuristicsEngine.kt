@@ -66,7 +66,6 @@ import com.raouf.mehrguard.model.ReasonCode
  * - Thread-safe: no mutable state
  *
  * @property urlAnalyzer The URL parser for extracting components
- * @author Mehr Guard Security Team
  * @since 1.0.0
  * @see com.raouf.mehrguard.core.SecurityConstants for threshold values
  */

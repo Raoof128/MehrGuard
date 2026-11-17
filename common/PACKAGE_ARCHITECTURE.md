@@ -75,9 +75,9 @@ val result = orchestrator.analyze("https://suspicious-url.com")
 | `HeuristicsEngine.kt` | 25+ security heuristic rules |
 | `HeuristicRules.kt` | Rule definitions |
 | `HeuristicWeightsConfig.kt` | Configurable rule weights |
-| `BrandDetector.kt` | Static brand impersonation detection (500+ brands) |
+| `BrandDetector.kt` | Static brand impersonation detection (60 brands) |
 | `DynamicBrandDiscovery.kt` | Pattern-based brand detection for unknown brands |
-| `BrandDatabase.kt` | 500+ brand definitions |
+| `BrandDatabase.kt` | 60 brand definitions with 484 listed lookalike patterns |
 | `BrandDatabaseLoader.kt` | Brand data loading |
 | `HomographDetector.kt` | Unicode lookalike detection |
 | `TldScorer.kt` | TLD risk scoring |
@@ -182,15 +182,17 @@ val result = orchestrator.analyze("https://suspicious-url.com")
 
 ## Performance Targets
 
-| Component | Target | Measured | Status |
-|-----------|--------|----------|--------|
-| Full URL Analysis | < 50ms | ~3-5ms | ✅ 10x faster |
-| Heuristics Engine | < 10ms | ~0.5ms | ✅ 20x faster |
-| ML Inference | < 5ms | ~0.1ms | ✅ 50x faster |
-| Brand Detection | < 15ms | ~1ms | ✅ 15x faster |
-| Throughput | > 100 URLs/sec | 500+ URLs/sec | ✅ 5x target |
+These are the thresholds the performance tests assert on the JVM. The measured values are printed by the tests and are not recorded here.
 
-Run benchmarks: `./gradlew :common:desktopTest --tests "*Benchmark*"`
+| Component | Threshold asserted in tests |
+|-----------|-----------------------------|
+| Full URL Analysis | < 50ms |
+| Heuristics Engine | < 10ms |
+| ML Inference | < 5ms |
+| Brand Detection | < 15ms |
+| Throughput | > 100 URLs/sec |
+
+Run them: `./gradlew :common:desktopTest --tests "*Performance*"`
 
 ---
 
@@ -198,6 +200,6 @@ Run benchmarks: `./gradlew :common:desktopTest --tests "*Benchmark*"`
 
 1. **Stateless Engines** - All detection engines are stateless and thread-safe
 2. **Defensive Coding** - All inputs validated, scores bounded
-3. **No Network** - Analysis is 100% on-device
+3. **No Network** - Analysis runs on the device and names no networking API
 4. **Configurable** - Heuristic weights can be tuned
 5. **Testable** - Each engine can be tested in isolation

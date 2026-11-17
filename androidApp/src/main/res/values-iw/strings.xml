@@ -192,7 +192,7 @@
     <string name="status_caution_advised">מומלצת זהירות</string>
     <string name="status_threat_detected">זוהה איום</string>
     <string name="status_analysis_complete">הניתוח הושלם</string>
-    <string name="meta_analyzed_offline">נותח במצב לא מקוון תוך פחות מ-5ms</string>
+    <string name="meta_analyzed_offline">נותח במצב לא מקוון</string>
     <string name="meta_no_data_leaves">שום נתונים לא עוזבים את המכשיר</string>
     <string name="top_analysis_factors_title">גורמי ניתוח מובילים</string>
     <string name="factor_category_https">HTTPS</string>
@@ -401,7 +401,7 @@
     <string name="privacy_memory_only">Memory Only</string>
     <string name="privacy_no_retention_desc">Scan history can be wiped instantly. We collect zero telemetry or analytics.</string>
     <string name="privacy_no_retention_title">No Data Retention</string>
-    <string name="privacy_offline_badge">100% Offline Operation</string>
+    <string name="privacy_offline_badge">On-device analysis</string>
     <string name="privacy_offline_title">Privacy &amp; Offline</string>
     <string name="privacy_on_device_ai_desc">ML models run locally using optimized inference. Zero cloud dependencies.</string>
     <string name="privacy_on_device_ai_title">On-Device AI</string>
@@ -555,7 +555,7 @@
     <string name="verification_dialog_complete">Verification Complete</string>
     <string name="verification_dialog_healthy">System Healthy ✓</string>
     <string name="verification_passed_tests">Passed %1$d/%2$d tests</string>
-    <string name="verify_integrity_desc_default">Prove 87%% accuracy claim on-device</string>
+    <string name="verify_integrity_desc_default">Run the built-in accuracy check on this device</string>
     <string name="verify_integrity_desc_running">Running verification...</string>
     <string name="verify_integrity_title">Verify System Integrity</string>
     <string name="view_certificate">View Certificate</string>

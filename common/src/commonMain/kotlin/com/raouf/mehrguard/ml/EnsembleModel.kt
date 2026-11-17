@@ -74,7 +74,6 @@ import kotlin.math.sqrt
  * - Deterministic: same input produces identical output
  * - No network calls: runs entirely on-device
  *
- * @author Mehr Guard Security Team
  * @since 1.3.0
  * @see LogisticRegressionModel
  */
@@ -111,7 +110,7 @@ class EnsembleModel private constructor(
         private const val NEUTRAL_PREDICTION = 0.5f
 
         /**
-         * Create default ensemble model with pre-trained components.
+         * Create default ensemble model with its hand-set components.
          */
         fun default(): EnsembleModel {
             return EnsembleModel(

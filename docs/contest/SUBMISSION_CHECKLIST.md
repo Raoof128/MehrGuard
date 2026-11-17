@@ -1,6 +1,6 @@
 # 📋 Submission Checklist (Judge-Facing)
 
-> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](README.md#summary) and [EVALUATION.md](docs/EVALUATION.md).
+> **Contest-era document, kept as a record.** Written for the KotlinConf 2025–26 student contest. Figures in it could not all be reproduced; the [corrections table](README.md#corrections) lists what is wrong and what is true.
 
 > **For Judges:** This checklist maps every KotlinConf 2025-2026 competition requirement to its evidence.
 >
@@ -18,9 +18,9 @@
 | NOT a template or "Hello World" | ✅ PASS | 26,000+ LOC, substantial security app |
 | NOT a library | ✅ PASS | Standalone application with full UI |
 | GitHub repository | ✅ PASS | [github.com/Raoof128/Raoof128.github.io](https://github.com/Raoof128/Raoof128.github.io) |
-| Open-source license (Apache 2.0/MIT/BSD) | ✅ PASS | [LICENSE](LICENSE) (Apache 2.0) |
-| README with installation instructions | ✅ PASS | [README.md](README.md) - All 5 platforms |
-| README with feature descriptions | ✅ PASS | [README.md](README.md) - Detection engine, ML, Red Team |
+| Open-source license (Apache 2.0/MIT/BSD) | ✅ PASS | [LICENSE](../../LICENSE) (Apache 2.0) |
+| README with installation instructions | ✅ PASS | [README.md](../../README.md) - All 5 platforms |
+| README with feature descriptions | ✅ PASS | [README.md](../../README.md) - Detection engine, ML, Red Team |
 | Short screencast (3-5 min) | ✅ PASS | [Demo Video](https://youtu.be/n8bheouj4jM) |
 | All content in English | ✅ PASS | Docs, code, comments all English |
 | 300-word Essay | ✅ PASS | [ESSAY.md](ESSAY.md) (327 words) |
@@ -35,8 +35,8 @@
 | Criterion | Evidence | Score Target |
 |-----------|----------|--------------|
 | **Unique Problem** | QR phishing detection—587% attack increase since 2023 | +10 |
-| **Offline-First Architecture** | Zero network calls, [verify_offline.sh](judge/verify_offline.sh) | +10 |
-| **Ensemble ML** | 3 models combined ([EnsembleModel.kt](common/src/commonMain/kotlin/com/raouf/mehrguard/ml/EnsembleModel.kt)) | +8 |
+| **Offline-First Architecture** | Zero network calls, [verify_offline.sh](../../judge/verify_offline.sh) | +10 |
+| **Ensemble ML** | 3 models combined ([EnsembleModel.kt](../../common/src/commonMain/kotlin/com/raouf/mehrguard/ml/EnsembleModel.kt)) | +8 |
 | **Dynamic Brand Discovery** | Detects unknown brands via patterns | +5 |
 | **Adversarial Robustness** | Homographs, punycode, RTL override detection | +5 |
 | **Beat the Bot Gamification** | Security training game mode | +2 |
@@ -47,11 +47,11 @@
 | Criterion | Evidence | Score Target |
 |-----------|----------|--------------|
 | **5 Platform Targets** | Android, iOS, Desktop, Web (JS), Web (Wasm) | +10 |
-| **~52% Shared Code** | [SHARED_CODE_REPORT.md](docs/SHARED_CODE_REPORT.md) - 13,500 LOC shared | +10 |
+| **~52% Shared Code** | [SHARED_CODE_REPORT.md](../SHARED_CODE_REPORT.md) - 13,500 LOC shared | +10 |
 | **Strategic expect/actual** | 7 platform abstractions (Clipboard, Haptics, Logger, etc.) | +8 |
 | **Shared Business Logic** | 100% of detection engine in commonMain | +5 |
 | **Native Integration** | SwiftUI + Kotlin bridge, Compose MP | +5 |
-| **Platform Parity Tests** | [verify_parity.sh](judge/verify_parity.sh) | +2 |
+| **Platform Parity Tests** | [verify_parity.sh](../../judge/verify_parity.sh) | +2 |
 | **TOTAL** | | **40/40** |
 
 ### Kotlin Coding Conventions (20%)
@@ -59,7 +59,7 @@
 | Criterion | Evidence | Score Target |
 |-----------|----------|--------------|
 | **Idiomatic Kotlin** | sealed classes, data classes, coroutines, Flow | +5 |
-| **Detekt Static Analysis** | [detekt.yml](detekt.yml), CI enforced | +5 |
+| **Detekt Static Analysis** | [detekt.yml](../../detekt.yml), CI enforced | +5 |
 | **KDoc Documentation** | All public APIs documented | +3 |
 | **Test Coverage** | 89% coverage, 1,248+ tests | +3 |
 | **Property-Based Tests** | Randomized input testing | +2 |
@@ -92,12 +92,12 @@ cd mehrguard
 
 | Category | File | Why It's Important |
 |----------|------|--------------------|
-| **Core Engine** | [PhishingEngine.kt](common/src/commonMain/kotlin/com/mehrguard/core/PhishingEngine.kt) | Main orchestrator, shows KMP design |
-| **ML Model** | [EnsembleModel.kt](common/src/commonMain/kotlin/com/mehrguard/ml/EnsembleModel.kt) | Ensemble architecture |
-| **Platform Abstraction** | [PlatformAbstractions.kt](common/src/commonMain/kotlin/com/mehrguard/platform/PlatformAbstractions.kt) | expect/actual pattern |
-| **iOS Integration** | [ComposeInterop.swift](iosApp/MehrGuard/ComposeInterop.swift) | SwiftUI + Compose hybrid |
-| **Tests** | [VerifyMlMathTest.kt](common/src/commonTest/kotlin/com/mehrguard/ml/VerifyMlMathTest.kt) | Proves ML is real |
-| **Security Constants** | [SecurityConstants.kt](common/src/commonMain/kotlin/com/mehrguard/core/SecurityConstants.kt) | Centralized, documented |
+| **Core Engine** | [PhishingEngine.kt](../../common/src/commonMain/kotlin/com/raouf/mehrguard/core/PhishingEngine.kt) | Main orchestrator, shows KMP design |
+| **ML Model** | [EnsembleModel.kt](../../common/src/commonMain/kotlin/com/raouf/mehrguard/ml/EnsembleModel.kt) | Ensemble architecture |
+| **Platform Abstraction** | [PlatformAbstractions.kt](../../common/src/commonMain/kotlin/com/raouf/mehrguard/platform/PlatformAbstractions.kt) | expect/actual pattern |
+| **iOS Integration** | [ComposeInterop.swift](../../iosApp/MehrGuard/ComposeInterop.swift) | SwiftUI + Compose hybrid |
+| **Tests** | [VerifyMlMathTest.kt](../../common/src/commonTest/kotlin/com/raouf/mehrguard/ml/VerifyMlMathTest.kt) | Proves ML is real |
+| **Security Constants** | [SecurityConstants.kt](../../common/src/commonMain/kotlin/com/raouf/mehrguard/core/SecurityConstants.kt) | Centralized, documented |
 
 ---
 
@@ -118,17 +118,17 @@ cd mehrguard
 
 | Document | Purpose |
 |----------|---------|
-| [README.md](README.md) | Quick start, architecture overview |
+| [README.md](../../README.md) | Quick start, architecture overview |
 | [ESSAY.md](ESSAY.md) | Competition essay (327 words) |
 | [CONTEST_START.md](CONTEST_START.md) | Contest timeline, original work proof |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Technical architecture deep-dive |
-| [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md) | Who attacks, what we detect |
-| [docs/EVALUATION.md](docs/EVALUATION.md) | Accuracy metrics, methodology |
-| [docs/HEURISTICS.md](docs/HEURISTICS.md) | All detection rules documented |
-| [docs/SHARED_CODE_REPORT.md](docs/SHARED_CODE_REPORT.md) | Module-by-module shared code % |
-| [SECURITY.md](SECURITY.md) | Security policy, disclosure |
-| [PRIVACY.md](PRIVACY.md) | What data we store/don't store |
-| [docs/VIDEO_DEMO.md](docs/VIDEO_DEMO.md) | Demo video and script |
+| [docs/ARCHITECTURE.md](../ARCHITECTURE.md) | Technical architecture deep-dive |
+| [docs/THREAT_MODEL.md](../THREAT_MODEL.md) | Who attacks, what we detect |
+| [docs/EVALUATION.md](../EVALUATION.md) | Accuracy metrics, methodology |
+| [docs/HEURISTICS.md](../HEURISTICS.md) | All detection rules documented |
+| [docs/SHARED_CODE_REPORT.md](../SHARED_CODE_REPORT.md) | Module-by-module shared code % |
+| [SECURITY.md](../../SECURITY.md) | Security policy, disclosure |
+| [PRIVACY.md](../../PRIVACY.md) | What data we store/don't store |
+| [docs/VIDEO_DEMO.md](VIDEO_DEMO.md) | Demo video and script |
 
 ---
 

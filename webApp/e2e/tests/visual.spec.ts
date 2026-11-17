@@ -3,7 +3,6 @@
  * 
  * Tests for visual consistency and UI appearance.
  * 
- * @author Mehr Guard Team
  * @license Apache-2.0
  */
 

@@ -28,7 +28,6 @@ package com.raouf.mehrguard.localization
  * val text = Translations.get("de").verdictSafe // "Sicher"
  * ```
  *
- * @author Mehr Guard Security Team
  * @since 1.7.0
  */
 object GermanTranslations : TranslationBundle {

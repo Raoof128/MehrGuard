@@ -27,7 +27,6 @@ import kotlin.test.assertFalse
  * Tests the security validation that all scanner implementations
  * should apply to prevent DoS and handle malformed input.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class ScannerInputValidationTest {

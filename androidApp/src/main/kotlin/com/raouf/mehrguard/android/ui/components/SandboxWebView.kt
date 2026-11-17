@@ -69,7 +69,6 @@ import com.raouf.mehrguard.sandbox.SandboxState
  * @param config Security configuration (defaults to maximum security)
  * @param modifier Compose modifier
  *
- * @author Mehr Guard Security Team
  * @since 1.4.0
  */
 @Composable

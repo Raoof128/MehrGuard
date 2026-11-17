@@ -204,7 +204,7 @@
     <string name="dev_mode_disable">отключения</string>
     <string name="verify_integrity_title">Проверить целостность системы</string>
     <string name="verify_integrity_desc_running">Выполняется проверка…</string>
-    <string name="verify_integrity_desc_default">Подтвердить 87% точности на устройстве</string>
+    <string name="verify_integrity_desc_default">Запустить встроенную проверку точности на этом устройстве</string>
     <string name="verification_dialog_healthy">Система здорова ✓</string>
     <string name="verification_dialog_complete">Проверка завершена</string>
     <string name="verification_passed_tests">Пройдено %1$d/%2$d тестов</string>
@@ -420,7 +420,7 @@
     <string name="privacy_offline_title">Конфиденциальность и офлайн</string>
     <string name="privacy_hero_title">Ваши данные никогда не покидают устройство</string>
     <string name="privacy_hero_desc">Mehr Guard работает полностью на вашем устройстве. Без облака. Без серверов. Без сбора данных. Полная конфиденциальность по дизайну.</string>
-    <string name="privacy_offline_badge">100% офлайн работа</string>
+    <string name="privacy_offline_badge">Анализ на устройстве</string>
     <string name="privacy_architecture">Архитектура конфиденциальности</string>
     <string name="privacy_local_db_title">Локальная база данных</string>
     <string name="privacy_local_db_desc">Сигнатуры угроз хранятся зашифрованными на устройстве. Обновляются через безопасный офлайн импорт.</string>
@@ -452,7 +452,7 @@
     <string name="feature_explainable_title">Объяснимая Безопасность</string>
     <string name="feature_explainable_desc">Не просто Заблокировать. Мы предоставляем детальный эвристический анализ параметров URL и редиректов.</string>
     <string name="feature_performance_title">Высокопроизводительный Движок</string>
-    <string name="feature_performance_desc">Оптимизирован для мобильных сред. Сканирование выполняется менее чем за 5мс с использованием нативных примитивов Kotlin.</string>
+    <string name="feature_performance_desc">Оптимизирован для мобильных сред. Сканирование выполняется с использованием нативных примитивов Kotlin.</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -610,7 +610,7 @@
     <string name="status_caution_advised">Рекомендуется Осторожность</string>
     <string name="status_threat_detected">Угроза Обнаружена</string>
     <string name="status_analysis_complete">Анализ Завершён</string>
-    <string name="meta_analyzed_offline">Проанализировано офлайн за &lt;5мс</string>
+    <string name="meta_analyzed_offline">Проанализировано офлайн</string>
     <string name="meta_no_data_leaves">Данные не покидают устройство</string>
     <string name="top_analysis_factors_title">Основные Факторы Анализа</string>
     <string name="factor_category_https">HTTPS</string>

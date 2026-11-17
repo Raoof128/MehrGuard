@@ -38,7 +38,6 @@ package com.raouf.mehrguard.platform
  * - `desktopMain`: Provides JVM desktop implementation
  * - `jsMain`: Provides browser implementation
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 expect class Platform() {

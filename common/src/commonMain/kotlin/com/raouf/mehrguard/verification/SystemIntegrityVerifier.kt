@@ -22,16 +22,17 @@ import com.raouf.mehrguard.model.Verdict
 /**
  * System Integrity Verifier - "The Receipt"
  *
- * Proves the detection engine's accuracy claims by running against a
- * curated dataset of known phishing and legitimate URLs in real-time.
+ * Runs the detection engine over a built-in list of URLs on the device and
+ * reports the confusion matrix it gets.
  *
- * ## Why This Matters
- * Any security tool can claim "87% accuracy". This module lets judges
- * verify that claim on their own device in seconds.
+ * ## What it is and is not
+ * A self-check that the engine on this device behaves as it does in the tests.
+ * The URLs were written by the project's author, so the result is not a
+ * benchmark and says nothing about live phishing.
  *
  * ## Dataset Composition
- * - 50 known phishing URLs (various attack types)
- * - 50 known legitimate URLs (real websites)
+ * - 50 author-written phishing URLs (various attack types)
+ * - 50 legitimate URLs (real websites)
  * - URLs are slightly obfuscated to prevent accidental navigation
  *
  * ## Metrics Calculated
@@ -41,7 +42,6 @@ import com.raouf.mehrguard.model.Verdict
  * - False Negatives (FN): Phishing incorrectly passed
  * - Precision, Recall, F1 Score
  *
- * @author Mehr Guard Security Team
  * @since 1.3.0
  */
 class SystemIntegrityVerifier(

@@ -62,7 +62,6 @@ package com.raouf.mehrguard.policy
  * }
  * ```
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 data class OrgPolicy(

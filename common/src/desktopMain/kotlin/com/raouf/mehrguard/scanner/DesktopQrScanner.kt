@@ -52,7 +52,6 @@ import javax.imageio.ImageIO
  * - Content length is bounds-checked
  * - All resources are properly closed
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class DesktopQrScanner : QrScanner {

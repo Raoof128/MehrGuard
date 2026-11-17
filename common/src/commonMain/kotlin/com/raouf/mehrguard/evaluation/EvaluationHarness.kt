@@ -33,7 +33,6 @@ private val timeSource = TimeSource.Monotonic
  * println(results.summary())
  * ```
  *
- * @author Mehr Guard Security Team
  * @since 1.19.0
  */
 class EvaluationHarness {

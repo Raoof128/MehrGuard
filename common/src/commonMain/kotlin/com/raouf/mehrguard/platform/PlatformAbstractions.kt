@@ -41,7 +41,6 @@ package com.raouf.mehrguard.platform
  * | Share            | System share sheets are platform-specific                    |
  * | Crypto           | Secure random generation varies by platform                  |
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 

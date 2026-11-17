@@ -27,7 +27,6 @@ package com.raouf.mehrguard.engine
  * - TLD lists are immutable and cannot be modified at runtime
  * - Thread-safe for concurrent access
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class TldScorer {

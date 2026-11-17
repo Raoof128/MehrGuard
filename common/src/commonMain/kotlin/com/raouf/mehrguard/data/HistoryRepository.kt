@@ -43,7 +43,6 @@ import kotlin.math.min
  * - Desktop: SQLDelight with JVM driver
  * - Web: SQLDelight with Web driver
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 interface HistoryRepository {

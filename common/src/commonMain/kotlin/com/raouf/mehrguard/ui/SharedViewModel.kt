@@ -47,7 +47,6 @@ import kotlinx.datetime.Clock
  * @param shortLinkResolver Resolver for URL shorteners (Aggressive Mode)
  * @param coroutineScope Scope for launching coroutines
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class SharedViewModel(

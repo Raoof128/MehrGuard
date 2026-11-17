@@ -28,7 +28,6 @@ import com.raouf.mehrguard.model.Verdict
  * Provides access to all app icons as Compose Painters.
  * Mirrors the iOS SF Symbols for cross-platform consistency.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object MehrGuardIcons {

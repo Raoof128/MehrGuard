@@ -16,7 +16,6 @@ package com.raouf.mehrguard.intel
  * - Exact set: HashSet for confirmed malicious domains
  * - Combined: Zero false positives, minimal memory
  *
- * @author Mehr Guard Security Team
  * @since 1.19.0
  */
 class ThreatIntelLookup private constructor(

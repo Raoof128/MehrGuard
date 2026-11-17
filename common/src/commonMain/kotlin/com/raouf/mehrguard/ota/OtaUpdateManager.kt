@@ -64,7 +64,6 @@ import kotlinx.coroutines.flow.asStateFlow
  *
  * @see OtaStorage for platform-specific storage implementation
  *
- * @author Mehr Guard Security Team
  * @since 1.3.0
  */
 class OtaUpdateManager(

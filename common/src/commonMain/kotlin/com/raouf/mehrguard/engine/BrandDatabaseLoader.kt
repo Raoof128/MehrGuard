@@ -27,7 +27,6 @@ package com.raouf.mehrguard.engine
  * - All values are validated before use
  * - Fallback to embedded database on parse failure
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object BrandDatabaseLoader {

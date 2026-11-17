@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
  * Material 3 typography with cybersecurity aesthetic.
  * Uses system fonts with monospace for URLs (matching iOS).
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object MehrGuardTypography {

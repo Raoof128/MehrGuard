@@ -4,7 +4,6 @@
  * Handles the display and interaction of scan results,
  * integrating with the Kotlin/JS PhishingEngine for analysis.
  * 
- * @author Mehr Guard Team
  * @version 2.4.0
  */
 

@@ -39,11 +39,10 @@ import org.koin.core.logger.Level
  *
  * Features:
  * - Koin DI initialization
- * - Production-ready logging configuration
+ * - Logging configuration
  * - Android 16 compatibility
  * - **Living Engine OTA Updates** (NEW in v1.3.0)
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class MehrGuardApplication : Application() {

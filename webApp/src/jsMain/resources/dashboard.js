@@ -3,7 +3,6 @@
  * 
  * Handles sidebar navigation, scan statistics, and page interactions.
  * 
- * @author Mehr Guard Team
  * @version 2.4.1
  */
 

@@ -28,7 +28,6 @@ import kotlin.test.assertTrue
  * - All edge cases are handled gracefully
  * - Results are always returned (never null)
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class ErrorHandlingTest {

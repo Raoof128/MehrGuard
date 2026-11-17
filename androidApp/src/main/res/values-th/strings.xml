@@ -267,7 +267,7 @@
     <string name="platform_kotlin">Kotlin 1.9.22</string>
     <string name="verify_integrity_title">ตรวจสอบความสมบูรณ์ของระบบ</string>
     <string name="verify_integrity_desc_running">กำลังตรวจสอบ…</string>
-    <string name="verify_integrity_desc_default">พิสูจน์ความแม่นยำ 87% บนอุปกรณ์</string>
+    <string name="verify_integrity_desc_default">เรียกใช้การตรวจสอบความแม่นยำในตัวบนอุปกรณ์นี้</string>
     <string name="verification_dialog_healthy">ระบบสมบูรณ์ ✓</string>
     <string name="verification_dialog_complete">การตรวจสอบเสร็จสิ้น</string>
     <string name="verification_passed_tests">ผ่าน %1$d/%2$d การทดสอบ</string>
@@ -422,7 +422,7 @@
     <string name="privacy_offline_title">ความเป็นส่วนตัวและออฟไลน์</string>
     <string name="privacy_hero_title">ข้อมูลของคุณไม่เคยออกไป</string>
     <string name="privacy_hero_desc">Mehr Guard ทำงานบนอุปกรณ์ของคุณทั้งหมด ไม่มีคลาวด์ ไม่มีเซิร์ฟเวอร์ ไม่มีการรวบรวมข้อมูล ความเป็นส่วนตัวสมบูรณ์โดยการออกแบบ</string>
-    <string name="privacy_offline_badge">การทำงานออฟไลน์ 100%</string>
+    <string name="privacy_offline_badge">วิเคราะห์บนอุปกรณ์</string>
     <string name="privacy_architecture">สถาปัตยกรรมความเป็นส่วนตัว</string>
     <string name="privacy_local_db_title">ฐานข้อมูลภายในเครื่อง</string>
     <string name="privacy_local_db_desc">ลายเซ็นภัยคุกคามเก็บแบบเข้ารหัสบนอุปกรณ์ อัปเดตผ่านการนำเข้าออฟไลน์ที่ปลอดภัย</string>
@@ -454,7 +454,7 @@
     <string name="feature_explainable_title">ความปลอดภัยที่อธิบายได้</string>
     <string name="feature_explainable_desc">ไม่ใช่แค่บล็อก เราให้การวิเคราะห์ heuristics โดยละเอียดของพารามิเตอร์ URL และการเปลี่ยนเส้นทาง</string>
     <string name="feature_performance_title">เอนจิ้นประสิทธิภาพสูง</string>
-    <string name="feature_performance_desc">ปรับให้เหมาะสมสำหรับสภาพแวดล้อมมือถือ สแกนประมวลผลภายใน 5ms โดยใช้ Kotlin primitives ดั้งเดิม</string>
+    <string name="feature_performance_desc">ปรับให้เหมาะสมสำหรับสภาพแวดล้อมมือถือ สแกนประมวลผลโดยใช้ Kotlin primitives ดั้งเดิม</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -612,7 +612,7 @@
     <string name="status_caution_advised">แนะนำให้ระวัง</string>
     <string name="status_threat_detected">ตรวจพบภัยคุกคาม</string>
     <string name="status_analysis_complete">การวิเคราะห์เสร็จสิ้น</string>
-    <string name="meta_analyzed_offline">วิเคราะห์ออฟไลน์ใน &lt;5ms</string>
+    <string name="meta_analyzed_offline">วิเคราะห์ออฟไลน์ใน</string>
     <string name="meta_no_data_leaves">ไม่มีข้อมูลออกจากอุปกรณ์</string>
     <string name="top_analysis_factors_title">ปัจจัยการวิเคราะห์หลัก</string>
     <string name="factor_category_https">HTTPS</string>

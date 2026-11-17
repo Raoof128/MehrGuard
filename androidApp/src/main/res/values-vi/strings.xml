@@ -267,7 +267,7 @@
     <string name="platform_kotlin">Kotlin 1.9.22</string>
     <string name="verify_integrity_title">Xác minh tính toàn vẹn hệ thống</string>
     <string name="verify_integrity_desc_running">Đang chạy xác minh…</string>
-    <string name="verify_integrity_desc_default">Chứng minh độ chính xác 87% trên thiết bị</string>
+    <string name="verify_integrity_desc_default">Chạy kiểm tra độ chính xác tích hợp trên thiết bị này</string>
     <string name="verification_dialog_healthy">Hệ thống khỏe mạnh ✓</string>
     <string name="verification_dialog_complete">Xác minh hoàn tất</string>
     <string name="verification_passed_tests">Đã vượt qua %1$d/%2$d bài kiểm tra</string>
@@ -422,7 +422,7 @@
     <string name="privacy_offline_title">Quyền riêng tư và Ngoại tuyến</string>
     <string name="privacy_hero_title">Dữ liệu của bạn không bao giờ rời đi</string>
     <string name="privacy_hero_desc">Mehr Guard hoạt động hoàn toàn trên thiết bị của bạn. Không cloud. Không server. Không thu thập dữ liệu. Quyền riêng tư hoàn toàn theo thiết kế.</string>
-    <string name="privacy_offline_badge">Hoạt động 100% ngoại tuyến</string>
+    <string name="privacy_offline_badge">Phân tích trên thiết bị</string>
     <string name="privacy_architecture">Kiến trúc quyền riêng tư</string>
     <string name="privacy_local_db_title">Cơ sở dữ liệu cục bộ</string>
     <string name="privacy_local_db_desc">Chữ ký mối đe dọa được lưu trữ mã hóa trên thiết bị. Cập nhật qua nhập ngoại tuyến an toàn.</string>
@@ -454,7 +454,7 @@
     <string name="feature_explainable_title">Bảo mật Có thể Giải thích</string>
     <string name="feature_explainable_desc">Không chỉ là Chặn. Chúng tôi cung cấp phân tích heuristic chi tiết về tham số URL và chuyển hướng.</string>
     <string name="feature_performance_title">Công cụ Hiệu suất Cao</string>
-    <string name="feature_performance_desc">Được tối ưu hóa cho môi trường di động. Quét được xử lý trong dưới 5ms bằng các nguyên thủy Kotlin gốc.</string>
+    <string name="feature_performance_desc">Được tối ưu hóa cho môi trường di động. Quét được xử lý bằng các nguyên thủy Kotlin gốc.</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -612,7 +612,7 @@
     <string name="status_caution_advised">Khuyến Cáo Cẩn Thận</string>
     <string name="status_threat_detected">Phát Hiện Mối Đe Dọa</string>
     <string name="status_analysis_complete">Phân Tích Hoàn Tất</string>
-    <string name="meta_analyzed_offline">Phân tích ngoại tuyến trong &lt;5ms</string>
+    <string name="meta_analyzed_offline">Phân tích ngoại tuyến</string>
     <string name="meta_no_data_leaves">Không có dữ liệu rời khỏi thiết bị</string>
     <string name="top_analysis_factors_title">Các Yếu Tố Phân Tích Hàng Đầu</string>
     <string name="factor_category_https">HTTPS</string>

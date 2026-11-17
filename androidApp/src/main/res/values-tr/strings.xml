@@ -267,7 +267,7 @@
     <string name="platform_kotlin">Kotlin 1.9.22</string>
     <string name="verify_integrity_title">Sistem Bütünlüğünü Doğrula</string>
     <string name="verify_integrity_desc_running">Doğrulama çalışıyor…</string>
-    <string name="verify_integrity_desc_default">Cihazda %87 doğruluğu kanıtla</string>
+    <string name="verify_integrity_desc_default">Yerleşik doğruluk denetimini bu cihazda çalıştır</string>
     <string name="verification_dialog_healthy">Sistem sağlıklı ✓</string>
     <string name="verification_dialog_complete">Doğrulama tamamlandı</string>
     <string name="verification_passed_tests">%1$d/%2$d test geçti</string>
@@ -422,7 +422,7 @@
     <string name="privacy_offline_title">Gizlilik ve Çevrimdışı</string>
     <string name="privacy_hero_title">Verileriniz Asla Çıkmaz</string>
     <string name="privacy_hero_desc">Mehr Guard tamamen cihazınızda çalışır. Bulut yok. Sunucu yok. Veri toplama yok. Tasarım gereği tam gizlilik.</string>
-    <string name="privacy_offline_badge">%100 Çevrimdışı Çalışma</string>
+    <string name="privacy_offline_badge">Cihaz üzerinde analiz</string>
     <string name="privacy_architecture">Gizlilik Mimarisi</string>
     <string name="privacy_local_db_title">Yerel Veritabanı</string>
     <string name="privacy_local_db_desc">Tehdit imzaları cihazda şifrelenmiş olarak saklanır. Güvenli çevrimdışı içe aktarımlarla güncellenir.</string>
@@ -454,7 +454,7 @@
     <string name="feature_explainable_title">Açıklanabilir Güvenlik</string>
     <string name="feature_explainable_desc">Sadece bir Engelle değil. URL parametreleri ve yönlendirmelerin ayrıntılı sezgisel analizlerini sunuyoruz.</string>
     <string name="feature_performance_title">Yüksek Performanslı Motor</string>
-    <string name="feature_performance_desc">Mobil ortamlar için optimize edilmiştir. Taramalar yerel Kotlin primitifleri kullanılarak 5ms altında işlenir.</string>
+    <string name="feature_performance_desc">Mobil ortamlar için optimize edilmiştir. Taramalar yerel Kotlin primitifleri kullanılarak işlenir.</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -612,7 +612,7 @@
     <string name="status_caution_advised">Dikkat Önerilir</string>
     <string name="status_threat_detected">Tehdit Algılandı</string>
     <string name="status_analysis_complete">Analiz Tamamlandı</string>
-    <string name="meta_analyzed_offline">&lt;5ms\'de çevrimdışı analiz edildi</string>
+    <string name="meta_analyzed_offline">çevrimdışı analiz edildi</string>
     <string name="meta_no_data_leaves">Hiçbir veri cihazı terk etmez</string>
     <string name="top_analysis_factors_title">En Önemli Analiz Faktörleri</string>
     <string name="factor_category_https">HTTPS</string>

@@ -4,7 +4,6 @@
  * Handles game logic, scoring, round progression,
  * and integration with the PhishingEngine.
  * 
- * @author Mehr Guard Team
  * @version 2.4.1
  */
 

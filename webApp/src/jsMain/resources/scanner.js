@@ -4,7 +4,6 @@
  * Handles camera access, QR scanning, URL input, and scan history.
  * Integrates with Kotlin/JS PhishingEngine for analysis.
  * 
- * @author Mehr Guard Team
  * @version 2.4.0
  */
 
@@ -19,7 +18,7 @@ const ScannerConfig = {
 };
 
 // =============================================================================
-// RED TEAM SCENARIOS (Matching Desktop/Android)
+// RED TEAM SCENARIOS (the same 18 ids and URLs as RedTeamScenarios.kt in the shared module)
 // =============================================================================
 
 const RedTeamScenarios = [
@@ -30,17 +29,24 @@ const RedTeamScenarios = [
     // IP Obfuscation
     { id: 'IP-001', category: 'IP Obfuscation', title: 'Decimal IP', url: 'http://3232235777/malware', icon: '🔢' },
     { id: 'IP-002', category: 'IP Obfuscation', title: 'Hex IP', url: 'http://0xC0A80101/payload', icon: '🔢' },
+    { id: 'IP-003', category: 'IP Obfuscation', title: 'Octal IP', url: 'http://0300.0250.0001.0001/shell', icon: '🔢' },
     // Suspicious TLD
     { id: 'TLD-001', category: 'Suspicious TLD', title: 'PayPal .tk', url: 'https://paypa1-secure.tk/login/verify', icon: '🌐' },
     { id: 'TLD-002', category: 'Suspicious TLD', title: 'Bank .ml', url: 'https://bank-secure.ml/verify', icon: '🌐' },
+    { id: 'TLD-003', category: 'Suspicious TLD', title: 'Amazon .ga', url: 'https://amazon-security.ga/giftcard', icon: '🌐' },
     // Nested Redirects
     { id: 'NR-001', category: 'Nested Redirect', title: 'URL in Query', url: 'https://legit.com/redirect?url=https://phishing.tk/login', icon: '↪️' },
+    { id: 'NR-002', category: 'Nested Redirect', title: 'Encoded Nested URL', url: 'https://legit.com/goto?next=https%3A%2F%2Fmalware.ml%2Fdownload', icon: '↪️' },
     // Brand Impersonation
     { id: 'BI-001', category: 'Brand Impersonation', title: 'Typosquatting', url: 'https://paypa1.com/signin', icon: '🏷️' },
+    { id: 'BI-002', category: 'Brand Impersonation', title: 'Google Typosquatting', url: 'https://googIe.com/account/verify', icon: '🏷️' },
+    { id: 'BI-003', category: 'Brand Impersonation', title: 'Netflix Subdomain', url: 'https://netflix.secure-verify.com/billing', icon: '🏷️' },
     // URL Shortener
     { id: 'SH-001', category: 'URL Shortener', title: 'bit.ly', url: 'https://bit.ly/3xYz123', icon: '🔗' },
+    { id: 'SH-002', category: 'URL Shortener', title: 'TinyURL', url: 'https://tinyurl.com/y2abc', icon: '🔗' },
     // Safe Control
     { id: 'SAFE-001', category: 'Safe Control', title: 'Google.com', url: 'https://www.google.com', icon: '✅' },
+    { id: 'SAFE-002', category: 'Safe Control', title: 'GitHub repository', url: 'https://github.com/Raoof128/QDKMP-KotlinConf-2026-', icon: '✅' },
 ];
 
 // =============================================================================

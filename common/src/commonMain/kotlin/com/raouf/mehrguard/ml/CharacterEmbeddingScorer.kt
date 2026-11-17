@@ -32,10 +32,9 @@ import kotlin.math.max
  * ## Design Notes
  * - Pure Kotlin (no external ML libraries)
  * - Deterministic (same input → same output)
- * - Pre-trained weights bundled
+ * - Weights are constants in this file (no training data or code is in this repository)
  * - Output is a "bonus signal" that augments heuristics
  *
- * @author Mehr Guard Security Team
  * @since 1.19.0
  */
 class CharacterEmbeddingScorer private constructor(
@@ -144,7 +143,7 @@ class CharacterEmbeddingScorer private constructor(
         const val RISK_CHAR_THRESHOLD = 2.0f
 
         /**
-         * Create scorer with pre-trained weights.
+         * Create scorer with the bundled weights.
          */
         fun create(): CharacterEmbeddingScorer {
             return CharacterEmbeddingScorer(
@@ -161,9 +160,8 @@ class CharacterEmbeddingScorer private constructor(
          */
         val default: CharacterEmbeddingScorer by lazy { create() }
 
-        // === Pre-trained Weights ===
-        // These weights are trained on a phishing/benign URL corpus
-        // and optimized for small size while maintaining accuracy.
+        // === Weights ===
+        // Constants written here; no training data or code for them is in this repository.
 
         private fun createEmbeddings(): Array<FloatArray> {
             // Initialize with patterns learned from phishing analysis

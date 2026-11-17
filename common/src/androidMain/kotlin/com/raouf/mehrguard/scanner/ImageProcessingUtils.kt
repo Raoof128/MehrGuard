@@ -32,7 +32,6 @@ import com.raouf.mehrguard.model.ContentType
  * - All image dimensions are bounded to prevent OOM
  * - Content validation is performed before processing
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object ImageProcessingUtils {

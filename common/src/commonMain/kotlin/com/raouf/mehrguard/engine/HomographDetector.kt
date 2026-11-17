@@ -49,7 +49,6 @@ package com.raouf.mehrguard.engine
  * | Armenian | U+0530-058F | Medium | Some lookalikes |
  * | Georgian | U+10A0-10FF | Medium | Some lookalikes |
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  * @see <a href="https://unicode.org/reports/tr39/">Unicode Security Mechanisms</a>
  */

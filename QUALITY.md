@@ -14,7 +14,7 @@ This project uses [Detekt](https://detekt.dev/) for static code analysis.
 
 | Metric | Value |
 |--------|-------|
-| **Weighted Issues** | 5,829 (baselined) |
+| **Baselined issues** | 4,210 entries in `detekt-baseline.xml` (counted 17 Nov 2026) |
 | **New Issues** | 0 |
 | **Baseline File** | `detekt-baseline.xml` |
 

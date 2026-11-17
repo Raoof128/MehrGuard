@@ -26,7 +26,7 @@ import com.raouf.mehrguard.core.SecurityConstants
  *
  * ## Why Dynamic Discovery?
  *
- * The static brand database (500+ entries) catches well-known brands, but:
+ * The static brand database (60 brands) catches well-known brands, but:
  * - New startups emerge daily
  * - Regional brands may not be in the database
  * - Attackers target niche brands
@@ -56,7 +56,6 @@ import com.raouf.mehrguard.core.SecurityConstants
  * Combined Risk Score
  * ```
  *
- * @author Mehr Guard Security Team
  * @since 1.6.1
  * @see BrandDetector
  * @see BrandDatabase

@@ -27,7 +27,6 @@ import kotlin.test.assertEquals
  *
  * Tests the payload analysis engine for non-URL QR code content.
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 class QrPayloadAnalyzerTest {

@@ -36,7 +36,6 @@ import com.raouf.mehrguard.core.UrlAnalyzer
  * - Only HTTPS final destinations are trusted
  * - Validates resolved URL before analysis
  *
- * @author Mehr Guard Security Team
  * @since 1.3.0
  */
 interface ShortLinkResolver {

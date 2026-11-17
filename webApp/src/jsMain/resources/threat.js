@@ -4,7 +4,6 @@
  * Handles threat display, attack breakdown interactions,
  * action buttons, and dynamic data population.
  * 
- * @author Mehr Guard Team
  * @version 2.4.1
  */
 

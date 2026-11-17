@@ -46,7 +46,7 @@
   - [TldRiskScores](#tldriskscores)
 - **[Verification Infrastructure (NEW)](#verification-infrastructure)**
   - [AccuracyVerificationTest](#accuracyverificationtest)
-  - [OfflineOnlyTest](#offlineonlytest)
+  - [LocalAnalysisSanityTest and AnalysisCodeHasNoNetworkApiTest](#localanalysissanitytest-and-analysiscodehasnonetworkapitest)
   - [ThreatModelVerificationTest](#threatmodelverificationtest)
   - [PropertyBasedTest](#propertybasedtest)
 - [Security Utilities](#security-utilities)
@@ -1240,22 +1240,21 @@ Deterministic evaluation of detection accuracy against committed dataset.
 - 22 known phishing URLs (typosquats, brand abuse, IP phishing)
 - 20 known legitimate URLs (major organizations)
 
-### OfflineOnlyTest
+### LocalAnalysisSanityTest and AnalysisCodeHasNoNetworkApiTest
 
-Proves that Mehr Guard performs ALL analysis offline without network calls.
+`AnalysisCodeHasNoNetworkApiTest` scans the source of the analysis packages for networking APIs. `LocalAnalysisSanityTest` checks that analysis returns for every input, deterministically, within a time bound. Neither is a network monitor.
 
-**Location:** `com.mehrguard.core.OfflineOnlyTest`
+**Location:** `com.raouf.mehrguard.core`
 
 ```bash
-# Run offline verification
-./gradlew :common:desktopTest --tests "*OfflineOnlyTest*"
+./gradlew :common:desktopTest --tests "*AnalysisCodeHasNoNetworkApiTest*" --tests "*LocalAnalysisSanityTest*"
 ```
 
 **Tests:**
+- No file in `core`, `engine`, `ml`, `model` or `security` names a networking API
 - Analysis completes for any URL pattern
-- All components work independently (Heuristics, Brand, TLD, ML)
-- Timing consistency (no network variability)
-- Result consistency (100 iterations = identical)
+- Each component runs when constructed on its own (heuristics, brand, TLD, scoring model)
+- Repeated analysis gives identical results within a time bound
 
 ### ThreatModelVerificationTest
 

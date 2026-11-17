@@ -34,7 +34,6 @@ import kotlin.test.assertTrue
  * - NoQrFound singleton behavior
  * - Pattern matching exhaustiveness
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class ScanResultTest {

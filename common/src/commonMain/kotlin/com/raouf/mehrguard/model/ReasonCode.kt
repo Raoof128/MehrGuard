@@ -44,7 +44,6 @@ package com.raouf.mehrguard.model
  * - **LOW**: Minor risk indicator (score impact: 1-14)
  * - **INFO**: Informational, no score impact
  *
- * @author Mehr Guard Security Team
  * @since 1.19.0
  */
 enum class ReasonCode(

@@ -61,7 +61,6 @@ package com.raouf.mehrguard.engine
  *
  * The warning is: "This URL may redirect - we can't verify the destination offline."
  *
- * @author Mehr Guard Security Team
  * @since 1.1.0
  */
 class StaticRedirectPatternAnalyzer {

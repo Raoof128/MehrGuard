@@ -43,7 +43,6 @@ import com.raouf.mehrguard.model.Verdict
  * - **User Win**: Engine misses phishing → +50 User points (rare!)
  * - **False Alarm**: Engine flags a truly safe URL → +5 User points
  *
- * @author Mehr Guard Security Team
  * @since 1.3.0
  */
 class BeatTheBot(

@@ -28,7 +28,6 @@ package com.raouf.mehrguard.engine
  * - 26-50: High impact indicators
  * - 51+: Critical indicators
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object HeuristicWeights {

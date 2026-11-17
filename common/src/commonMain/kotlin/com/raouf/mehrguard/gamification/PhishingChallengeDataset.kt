@@ -29,7 +29,6 @@ package com.raouf.mehrguard.gamification
  * All URLs are synthetic and do not resolve to real malicious sites.
  * They are designed to trigger specific detection heuristics.
  *
- * @author Mehr Guard Security Team
  * @since 1.4.0
  */
 object PhishingChallengeDataset {

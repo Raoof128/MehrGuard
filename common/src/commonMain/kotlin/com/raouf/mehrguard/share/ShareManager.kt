@@ -25,7 +25,6 @@ import com.raouf.mehrguard.model.Verdict
  * Generates shareable content from scan analysis results.
  * Platform-specific implementations handle actual sharing.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object ShareManager {

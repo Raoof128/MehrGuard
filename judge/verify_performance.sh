@@ -2,13 +2,10 @@
 # ==============================================================================
 # Performance Verification
 # ==============================================================================
-# Proves: <5ms median (P50) latency for URL analysis
-#
-# This runs the PerformanceBenchmarkTest suite which:
-# 1. Warms up the JIT compiler (100 iterations)
-# 2. Runs 1000 benchmark iterations
-# 3. Reports P50, P90, P99 latencies
-# 4. Asserts P50 < 5ms (our claim) and P99 < 50ms
+# Runs PerformanceBenchmarkTest on this machine's JVM. The test warms up, times
+# repeated analyses and fails if a latency threshold written in the test is
+# exceeded (for a full analysis of one URL: P99 under 50 ms). The measured
+# values are printed by the test. Latency on phones is not measured here.
 # ==============================================================================
 
 set -eo pipefail

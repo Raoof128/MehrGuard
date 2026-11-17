@@ -48,7 +48,6 @@ import com.raouf.mehrguard.policy.RiskLevel
  * - Dust attacks (small amounts to track)
  * - Smart contract interaction URLs
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 object QrPayloadAnalyzer {

@@ -22,7 +22,6 @@ package com.raouf.mehrguard.platform
  * Shared implementation for both Kotlin/JS and Kotlin/Wasm targets
  * using the webMain source set introduced in Kotlin 2.2.20.
  *
- * @author Mehr Guard Security Team
  * @since 1.17.25
  */
 actual class Platform actual constructor() {

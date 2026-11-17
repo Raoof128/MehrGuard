@@ -61,15 +61,15 @@ jobs:
           common/build/test-results/
         retention-days: 30
 
-    # Run Performance Benchmarks (with verbose output for judges)
+    # Run Performance Benchmarks (verbose output)
     - name: Run Performance Benchmarks
       run: |
         echo "📊 Running Performance Benchmarks..."
         ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.benchmark.PerformanceBenchmarkTest" --info --no-daemon
       continue-on-error: true  # Don't fail build on benchmark variance
 
-    # Judge-Proof Verification: Accuracy
-    - name: Verify Accuracy (Precision/Recall/F1)
+    # Accuracy floors on the 41 URLs listed in AccuracyVerificationTest
+    - name: Check Accuracy Floors (AccuracyVerificationTest)
       run: |
         echo "📊 Running Accuracy Verification..."
         ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.core.AccuracyVerificationTest" --info --no-daemon
@@ -80,13 +80,12 @@ jobs:
         ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.core.DatasetEvaluationTest" --info --no-daemon
         cat common/build/reports/dataset-evaluation.txt
 
-    # Judge-Proof Verification: Offline Operation
-    - name: Verify Offline Operation (No Network)
+    # Text scan: the analysis packages reference no networking API. Then a timing sanity check.
+    - name: Check Analysis Code Has No Network API, and Local Timing
       run: |
-        echo "🔒 Running Offline Verification..."
-        ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.core.OfflineOnlyTest" --info --no-daemon
+        ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.core.AnalysisCodeHasNoNetworkApiTest" --tests "com.raouf.mehrguard.core.LocalAnalysisSanityTest" --info --no-daemon
 
-    # Judge-Proof Verification: Threat Model Coverage
+    # Threat model coverage tests
     - name: Verify Threat Model Coverage
       run: |
         echo "🛡️ Running Threat Model Verification..."
@@ -590,8 +589,8 @@ jobs:
           ### ✨ Features
           - 🔍 25+ security heuristics
           - 🤖 ML-powered phishing detection
-          - 🏢 Brand impersonation detection (500+ brands)
-          - 🔒 100% offline, privacy-first
+          - 🏢 Brand impersonation detection (60 listed brands)
+          - 🔒 URL analysis runs on the device
           - 🌍 Cross-platform (Android, iOS, Desktop, Web)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

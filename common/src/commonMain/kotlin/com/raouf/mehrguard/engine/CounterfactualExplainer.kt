@@ -28,7 +28,6 @@ package com.raouf.mehrguard.engine
  *
  * This improves transparency and user education about phishing indicators.
  *
- * @author Mehr Guard Security Team
  * @since 1.1.0
  */
 class CounterfactualExplainer {

@@ -2,18 +2,18 @@
 # ==============================================================================
 # Platform Parity Verification
 # ==============================================================================
-# Proves: Identical verdicts across JVM, JS, Native, and Wasm
+# What each step does:
+# 1. JVM (desktop): runs PlatformParityTest, which checks the engine's verdicts
+#    on a fixed list of URLs against the values written in the test.
+# 2. Android: assembles the debug build.
+# 3. JavaScript: compiles the shared module for Kotlin/JS.
+# 4. iOS simulator: runs PlatformParityTest on Kotlin/Native, on macOS with
+#    Xcode only; skipped elsewhere.
+# 5. WebAssembly: builds the web app for Kotlin/Wasm.
 #
-# This runs the PlatformParityTest suite on ALL supported platforms:
-# 1. JVM (Desktop) - Primary platform
-# 2. JavaScript (Web) - Kotlin/JS compilation
-# 3. Native (iOS Simulator) - Kotlin/Native compilation
-# 4. WebAssembly (Wasm) - Kotlin/Wasm compilation (Kotlin 2.3.0+)
-#
-# Each platform tests 50+ URLs and verifies:
-# - Verdict agreement (SAFE/SUSPICIOUS/MALICIOUS)
-# - Score variance within 10%
-# - Deterministic results
+# The same Kotlin source is compiled for every target. Only the JVM step, and
+# the iOS step where it runs, execute the engine and compare its verdicts.
+# Steps 2, 3 and 5 show that the target builds, not what it computes.
 # ==============================================================================
 
 set -eo pipefail
@@ -148,22 +148,16 @@ echo ""
 # ==============================================================================
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 if [ $FAILS -eq 0 ] && [ $PASSES -ge 1 ]; then
-    echo "✅ PLATFORM PARITY VERIFICATION PASSED"
+    echo "✅ PLATFORM PARITY CHECKS PASSED"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    echo "What this proves:"
-    echo "  • Identical verdicts: The PhishingEngine produces the same results"
-    echo "    on JVM, JavaScript, Native, and WebAssembly platforms"
-    echo "  • Score variance: < 5% across platforms (within acceptable tolerance)"
-    echo "  • Shared code works: ~80% code sharing is functional, not just claimed"
+    echo "Steps passed: $PASSES"
     echo ""
-    echo "Platforms verified: $PASSES"
-    echo "  • JVM (Desktop)        - Primary target"
-    echo "  • JavaScript (Web)     - Kotlin/JS runtime"
-    echo "  • Native (iOS/Android) - Kotlin/Native runtime"
-    echo "  • WebAssembly (Wasm)   - Kotlin/Wasm runtime (Kotlin 2.3.0)"
-    echo ""
-    echo "This is the \"5-platform KMP proof\" — same logic, same results, everywhere."
+    echo "What this shows:"
+    echo "  • The parity tests pass on the JVM (and on the iOS simulator if that step ran)"
+    echo "  • The Android, JavaScript and WebAssembly targets build from the same source"
+    echo "What it does not show:"
+    echo "  • Verdicts computed on Android, JavaScript or WebAssembly: those steps only build"
     exit 0
 else
     echo "❌ PLATFORM PARITY VERIFICATION FAILED"

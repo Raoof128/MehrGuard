@@ -32,7 +32,6 @@ import kotlin.test.assertTrue
  * - This tests the Kotlin/Native layer that bridges to Swift
  * - Ensures expect/actual pattern is correctly implemented
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class IosQrScannerTest {

@@ -37,7 +37,6 @@ package com.raouf.mehrguard.platform
  * Note: Uses external declarations for JS interop to ensure compatibility
  * with both Kotlin/JS and Kotlin/Wasm targets.
  *
- * @author Mehr Guard Security Team
  * @since 1.17.25
  */
 

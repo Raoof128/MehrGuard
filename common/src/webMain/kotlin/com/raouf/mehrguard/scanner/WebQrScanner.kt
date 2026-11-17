@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.flowOf
  * Note: Camera scanning is handled by JavaScript/HTML5 in the web app.
  * This implementation provides the Kotlin interface.
  *
- * @author Mehr Guard Security Team
  * @since 1.17.25
  */
 class WebQrScanner : QrScanner {

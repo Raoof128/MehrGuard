@@ -412,7 +412,7 @@ private fun LiveScanContent(
                         MaterialSymbol(name = "bolt", size = 14.sp, color = colors.success)
                         Spacer(Modifier.width(6.dp))
                         Text(
-                            statusMessage?.text ?: t("Local analysis engine ready (<5ms latency)"),
+                            statusMessage?.text ?: t("Local analysis engine ready"),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
                             color = when (statusMessage?.kind) {

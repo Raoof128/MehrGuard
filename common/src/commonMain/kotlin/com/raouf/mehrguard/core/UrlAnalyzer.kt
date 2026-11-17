@@ -28,7 +28,6 @@ import com.raouf.mehrguard.engine.PublicSuffixList
  * - Regex patterns are designed to avoid ReDoS
  * - All string operations use safe methods
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class UrlAnalyzer {

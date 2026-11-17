@@ -28,7 +28,6 @@ package com.raouf.mehrguard.engine
  * - Patterns are curated from real phishing campaigns
  * - Updated regularly with new threat intelligence
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object BrandDatabase {

@@ -35,7 +35,7 @@
     <string name="feature_explainable_title">Explainable Security</string>
     <string name="feature_explainable_desc">Don\'t just get a "Block". We provide detailed heuristic breakdowns of URL parameters and redirects.</string>
     <string name="feature_performance_title">High-Performance Engine</string>
-    <string name="feature_performance_desc">Optimised for mobile environments. Scans are processed in under 5ms using native Kotlin primitives.</string>
+    <string name="feature_performance_desc">Optimised for mobile environments. Scans are processed using native Kotlin primitives.</string>
     
     <!-- Scanner Screen -->
     <string name="start_scanning">Start Scanning</string>
@@ -356,7 +356,7 @@
     <string name="status_analysis_complete">Analysis Complete</string>
     
     <!-- WebApp Parity: Meta Info -->
-    <string name="meta_analyzed_offline">Analyzed offline in &lt;5ms</string>
+    <string name="meta_analyzed_offline">Analyzed offline</string>
     <string name="meta_no_data_leaves">No data leaves device</string>
     
     <!-- WebApp Parity: Top Analysis Factors -->
@@ -402,7 +402,7 @@
     <string name="platform_kotlin">Kotlin 1.9.22</string>
     <string name="verify_integrity_title">Verify System Integrity</string>
     <string name="verify_integrity_desc_running">Running verification...</string>
-    <string name="verify_integrity_desc_default">Prove 87%% accuracy claim on-device</string>
+    <string name="verify_integrity_desc_default">Run the built-in accuracy check on this device</string>
     <string name="verification_dialog_healthy">System Healthy ✓</string>
     <string name="verification_dialog_complete">Verification Complete</string>
     <string name="verification_passed_tests">Passed %1$d/%2$d tests</string>
@@ -580,7 +580,7 @@
     <string name="privacy_offline_title">Privacy &amp; Offline</string>
     <string name="privacy_hero_title">Your Data Never Leaves</string>
     <string name="privacy_hero_desc">Mehr Guard operates entirely on your device. No cloud. No servers. No data collection. Complete privacy by design.</string>
-    <string name="privacy_offline_badge">100% Offline Operation</string>
+    <string name="privacy_offline_badge">On-device analysis</string>
     <string name="privacy_architecture">Privacy Architecture</string>
     <string name="privacy_local_db_title">Local Database</string>
     <string name="privacy_local_db_desc">Threat signatures stored encrypted on-device. Updated via secure offline imports.</string>

@@ -45,7 +45,6 @@ import kotlin.test.assertTrue
  * - Content type detection
  * - Result handler validation
  *
- * @author Mehr Guard Security Team
  * @since 1.4.0
  */
 @OptIn(ExperimentalCoroutinesApi::class)

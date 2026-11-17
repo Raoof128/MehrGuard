@@ -204,7 +204,7 @@
     <string name="dev_mode_disable">disattivare</string>
     <string name="verify_integrity_title">Verifica integrità sistema</string>
     <string name="verify_integrity_desc_running">Verifica in corso…</string>
-    <string name="verify_integrity_desc_default">Dimostra 87% di precisione sul dispositivo</string>
+    <string name="verify_integrity_desc_default">Esegui il controllo di precisione integrato su questo dispositivo</string>
     <string name="verification_dialog_healthy">Sistema integro ✓</string>
     <string name="verification_dialog_complete">Verifica completata</string>
     <string name="verification_passed_tests">Superati %1$d/%2$d test</string>
@@ -422,7 +422,7 @@
     <string name="privacy_offline_title">Privacy e offline</string>
     <string name="privacy_hero_title">I tuoi dati non escono mai</string>
     <string name="privacy_hero_desc">Mehr Guard opera interamente sul tuo dispositivo. Nessun cloud. Nessun server. Nessuna raccolta dati. Privacy completa per design.</string>
-    <string name="privacy_offline_badge">100% operatività offline</string>
+    <string name="privacy_offline_badge">Analisi sul dispositivo</string>
     <string name="privacy_architecture">Architettura privacy</string>
     <string name="privacy_local_db_title">Database locale</string>
     <string name="privacy_local_db_desc">Firme minacce archiviate crittografate sul dispositivo. Aggiornate tramite import offline sicuri.</string>
@@ -454,7 +454,7 @@
     <string name="feature_explainable_title">Sicurezza Spiegabile</string>
     <string name="feature_explainable_desc">Non solo un Blocca. Forniamo analisi euristiche dettagliate di parametri URL e reindirizzamenti.</string>
     <string name="feature_performance_title">Motore ad Alte Prestazioni</string>
-    <string name="feature_performance_desc">Ottimizzato per ambienti mobili. Le scansioni vengono elaborate in meno di 5ms usando primitive Kotlin native.</string>
+    <string name="feature_performance_desc">Ottimizzato per ambienti mobili. Le scansioni vengono elaborate usando primitive Kotlin native.</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -612,7 +612,7 @@
     <string name="status_caution_advised">Cautela Consigliata</string>
     <string name="status_threat_detected">Minaccia Rilevata</string>
     <string name="status_analysis_complete">Analisi Completata</string>
-    <string name="meta_analyzed_offline">Analizzato offline in &lt;5ms</string>
+    <string name="meta_analyzed_offline">Analizzato offline</string>
     <string name="meta_no_data_leaves">Nessun dato lascia il dispositivo</string>
     <string name="top_analysis_factors_title">Principali Fattori di Analisi</string>
     <string name="factor_category_https">HTTPS</string>

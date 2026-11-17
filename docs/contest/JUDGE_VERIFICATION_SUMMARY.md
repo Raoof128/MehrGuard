@@ -1,6 +1,6 @@
 # 🔍 Judge Verification Summary
 
-> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](README.md#summary) and [EVALUATION.md](docs/EVALUATION.md).
+> **Contest-era document, kept as a record.** Written for the KotlinConf 2025–26 student contest. Figures in it could not all be reproduced; the [corrections table](README.md#corrections) lists what is wrong and what is true.
 
 > **Audit Date:** 2026-01-03  
 > **Release Tag:** `v2.0.36-submission`  

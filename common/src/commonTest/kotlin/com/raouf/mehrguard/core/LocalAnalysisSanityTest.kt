@@ -24,31 +24,22 @@ import kotlin.time.measureTime
 import kotlin.time.TimeSource
 
 /**
- * Offline-Only Verification Test
+ * Sanity checks that analysis is plain local computation.
  *
- * Proves that Mehr Guard performs ALL analysis offline without any network calls.
- * This is a core privacy guarantee of the application.
+ * What these tests check:
+ * 1. Analysis returns a bounded score for every kind of input, including malformed ones.
+ * 2. Each component (heuristics, brand detector, TLD scorer, scoring model,
+ *    homograph detector) runs when constructed on its own, with no setup.
+ * 3. Analysing the same URL repeatedly gives the same result.
+ * 4. Analysis stays within a generous time bound.
  *
- * ## Security Rationale
+ * What they do not check: network activity. A unit test cannot observe sockets
+ * or DNS lookups. The evidence that analysis makes no network calls is the
+ * source code, which `AnalysisCodeHasNoNetworkApiTest` scans for networking APIs.
  *
- * Network calls during URL analysis would:
- * 1. **Leak user data**: Every scanned URL would be sent externally
- * 2. **Create availability dependency**: No internet = no protection
- * 3. **Enable tracking**: Third parties could build scan profiles
- * 4. **Violate privacy**: Medical/legal/financial QR codes could be exposed
- *
- * ## Test Strategy
- *
- * We cannot truly block network in pure Kotlin tests, but we can verify:
- * 1. Analysis completes successfully for any URL
- * 2. No timeouts occur (network calls would timeout)
- * 3. Results are consistent (no external data variation)
- * 4. All components work without network initialization
- *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
-class OfflineOnlyTest {
+class LocalAnalysisSanityTest {
 
     private val engine = PhishingEngine()
     private val timeSource = TimeSource.Monotonic
@@ -59,34 +50,34 @@ class OfflineOnlyTest {
         return ((value * multiplier).toInt() / multiplier).toString()
     }
 
-    // ==================== Offline Analysis Verification ====================
+    // ==================== Analysis completes ====================
 
     @Test
-    fun `VERIFY analysis completes without network for any URL pattern`() {
+    fun `analysis completes for every URL pattern within the time bound`() {
         val testUrls = listOf(
             // Standard URLs
             "https://google.com",
             "http://evil.tk/phish",
 
-            // IP addresses (no DNS needed)
+            // IP addresses
             "http://192.168.1.1/login",
             "http://10.0.0.1:8080/admin",
             "http://[::1]/test",
 
-            // Punycode (no WHOIS lookup)
+            // Punycode
             "https://xn--80ak6aa.com/test",
 
-            // Very long URLs (no truncation service)
+            // Very long URLs
             "https://example.com/" + "a".repeat(500),
 
-            // Unicode domains (no normalization service)
+            // Unicode domains
             "https://gооgle.com",  // Cyrillic o
             "https://раураl.com",  // Cyrillic
 
             // Complex redirect patterns
             "https://redirect.com?url=https://evil.com?next=https://phish.tk",
 
-            // Data URIs (should be handled locally)
+            // Data URIs
             "data:text/html,<script>alert(1)</script>",
 
             // Edge cases
@@ -108,55 +99,53 @@ class OfflineOnlyTest {
 
         println("""
             |
-            |✅ OFFLINE ANALYSIS VERIFICATION
+            |LOCAL ANALYSIS SANITY CHECK
             |   URLs analyzed: ${testUrls.size}
             |   Total time: ${elapsed}ms
             |   Average per URL: ${elapsed / testUrls.size}ms
             |   
-            |   If any network calls occurred, this would have timed out
-            |   or produced inconsistent results.
+            |   This is a time bound, not a network monitor.
             |
         """.trimMargin())
 
-        // If network calls happened, this would be much slower
-        // Average should be <100ms per URL for offline analysis
+        // A generous bound for local computation
         assertTrue(
             elapsed / testUrls.size < 500,
-            "Analysis too slow (${elapsed / testUrls.size}ms/URL) - possible network dependency"
+            "Analysis too slow for local computation (${elapsed / testUrls.size}ms/URL)"
         )
     }
 
     @Test
-    fun `VERIFY heuristics engine works offline`() {
+    fun `heuristics engine runs standalone`() {
         val heuristics = com.raouf.mehrguard.engine.HeuristicsEngine()
 
         val result = heuristics.analyze("http://paypal-secure.tk/login")
 
         assertNotNull(result)
         assertTrue(result.score >= 0, "Heuristic score should be non-negative")
-        assertTrue(result.flags.isNotEmpty(), "Should detect flags offline")
+        assertTrue(result.flags.isNotEmpty(), "Should report at least one flag")
 
-        println("✅ Heuristics Engine: ${result.flags.size} flags detected offline")
+        println("Heuristics engine: ${result.flags.size} flags")
     }
 
     @Test
-    fun `VERIFY brand detector works offline`() {
+    fun `brand detector runs standalone`() {
         val detector = com.raouf.mehrguard.engine.BrandDetector()
 
         val result = detector.detect("http://paypa1-secure.tk/login")
 
         assertNotNull(result)
-        // Brand detector should find PayPal match offline
+        // The detector returns a result; what it matches is covered by BrandDetectorTest
         assertTrue(
             result.match != null || result.score >= 0,
-            "Brand detector should work offline"
+            "Brand detector should return a result"
         )
 
-        println("✅ Brand Detector: ${result.match ?: "No match"} (score: ${result.score})")
+        println("Brand detector: ${result.match ?: "No match"} (score: ${result.score})")
     }
 
     @Test
-    fun `VERIFY TLD scorer works offline`() {
+    fun `TLD scorer runs standalone`() {
         val scorer = com.raouf.mehrguard.engine.TldScorer()
 
         // Test with full URL format
@@ -181,11 +170,11 @@ class OfflineOnlyTest {
             assertTrue(result.score <= 35, "Low-risk TLD in $url should have score <= 35")
         }
 
-        println("✅ TLD Scorer: All TLDs scored offline")
+        println("TLD scorer: all TLDs scored")
     }
 
     @Test
-    fun `VERIFY ML model works offline`() {
+    fun `scoring model runs standalone`() {
         val model = com.raouf.mehrguard.ml.LogisticRegressionModel.default()
         val extractor = com.raouf.mehrguard.ml.FeatureExtractor()
 
@@ -194,26 +183,26 @@ class OfflineOnlyTest {
 
         assertTrue(score in 0.0f..1.0f, "ML score should be between 0 and 1")
 
-        println("✅ ML Model: Prediction score = ${formatDouble(score.toDouble(), 2)}")
+        println("Scoring model: prediction score = ${formatDouble(score.toDouble(), 2)}")
     }
 
     @Test
-    fun `VERIFY homograph detector works offline`() {
+    fun `homograph detector runs standalone`() {
         val detector = com.raouf.mehrguard.engine.HomographDetector()
 
         // Cyrillic 'a' looks like Latin 'a'
         val result = detector.detect("gооgle.com")  // Cyrillic o's
 
-        assertTrue(result.isHomograph, "Should detect homograph offline")
+        assertTrue(result.isHomograph, "Should detect the homograph")
         assertTrue(result.detectedCharacters.isNotEmpty(), "Should find confusable characters")
 
-        println("✅ Homograph Detector: ${result.detectedCharacters.size} confusables found offline")
+        println("Homograph detector: ${result.detectedCharacters.size} confusables found")
     }
 
     // ==================== Consistency Verification ====================
 
     @Test
-    fun `VERIFY results are consistent without external data`() {
+    fun `repeated analysis of one URL gives identical results`() {
         val url = "http://paypal-secure.tk/verify-account/login"
 
         // Analyze same URL 100 times
@@ -233,13 +222,13 @@ class OfflineOnlyTest {
             )
         }
 
-        println("✅ Consistency: 100 iterations produced identical results (no external data variance)")
+        println("Consistency: 100 iterations produced identical results")
     }
 
     // ==================== Timing Analysis ====================
 
     @Test
-    fun `VERIFY analysis timing is consistent with offline operation`() {
+    fun `repeated analysis stays within the local time bound`() {
         val url = "http://suspicious-domain.tk/phishing/login"
 
         // Warm up
@@ -264,13 +253,12 @@ class OfflineOnlyTest {
             |   Min: ${minTime}ms
             |   Max: ${maxTime}ms
             |   
-            |   Consistent timing indicates no network variability.
-            |   Network calls would show high variance and occasional spikes.
+            |   A time bound only; this test cannot observe network activity.
             |
         """.trimMargin())
 
-        // Network calls would cause high variance and occasional timeouts
-        assertTrue(maxTime < 1000, "Max time too high - possible network dependency")
-        assertTrue(avgTime < 100, "Average time too high - possible network dependency")
+        // Generous bounds for local computation
+        assertTrue(maxTime < 1000, "Max time too high for local computation")
+        assertTrue(avgTime < 100, "Average time too high for local computation")
     }
 }

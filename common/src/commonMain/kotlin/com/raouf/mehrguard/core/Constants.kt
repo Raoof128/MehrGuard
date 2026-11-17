@@ -24,7 +24,6 @@ package com.raouf.mehrguard.core
  * - Consistent values across components
  * - Clear documentation of each constant's purpose
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object Constants {

@@ -27,7 +27,6 @@ import org.w3c.dom.Worker
  * Creates a Web Worker-based SQLite driver using sql.js.
  * Data is stored in browser IndexedDB for persistence.
  *
- * @author Mehr Guard Security Team
  * @since 1.17.25
  */
 actual class DatabaseDriverFactory {

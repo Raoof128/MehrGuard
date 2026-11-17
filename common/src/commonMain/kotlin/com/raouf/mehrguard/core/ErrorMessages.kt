@@ -24,7 +24,6 @@ package com.raouf.mehrguard.core
  * - Consistent messaging across platforms
  * - Centralized maintenance
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object ErrorMessages {

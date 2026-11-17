@@ -30,7 +30,6 @@ import kotlin.math.exp
  * - Model is immutable after construction
  * - Thread-safe for concurrent predictions
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class LogisticRegressionModel private constructor(
@@ -103,7 +102,7 @@ class LogisticRegressionModel private constructor(
         }
 
         /**
-         * Default model with pre-trained weights.
+         * Default model with the hand-set weights.
          *
          * These weights are calibrated for phishing URL detection.
          * In production, consider loading from an encrypted model file.

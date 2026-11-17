@@ -267,7 +267,7 @@
     <string name="platform_kotlin">Kotlin 1.9.22</string>
     <string name="verify_integrity_title">Verifikasi Integritas Sistem</string>
     <string name="verify_integrity_desc_running">Menjalankan verifikasi…</string>
-    <string name="verify_integrity_desc_default">Buktikan klaim akurasi 87% di perangkat</string>
+    <string name="verify_integrity_desc_default">Jalankan pemeriksaan akurasi bawaan di perangkat ini</string>
     <string name="verification_dialog_healthy">Sistem Sehat ✓</string>
     <string name="verification_dialog_complete">Verifikasi Selesai</string>
     <string name="verification_passed_tests">Lulus %1$d/%2$d pengujian</string>
@@ -422,7 +422,7 @@
     <string name="privacy_offline_title">Privasi dan Offline</string>
     <string name="privacy_hero_title">Data Anda Tidak Pernah Keluar</string>
     <string name="privacy_hero_desc">Mehr Guard beroperasi sepenuhnya di perangkat Anda. Tidak ada cloud. Tidak ada server. Tidak ada pengumpulan data. Privasi lengkap berdasarkan desain.</string>
-    <string name="privacy_offline_badge">Operasi 100% Offline</string>
+    <string name="privacy_offline_badge">Analisis di perangkat</string>
     <string name="privacy_architecture">Arsitektur Privasi</string>
     <string name="privacy_local_db_title">Database Lokal</string>
     <string name="privacy_local_db_desc">Tanda tangan ancaman disimpan terenkripsi di perangkat. Diperbarui melalui impor offline yang aman.</string>
@@ -454,7 +454,7 @@
     <string name="feature_explainable_title">Keamanan yang Dapat Dijelaskan</string>
     <string name="feature_explainable_desc">Bukan hanya Blokir. Kami menyediakan analisis heuristik terperinci dari parameter URL dan pengalihan.</string>
     <string name="feature_performance_title">Mesin Performa Tinggi</string>
-    <string name="feature_performance_desc">Dioptimalkan untuk lingkungan seluler. Pemindaian diproses dalam waktu kurang dari 5ms menggunakan primitif Kotlin asli.</string>
+    <string name="feature_performance_desc">Dioptimalkan untuk lingkungan seluler. Pemindaian diproses menggunakan primitif Kotlin asli.</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -612,7 +612,7 @@
     <string name="status_caution_advised">Disarankan Berhati-hati</string>
     <string name="status_threat_detected">Ancaman Terdeteksi</string>
     <string name="status_analysis_complete">Analisis Selesai</string>
-    <string name="meta_analyzed_offline">Dianalisis offline dalam &lt;5ms</string>
+    <string name="meta_analyzed_offline">Dianalisis offline</string>
     <string name="meta_no_data_leaves">Tidak ada data yang keluar dari perangkat</string>
     <string name="top_analysis_factors_title">Faktor Analisis Teratas</string>
     <string name="factor_category_https">HTTPS</string>

@@ -26,7 +26,6 @@ import kotlin.test.assertTrue
 /**
  * Integration tests for the full scan-to-result flow.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class IntegrationTest {

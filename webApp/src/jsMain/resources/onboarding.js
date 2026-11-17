@@ -4,7 +4,6 @@
  * Handles the offline privacy onboarding flow,
  * settings management, and navigation.
  * 
- * @author Mehr Guard Team
  * @version 2.4.1
  */
 

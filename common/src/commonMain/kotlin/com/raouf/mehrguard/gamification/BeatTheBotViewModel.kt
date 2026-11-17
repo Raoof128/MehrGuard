@@ -49,7 +49,6 @@ import kotlinx.datetime.Clock
  *
  * @param engine PhishingEngine for URL analysis
  * @param scope CoroutineScope for async operations
- * @author Mehr Guard Security Team
  * @since 1.4.0
  */
 class BeatTheBotViewModel(

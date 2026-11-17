@@ -33,7 +33,6 @@ package com.raouf.mehrguard.engine
  * - Thread-safe for concurrent detection
  * - Includes Australian banking institutions
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class BrandDetector {

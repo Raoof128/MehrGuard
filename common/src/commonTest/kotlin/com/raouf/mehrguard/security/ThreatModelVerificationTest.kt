@@ -37,7 +37,6 @@ import kotlin.test.assertTrue
  * ## Test Naming Convention
  * THREAT_[ID]_[Description]_[Control]
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 class ThreatModelVerificationTest {

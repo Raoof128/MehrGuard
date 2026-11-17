@@ -41,7 +41,6 @@ import kotlinx.datetime.Clock
  * - All mutations are synchronized via CoroutineScope
  * - State is immutable and replaced atomically
  *
- * @author Mehr Guard Security Team
  * @since 1.4.0
  */
 class AllowlistManager(

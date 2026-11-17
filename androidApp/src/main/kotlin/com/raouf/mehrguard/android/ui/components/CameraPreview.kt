@@ -65,7 +65,6 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @param onQrCodeScanned Callback when QR code is detected
  * @param onCameraError Callback when camera error occurs
  *
- * @author Mehr Guard Security Team
  * @since 1.1.0
  */
 @Composable

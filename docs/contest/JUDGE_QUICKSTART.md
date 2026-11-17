@@ -1,6 +1,6 @@
 # 🏆 Judge's Quick Start Guide
 
-> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](README.md#summary) and [EVALUATION.md](docs/EVALUATION.md).
+> **Contest-era document, kept as a record.** Written for the KotlinConf 2025–26 student contest. Figures in it could not all be reproduced; the [corrections table](README.md#corrections) lists what is wrong and what is true.
 
 > **Start Here** — Verify Mehr Guard in under 5 minutes.
 
@@ -16,7 +16,7 @@
 | 📖 **Read Essay** | [ESSAY.md](ESSAY.md) |
 | 🔨 **One-Command Build Test** | `./scripts/judge-smoke.sh` |
 | ✅ **Verify All Claims** | `./judge/verify_all.sh` |
-| 📊 **View Evidence Pack** | [docs/EVIDENCE.md](docs/EVIDENCE.md) |
+| 📊 **Measured results** | [docs/EVALUATION.md](../EVALUATION.md) |
 
 ---
 
@@ -92,10 +92,10 @@ cd mehrguard
 |--------|-------|----------|
 | **Test Coverage** | 89% | [Kover Report](https://github.com/Raoof128/Raoof128.github.io/actions/workflows/kover.yml) |
 | **Total Tests** | 1,248 | `./gradlew :common:desktopTest` |
-| **Analysis Latency** | P99 under 50 ms, asserted in CI | [EVALUATION.md](docs/EVALUATION.md) |
-| **Detection Rate** | 90.7% F1 on 100 author-written URLs | [EVALUATION.md](docs/EVALUATION.md) |
-| **False Positive Rate** | <5% | [AlexaTop100FPTest.kt](common/src/commonTest/kotlin/com/mehrguard/benchmark/AlexaTop100FPTest.kt) |
-| **Shared Code** | ~11,000 LOC | [SHARED_CODE_REPORT.md](docs/SHARED_CODE_REPORT.md) |
+| **Analysis Latency** | P99 under 50 ms, asserted in CI | [EVALUATION.md](../EVALUATION.md) |
+| **Detection Rate** | 90.7% F1 on 100 author-written URLs | [EVALUATION.md](../EVALUATION.md) |
+| **False Positive Rate** | <5% | [AlexaTop100FPTest.kt](../../common/src/commonTest/kotlin/com/raouf/mehrguard/benchmark/AlexaTop100FPTest.kt) |
+| **Shared Code** | ~11,000 LOC | [SHARED_CODE_REPORT.md](../SHARED_CODE_REPORT.md) |
 | **Platforms** | 5 (Android, iOS, Desktop, JS, Wasm) | All build successfully |
 | **Languages** | 18 | Full i18n support |
 | **Accessibility** | Full | 197+ content descriptions, VoiceOver labels |
@@ -109,10 +109,10 @@ If you have limited time, focus on these files:
 
 | Priority | File | What It Shows |
 |----------|------|---------------|
-| ⭐⭐⭐ | [PhishingEngine.kt](common/src/commonMain/kotlin/com/mehrguard/core/PhishingEngine.kt) | Core detection logic, KMP architecture |
-| ⭐⭐⭐ | [EnsembleModel.kt](common/src/commonMain/kotlin/com/mehrguard/ml/EnsembleModel.kt) | 3-model ML ensemble (LR + Boosting + Rules) |
-| ⭐⭐ | [HeuristicsEngine.kt](common/src/commonMain/kotlin/com/mehrguard/engine/HeuristicsEngine.kt) | 25+ security heuristics |
-| ⭐⭐ | [PlatformAbstractions.kt](common/src/commonMain/kotlin/com/mehrguard/platform/PlatformAbstractions.kt) | expect/actual pattern |
+| ⭐⭐⭐ | [PhishingEngine.kt](../../common/src/commonMain/kotlin/com/raouf/mehrguard/core/PhishingEngine.kt) | Core detection logic, KMP architecture |
+| ⭐⭐⭐ | [EnsembleModel.kt](../../common/src/commonMain/kotlin/com/raouf/mehrguard/ml/EnsembleModel.kt) | 3-model ML ensemble (LR + Boosting + Rules) |
+| ⭐⭐ | [HeuristicsEngine.kt](../../common/src/commonMain/kotlin/com/raouf/mehrguard/engine/HeuristicsEngine.kt) | 25+ security heuristics |
+| ⭐⭐ | [PlatformAbstractions.kt](../../common/src/commonMain/kotlin/com/raouf/mehrguard/platform/PlatformAbstractions.kt) | expect/actual pattern |
 | ⭐ | [ESSAY.md](ESSAY.md) | Competition essay (322 words) |
 
 ---
@@ -122,8 +122,8 @@ If you have limited time, focus on these files:
 | Requirement | Status | Location |
 |-------------|--------|----------|
 | ✅ Original work (not pre-existing) | PASS | [CONTEST_START.md](CONTEST_START.md) |
-| ✅ Open-source license | PASS | [LICENSE](LICENSE) (Apache 2.0) |
-| ✅ README.md with instructions | PASS | [README.md](README.md) |
+| ✅ Open-source license | PASS | [LICENSE](../../LICENSE) (Apache 2.0) |
+| ✅ README.md with instructions | PASS | [README.md](../../README.md) |
 | ✅ Essay (300+ words) | PASS | [ESSAY.md](ESSAY.md) (322 words) |
 | ✅ Public GitHub repository | PASS | [github.com/Raoof128/Raoof128.github.io](https://github.com/Raoof128/Raoof128.github.io) |
 | ✅ Not a library-only submission | PASS | Full apps on 5 platforms |
@@ -158,7 +158,7 @@ If you have limited time, focus on these files:
 
 ### "Why are web demo scores different from native?"
 
-Web uses optimized ML weights (~200KB vs ~500KB). Detection is still accurate—only thresholds differ slightly. See [Platform Parity Note](docs/PLATFORM_PARITY.md#web-optimization).
+Web uses optimized ML weights (~200KB vs ~500KB). Detection is still accurate—only thresholds differ slightly. See [Platform Parity Note](PLATFORM_PARITY.md#web-optimization).
 
 ### "How do I test iOS without Xcode?"
 

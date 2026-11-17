@@ -23,7 +23,7 @@
 
 ## 👤 Attacker Profiles
 
-### 1. Lazy Phisher (80% of attacks)
+### 1. Lazy Phisher
 
 **Profile:**
 - Uses free TLDs (.tk, .ml, .ga, .cf, .gq)
@@ -45,7 +45,7 @@ http://192.168.1.1:8080/paypal-login
 
 ---
 
-### 2. Script Kiddie (15% of attacks)
+### 2. Script Kiddie
 
 **Profile:**
 - Uses URL shorteners to hide destination
@@ -67,7 +67,7 @@ https://google.com@evil.com → @ injection
 
 ---
 
-### 3. Credential Harvester (5% of attacks)
+### 3. Credential Harvester
 
 **Profile:**
 - Creates convincing login pages
@@ -125,18 +125,20 @@ https://google.com@evil.com → @ injection
 
 ### ML Detectors
 
-| Model | What It Learns | Contribution |
-|-------|----------------|--------------|
-| Logistic Regression | Linear feature relationships | 40% |
-| Gradient Boosting | Non-linear patterns | 35% |
-| Decision Stumps | Hard rules (IP, @, port) | 25% |
+Nothing here is learned from data; the weights and thresholds are set by hand ([ML_TRAINING.md](ML_TRAINING.md)).
+
+| Component | What it is | Weight in the blend |
+|-----------|------------|---------------------|
+| Logistic score | A weighted sum of fifteen URL features | 0.40 |
+| Ten threshold rules | Each tests one feature | 0.35 |
+| Five more threshold rules | Hard signals (IP host, @, port) | 0.25 |
 
 ### Brand Detection
 
 | Method | Coverage |
 |--------|----------|
-| Static database | 60+ brands with official domains |
-| Levenshtein matching | Typosquats within edit distance 2 |
+| Static database | 60 brands with official domains |
+| Levenshtein matching | Site names within one edit of a short brand, or two of a brand of six letters or more |
 | Dynamic discovery | Trust words, action words, urgency patterns |
 
 ---
@@ -195,17 +197,9 @@ https://google.com@evil.com → @ injection
 
 ---
 
-## 📊 Detection Rates (Estimated)
+## 📊 Detection Rates
 
-| Attack Type | Detection Rate | False Positive Rate |
-|-------------|----------------|---------------------|
-| Free TLD phishing | ~95% | <1% |
-| Typosquatting | ~90% | ~2% |
-| Homograph attacks | ~98% | <0.5% |
-| IP-based phishing | ~99% | ~1% |
-| URL shorteners | 100% (flagged) | ~5% (legit shorteners) |
-| Clean new domains | ~20% | N/A |
-| Sophisticated APT | ~5% | N/A |
+No detection rate per attack type has been measured. An earlier version of this section gave estimates (for example "about 95%" for free-TLD phishing); they were guesses and have been removed. What has been measured is in [EVALUATION.md](EVALUATION.md).
 
 ---
 
@@ -214,7 +208,7 @@ https://google.com@evil.com → @ injection
 | Trade-off | Why We Accept It |
 |-----------|------------------|
 | No real-time blocklists | Privacy is non-negotiable |
-| Lower recall on new threats | Heuristics catch 90% of attacks |
+| Lower recall on new threats | Heuristics look for patterns, so they do not depend on a blocklist |
 | Some false positives | SUSPICIOUS ≠ blocked |
 | No page content analysis | Scope is URL, not browser |
 
@@ -231,4 +225,4 @@ Mehr Guard is **one layer** in a security stack:
 
 ---
 
-*This threat model is honest. We catch 90% with 0% data collection.*
+*No scanned URL leaves the device. How much real phishing the engine catches has not been measured.*
