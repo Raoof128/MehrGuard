@@ -86,3 +86,16 @@
   - `xcodebuild -project iosApp/MehrGuard.xcodeproj -scheme MehrGuard -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2' test` ✅
   - `swift build` ✅
   - `swift test` ❌ (exit 139 before execution)
+
+## 2026-11-17 (Australia/Sydney)
+**Raouf:**
+- **Scope:** CI workflow validity and licence text
+- **Summary:** `ci.yml` and `performance.yml` failed on every push with "workflow file issue". `ci.yml` read `secrets.ANDROID_KEYSTORE_BASE64` in two step-level `if:` conditions, where the `secrets` context is not available; the release job now exposes it as a job-level `env` value and the conditions read `env`. `performance.yml` used double-quoted string literals inside a `${{ }}` expression; they are now single-quoted. `LICENSE` held an abridged paraphrase of Apache 2.0 (90 lines), which GitHub could not identify; it now holds the full canonical Apache License 2.0 text with the same copyright line.
+- **Files Changed:**
+  - .github/workflows/ci.yml
+  - .github/workflows/performance.yml
+  - LICENSE
+  - AGENT.md
+  - CHANGELOG.md
+- **Verification:** `actionlint` reports no errors on all seven workflow files (it reported three before). No application code changed.
+- **Follow-ups:** The workflows trigger on `main` but the default branch is `master`, so the build and test jobs do not run on pushes to the default branch. A trial run of `ci.yml` against `master` (pull request #1) compiled every target but stopped at `:common:lintDebug` with 4 Android lint errors, the first being `MissingPermission` for `Vibrator.vibrate` at `AndroidPlatformAbstractions.kt:128`. Those need fixing before the trigger is extended to `master`.
