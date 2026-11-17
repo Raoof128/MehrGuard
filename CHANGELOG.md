@@ -99,3 +99,21 @@
   - CHANGELOG.md
 - **Verification:** `actionlint` reports no errors on all seven workflow files (it reported three before). No application code changed.
 - **Follow-ups:** The workflows trigger on `main` but the default branch is `master`, so the build and test jobs do not run on pushes to the default branch. A trial run of `ci.yml` against `master` (pull request #1) compiled every target but stopped at `:common:lintDebug` with 4 Android lint errors, the first being `MissingPermission` for `Vibrator.vibrate` at `AndroidPlatformAbstractions.kt:128`. Those need fixing before the trigger is extended to `master`.
+
+## 2026-11-17 (Australia/Sydney)
+**Raouf:**
+- **Scope:** CI on the default branch
+- **Summary:** The CI workflow triggered only on `main`, so the build and tests never ran on `master`. The trigger now includes `master`, and the defects the first run surfaced are fixed:
+  - `common` had no Android manifest while `PlatformHaptics` calls `Vibrator.vibrate` in four places, so `:common:lintDebug` failed with four `MissingPermission` errors. `common/src/androidMain/AndroidManifest.xml` now declares `VIBRATE`, which the app manifest already held.
+  - The verification steps filtered on `com.mehrguard.*`; the tests live in `com.raouf.mehrguard.*`, so Gradle found none. Fixed in `ci.yml`, `quality-tests.yml` and `benchmark.yml`.
+  - The workflow token could not comment on pull requests or publish check runs. `ci.yml` now requests `pull-requests: write` and `checks: write`.
+  - The Android test summary failed when no report files existed. `androidApp` has no local unit tests, so an empty set is no longer a failure.
+- **Files Changed:**
+  - common/src/androidMain/AndroidManifest.xml (new)
+  - .github/workflows/ci.yml
+  - .github/workflows/quality-tests.yml
+  - .github/workflows/benchmark.yml
+  - AGENT.md
+  - CHANGELOG.md
+- **Verification:** On pull request #2 the common build and tests, accuracy, offline, threat-model and property-based verification, desktop, web and iOS builds, code quality, security scan and dependency audit all pass.
+- **Follow-ups:** `androidApp` has no local unit tests. `benchmark.yml` names an `EnergyProxyBenchmark` class that is not in the tree. `performance.yml`, `quality-tests.yml`, `benchmark.yml` and `pages.yml` still trigger on `main` only.

@@ -207,6 +207,8 @@ jobs:
         path: 'androidApp/build/test-results/**/TEST-*.xml'
         reporter: 'java-junit'
         fail-on-error: false
+        # androidApp has no local unit tests yet; an empty report set is not a failure.
+        fail-on-empty: false
 
   # ============================================
   # Desktop Build & Test
