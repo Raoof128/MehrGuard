@@ -74,6 +74,12 @@ jobs:
         echo "📊 Running Accuracy Verification..."
         ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.core.AccuracyVerificationTest" --info --no-daemon
 
+    # Measured, not asserted from documentation: precision/recall/F1 on data/test_urls.csv
+    - name: Measure Dataset Metrics (data/test_urls.csv)
+      run: |
+        ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.core.DatasetEvaluationTest" --info --no-daemon
+        cat common/build/reports/dataset-evaluation.txt
+
     # Judge-Proof Verification: Offline Operation
     - name: Verify Offline Operation (No Network)
       run: |
