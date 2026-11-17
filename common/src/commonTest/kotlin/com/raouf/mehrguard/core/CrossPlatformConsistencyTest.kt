@@ -31,7 +31,6 @@ import kotlin.test.assertTrue
  * CRITICAL: If these tests fail, it indicates platform-specific behavior
  * that would undermine the KMP value proposition.
  *
- * @author Mehr Guard Security Team
  * @since 1.1.4
  */
 class CrossPlatformConsistencyTest {

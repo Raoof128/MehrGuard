@@ -23,7 +23,7 @@ fun main() { /* Wasm entry point */ }
 - WebAssembly linear memory limits affect large URL processing
 - Browser adoption of Wasm GC is still growing
 
-**When ready:** Will enable ~2x faster URL analysis in browsers.
+**When ready:** May speed up URL analysis in browsers; this has not been measured.
 
 ---
 
@@ -120,10 +120,9 @@ These are **shipped and working**:
 |---------|----------|
 | ✅ Ensemble ML (3 models) | `EnsembleModel.kt` |
 | ✅ 25+ security heuristics | `HeuristicsEngine.kt` |
-| ✅ 500+ brand database | `BrandDetector.kt` |
+| ✅ Brand database (60 brands) | `BrandDatabase.kt` |
 | ✅ Dynamic brand discovery | `DynamicBrandDiscovery.kt` |
-| ✅ 89% test coverage | CI badge |
-| ✅ <5ms analysis (P50) | `./judge/verify_performance.sh` |
+| ✅ Latency assertions (P99 under 50 ms on the JVM) | `./judge/verify_performance.sh` |
 | ✅ 5-language translations | `Translations.kt` |
 | ✅ Real ECDH crypto | `SecureAggregation.kt` |
 | ✅ iOS Compose hybrid | `ComposeInterop.swift` |

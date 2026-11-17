@@ -16,7 +16,6 @@ This document outlines Mehr Guard's security model, including attacker assumptio
 - [What We Don't Detect](#-what-we-dont-detect)
 - [Offline-First Justification](#-offline-first-justification)
 - [Evaluation Evidence](#-evaluation-evidence)
-- [False Positive/Negative Analysis](#-false-positivenegative-analysis)
 - [Security Principles](#-security-principles)
 
 ---
@@ -40,12 +39,12 @@ This document outlines Mehr Guard's security model, including attacker assumptio
 │  Mehr Guard DEFENSE                                                           │
 │  ─────────────────                                                           │
 │  • URL heuristics (25+ signals)                                              │
-│  • Brand impersonation detection (500+ brands)                               │
+│  • Brand impersonation detection (60 brands)                                 │
 │  • Homograph/punycode attack detection                                       │
 │  • TLD risk scoring                                                          │
 │  • Ensemble ML (Logistic + Boosting + Rules)                                 │
 │  • Component voting system (v1.19.0) - democratic verdict                    │
-│  • 100% offline analysis (privacy-preserving)                                │
+│  • On-device analysis (privacy-preserving)                                   │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -132,6 +131,8 @@ Mehr Guard uses a **democratic voting approach** where each detection component 
 
 ### Detection Accuracy Targets
 
+These were design goals. They are not measurements, and whether the engine meets them on real traffic has not been tested.
+
 | Metric | Target | Rationale |
 |--------|--------|-----------|
 | **True Positive Rate** | >90% | Catch most obvious attacks |
@@ -178,7 +179,7 @@ Mehr Guard uses a **democratic voting approach** where each detection component 
 │  ↑ Our choice                                                    │
 │                                                                  │
 │  We prioritize:                                                  │
-│  • Zero network requests (privacy)                               │
+│  • No network requests in analysis                               │
 │  • Fast local analysis (<50ms)                                   │
 │  • No external dependencies                                      │
 │                                                                  │
@@ -227,207 +228,9 @@ Mehr Guard uses a **democratic voting approach** where each detection component 
 
 ---
 
-## 📊 Evaluation Evidence
+## 📊 Evaluation
 
-### Test Dataset
-
-We maintain a curated dataset of 100 URLs for validation testing.
-
-#### Benign URLs (50)
-
-```
-# Major brands - verified safe
-https://google.com
-https://www.apple.com
-https://github.com
-https://microsoft.com
-https://amazon.com
-https://facebook.com
-https://twitter.com
-https://linkedin.com
-https://youtube.com
-https://netflix.com
-https://spotify.com
-https://dropbox.com
-https://salesforce.com
-https://adobe.com
-https://paypal.com
-https://stripe.com
-https://zoom.us
-https://slack.com
-https://notion.so
-https://figma.com
-
-# Australian banks - verified safe
-https://commbank.com.au
-https://nab.com.au
-https://westpac.com.au
-https://anz.com.au
-https://bankwest.com.au
-
-# News/media - verified safe
-https://bbc.com
-https://nytimes.com
-https://theguardian.com
-https://reuters.com
-https://bloomberg.com
-
-# Educational - verified safe
-https://wikipedia.org
-https://khanacademy.org
-https://coursera.org
-https://edx.org
-https://mit.edu
-
-# Government - verified safe  
-https://gov.au
-https://usa.gov
-https://gov.uk
-https://canada.ca
-https://europa.eu
-
-# Tech companies - verified safe
-https://jetbrains.com
-https://kotlinlang.org
-https://gradle.org
-https://android.com
-https://developer.apple.com
-
-# E-commerce - verified safe
-https://ebay.com
-https://etsy.com
-https://shopify.com
-https://alibaba.com
-https://walmart.com
-```
-
-#### Malicious URLs (50) - DEFANGED
-
-```
-# Typosquatting attacks
-hxxps://paypa1[.]com/login
-hxxps://arnazon[.]com/signin
-hxxps://g00gle[.]com/auth
-hxxps://micros0ft[.]com/verify
-hxxps://faceb00k[.]com/login
-hxxps://linkedln[.]com/signin
-hxxps://tw1tter[.]com/login
-hxxps://netf1ix[.]com/billing
-
-# Suspicious TLD abuse
-hxxps://paypal-secure[.]tk/login
-hxxps://commbank-verify[.]ml/auth
-hxxps://amazon-support[.]ga/help
-hxxps://apple-id[.]cf/verify
-hxxps://microsoft-account[.]gq/signin
-
-# Brand in subdomain attacks
-hxxps://paypal[.]secure-login[.]xyz/auth
-hxxps://commbank[.]account-verify[.]tk/login
-hxxps://nab[.]secure-banking[.]ml/verify
-hxxps://westpac[.]online-banking[.]ga/auth
-
-# URL shortener obfuscation
-hxxps://bit[.]ly/3xYz123
-hxxps://t[.]co/AbCdEfG
-hxxps://goo[.]gl/qRsT45
-hxxps://tinyurl[.]com/phish123
-
-# IP-based attacks
-hxxp://192[.]168[.]1[.]100/login
-hxxp://10[.]0[.]0[.]1/banking
-hxxps://203[.]45[.]67[.]89/verify
-
-# Homograph attacks (Cyrillic)
-hxxps://pаypаl[.]com/signin     # Cyrillic 'а'
-hxxps://аpple[.]com/id          # Cyrillic 'а'
-hxxps://gооgle[.]com/login      # Cyrillic 'о'
-hxxps://fаcebook[.]com/auth     # Cyrillic 'а'
-
-# Credential harvesting paths
-hxxps://evil[.]com/paypal/login[.]php
-hxxps://phish[.]tk/commbank/signin
-hxxps://fake[.]ml/nab/verify-account
-hxxps://scam[.]ga/westpac/update-details
-
-# Complex attacks (multiple signals)
-hxxps://paypa1-secure-login[.]tk/auth?user=victim&redirect=hxxps://evil[.]com
-hxxps://commbank[.]verify-account[.]ml/login[.]php?session=abc123
-hxxps://xn--pypal-4ve[.]com/signin  # Punycode
-hxxps://secure-banking[.]paypal[.]com[.]evil[.]tk/verify
-
-# Base64 payload attacks
-hxxps://evil[.]com/?redirect=aHR0cHM6Ly9waGlzaC5jb20=
-hxxps://track[.]com/click?url=aHR0cHM6Ly9tYWx3YXJlLmNvbQ==
-
-# Long/obfuscated URLs
-hxxps://secure[.]account[.]verify[.]login[.]banking[.]fake[.]tk/auth
-hxxps://a1b2c3d4e5f6[.]random-domain[.]ml/xKj2mNp9qRs/login
-
-# Double extension attacks
-hxxps://evil[.]com/document[.]pdf[.]exe
-hxxps://phish[.]tk/invoice[.]docx[.]scr
-```
-
-### Evaluation Results
-
-| Metric | Value | Target | Status |
-|--------|-------|--------|--------|
-| **True Positives** | 47/50 | >45 | ✅ Pass |
-| **True Negatives** | 49/50 | >47 | ✅ Pass |
-| **False Positives** | 1/50 | <3 | ✅ Pass |
-| **False Negatives** | 3/50 | <5 | ✅ Pass |
-| **Precision** | 97.9% | >95% | ✅ Pass |
-| **Recall** | 94.0% | >90% | ✅ Pass |
-| **F1 Score** | 95.9% | >92% | ✅ Pass |
-
-### Detailed Analysis
-
-#### False Positive (1)
-| URL | Expected | Predicted | Reason |
-|-----|----------|-----------|--------|
-| `https://bit.ly/official-product` | SAFE | SUSPICIOUS | URL shortener flagged (design choice) |
-
-*Note: URL shorteners are intentionally flagged as SUSPICIOUS because they hide the destination. This is a feature, not a bug.*
-
-#### False Negatives (3)
-| URL | Expected | Predicted | Reason |
-|-----|----------|-----------|--------|
-| `hxxps://totally-legit-bank[.]com/login` | MALICIOUS | SUSPICIOUS | No brand match, clean TLD |
-| `hxxps://my-secure-account[.]net/verify` | MALICIOUS | SAFE | Generic domain, HTTPS, no signals |
-| `hxxps://download[.]com/safe-file[.]zip` | MALICIOUS | SAFE | Legitimate-looking structure |
-
-*Note: These edge cases represent sophisticated attacks with no obvious heuristic triggers.*
-
----
-
-## 📈 False Positive/Negative Analysis
-
-### Confusion Matrix
-
-```
-                    Predicted
-                    SAFE    SUSPICIOUS    MALICIOUS
-Actual  SAFE        49      1             0           = 50
-        MALICIOUS   2       1             47          = 50
-                    ──      ──            ──
-                    51      2             47          = 100
-```
-
-### Key Insights
-
-1. **Precision (97.9%)**: When we say MALICIOUS, we're almost always right
-2. **Recall (94.0%)**: We catch 94% of actual malicious URLs
-3. **False Alarm Rate (2%)**: Only 1 in 50 safe URLs incorrectly flagged
-4. **Miss Rate (6%)**: 3 in 50 malicious URLs slipped through
-
-### Score Distribution
-
-| Verdict | Score Range | Benign URLs | Malicious URLs |
-|---------|-------------|-------------|----------------|
-| SAFE | 0-29 | 49 (98%) | 2 (4%) |
-| SUSPICIOUS | 30-69 | 1 (2%) | 1 (2%) |
-| MALICIOUS | 70-100 | 0 (0%) | 47 (94%) |
+An earlier version of this section listed a 100-URL test set with a confusion matrix, 97.9% precision and 94.0% recall. Those results could not be reproduced and have been removed. The measured results, and their limits, are in [docs/EVALUATION.md](docs/EVALUATION.md).
 
 ---
 

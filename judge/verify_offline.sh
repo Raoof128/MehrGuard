@@ -1,35 +1,37 @@
 #!/bin/bash
 # ==============================================================================
-# Offline Capability Verification
+# On-device analysis check
 # ==============================================================================
-# A timing sanity check, not a network monitor.
+# Runs two tests:
 #
-# This runs OfflineOnlyTest, which analyses a set of URLs and checks that each
-# analysis finishes quickly and consistently. It cannot observe DNS lookups or
-# sockets. The evidence that analysis is offline is the code itself: the
-# analysis module has no HTTP client.
+# 1. AnalysisCodeHasNoNetworkApiTest scans the source of the analysis packages
+#    (core, engine, ml, model, security) and fails if any file names a
+#    networking API. This is a text scan of the code, not a network monitor.
+# 2. LocalAnalysisSanityTest checks that analysis returns for every kind of
+#    input, gives the same result every time, and stays within a time bound.
+#
+# Neither test observes sockets or DNS. Separately from analysis, the Android
+# app checks GitHub Pages at startup for updated detection rules.
 # ==============================================================================
 
 set -eo pipefail
 
-echo "Verifying offline-only analysis..."
+echo "Checking that the analysis code names no networking API..."
 echo ""
 
-# Run the offline verification tests
 ./gradlew :common:desktopTest \
-    --tests "*OfflineOnlyTest*" \
+    --tests "*AnalysisCodeHasNoNetworkApiTest*" \
+    --tests "*LocalAnalysisSanityTest*" \
     --no-daemon \
     --quiet \
     2>&1 | tail -20
 
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "✅ OFFLINE VERIFICATION PASSED"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "Both tests passed."
 echo ""
-echo "What this check shows:"
-echo "  • Analysis timings consistent with purely local computation"
-echo "  • All detection runs locally (heuristics + on-device ML)"
-echo "  • Works in airplane mode"
-echo "  • (No network monitor is involved; see the header of this script)"
+echo "What this shows:"
+echo "  • No file in the analysis packages names a networking API (text scan)"
+echo "  • Analysis returns for every input, deterministically, within a time bound"
+echo "What it does not show:"
+echo "  • Anything observed on the network: no monitor is involved"
 echo ""

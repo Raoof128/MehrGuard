@@ -47,7 +47,6 @@ import kotlinx.cinterop.usePinned
  * - UIKit integration for haptics and sharing
  * - Secure random from Security.framework
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 

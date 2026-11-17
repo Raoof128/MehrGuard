@@ -36,7 +36,6 @@ import kotlin.test.assertTrue
  * - PhishTank Database
  * - Australian Cyber Security Centre Threat Reports
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class RealWorldPhishingTest {

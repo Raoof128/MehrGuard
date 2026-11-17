@@ -31,7 +31,6 @@ import kotlin.math.pow
  * - Optimized for KMP (no platform-specific code)
  * - Serializable to ByteArray for bundling
  *
- * @author Mehr Guard Security Team
  * @since 1.19.0
  */
 class BloomFilter private constructor(

@@ -36,7 +36,6 @@ import com.raouf.mehrguard.security.UnicodeRiskAnalyzer
  * - **Derived**: registrableDomain, subdomainDepth, effectiveTld, etc.
  * - **Security**: safeDisplayHost, isPunycode, isIpAddress, unicodeRisk
  *
- * @author Mehr Guard Security Team
  * @since 1.19.0
  */
 data class CanonicalUrl(

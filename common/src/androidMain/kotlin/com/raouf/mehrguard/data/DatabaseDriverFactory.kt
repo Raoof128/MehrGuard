@@ -27,7 +27,6 @@ import com.raouf.mehrguard.db.MehrGuardDatabase
  * Creates an Android-specific SQLite driver using AndroidSqliteDriver.
  * The database file is stored in the app's private data directory.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 actual class DatabaseDriverFactory(private val context: Context) {

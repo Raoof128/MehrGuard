@@ -59,7 +59,6 @@ import kotlin.random.Random
  * - Bernstein, D. J. (2006). "Curve25519: new Diffie-Hellman speed records"
  * - Hankerson, D., Menezes, A., & Vanstone, S. (2004). "Guide to Elliptic Curve Cryptography"
  *
- * @author Mehr Guard Security Team
  * @since 1.6.2
  */
 class SecureAggregation {

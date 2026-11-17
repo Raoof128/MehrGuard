@@ -8,7 +8,7 @@
 ## Quick Start
 
 ```bash
-cd /Users/raoof.r12/Desktop/Raouf/K/mehrguard
+cd <repo>
 ./gradlew :desktopApp:run
 ```
 

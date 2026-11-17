@@ -31,7 +31,6 @@ package com.raouf.mehrguard.sandbox
  * - No redirect escape to system browser
  * - Persistent safety overlay
  *
- * @author Mehr Guard Security Team
  * @since 1.4.0
  */
 data class SandboxConfig(

@@ -69,7 +69,6 @@ import kotlinx.coroutines.withContext
  * - Scoring uses defensive arithmetic with bounds checking
  * - Thread-safe: all dependencies are stateless
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  * @see HeuristicsEngine
  * @see BrandDetector
@@ -321,7 +320,7 @@ class PhishingEngine(
         // Run heuristics engine
         val heuristicResult = heuristicsEngine.analyze(url)
 
-        // Run static brand detection (500+ known brands)
+        // Run static brand detection (60 listed brands)
         val brandResult = brandDetector.detect(url)
 
         // Run dynamic brand discovery (pattern-based for unknown brands)

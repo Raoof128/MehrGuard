@@ -20,7 +20,6 @@ import com.raouf.mehrguard.engine.PublicSuffixList
  * - Rollback to "last known good" on failure
  * - Bundle version validation (no downgrades)
  *
- * @author Mehr Guard Security Team
  * @since 1.19.0
  */
 class SecureBundleLoader {

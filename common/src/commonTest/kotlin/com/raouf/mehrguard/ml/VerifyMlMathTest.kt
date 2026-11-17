@@ -40,7 +40,6 @@ import kotlin.test.assertTrue
  * - Predictions are deterministic (same input = same output)
  * - Predictions vary meaningfully with input changes
  *
- * @author Mehr Guard Security Team
  * @since 1.7.0
  */
 class VerifyMlMathTest {

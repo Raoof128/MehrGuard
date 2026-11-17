@@ -41,7 +41,6 @@ import com.raouf.mehrguard.privacy.SecureAggregation
  * - Web: WebCrypto API ECDH
  *
  * @see SecureAggregation The underlying ECDH implementation
- * @author Mehr Guard Security Team
  * @since 1.6.3
  */
 object SecureECDH {

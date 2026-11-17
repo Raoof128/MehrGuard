@@ -15,7 +15,6 @@
  * | PlatformSecureRandom| crypto.getRandomValues() (CSPRNG)   |
  * | PlatformUrlOpener   | window.open()                       |
  *
- * @author Mehr Guard Security Team
  * @since 1.17.26
  * @see common/src/webMain/kotlin/com/mehrguard/platform/WebPlatformAbstractions.kt
  */

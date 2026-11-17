@@ -47,7 +47,6 @@ package com.raouf.mehrguard.core
  * val engine = PhishingEngine(config = remoteConfig)
  * ```
  *
- * @author Mehr Guard Security Team
  * @since 1.1.0
  */
 data class DetectionConfig(

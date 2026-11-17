@@ -2,8 +2,8 @@
 # ==============================================================================
 # Mehr Guard Judge Verification Suite
 # ==============================================================================
-# This script verifies ALL reproducible claims made in the competition submission.
-# Run time: ~3 minutes on Apple Silicon, ~5 minutes on Intel.
+# Runs the four check scripts in this directory and reports which passed.
+# Each script says in its header what it does and does not show.
 #
 # Usage: ./judge/verify_all.sh
 # ==============================================================================
@@ -18,8 +18,7 @@ NC='\033[0m' # No Color
 
 echo ""
 echo -e "${CYAN}╔══════════════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${CYAN}║           🧪 Mehr Guard Judge Verification Suite                      ║${NC}"
-echo -e "${CYAN}║                  KotlinConf 2026 Competition                         ║${NC}"
+echo -e "${CYAN}║                    Mehr Guard verification scripts                   ║${NC}"
 echo -e "${CYAN}╚══════════════════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
@@ -49,7 +48,7 @@ echo ""
 # ============================================================================
 # 1. OFFLINE CAPABILITY
 # ============================================================================
-run_verification "1️⃣  Offline Analysis (Zero Network Calls)" "./judge/verify_offline.sh"
+run_verification "1️⃣  On-device analysis (source scan and timing check)" "./judge/verify_offline.sh"
 
 # ============================================================================
 # 2. PERFORMANCE CLAIMS
@@ -64,7 +63,7 @@ run_verification "3️⃣  Detection Accuracy (measured on the committed dataset
 # ============================================================================
 # 4. PLATFORM PARITY
 # ============================================================================
-run_verification "4️⃣  Platform Parity (Identical Verdicts)" "./judge/verify_parity.sh"
+run_verification "4️⃣  Platform parity (JVM parity tests; other targets build)" "./judge/verify_parity.sh"
 
 # ============================================================================
 # SUMMARY
@@ -80,13 +79,11 @@ if [ $FAIL_COUNT -eq 0 ]; then
     echo -e "${GREEN}║                    ✅ ALL $PASS_COUNT VERIFICATIONS PASSED!                      ║${NC}"
     echo -e "${GREEN}╚══════════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo "All claims in the submission are reproducible."
-    echo ""
-    echo "Verified:"
-    echo "  • Offline-first: Zero network calls during analysis"
-    echo "  • Performance: <5ms median latency (10-50x target)"
-    echo "  • Accuracy: 87%+ F1 score on red team corpus"
-    echo "  • Parity: Identical verdicts across JVM/JS/Native"
+    echo "What passed:"
+    echo "  • The analysis packages name no networking API (text scan), and analysis stays within a time bound"
+    echo "  • The latency assertions in the performance tests hold on this machine"
+    echo "  • The accuracy tests ran; the measured table is printed above by verify_accuracy.sh"
+    echo "  • The parity tests pass on the JVM and the other targets build"
     echo ""
     exit 0
 else

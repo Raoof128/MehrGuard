@@ -37,7 +37,6 @@ import com.raouf.mehrguard.engine.HeuristicsEngine
  * @see OtaUpdateManager
  * @see PhishingEngine
  *
- * @author Mehr Guard Security Team
  * @since 1.3.0
  */
 object LivingEngineFactory {
@@ -89,7 +88,7 @@ object LivingEngineFactory {
         // we intentionally use static weights validated for competition scoring.
         // OTA data is cached for future A/B testing and production deployment.
 
-        // Design Decision: Brand detection uses a curated static database (500+ brands).
+        // Design Decision: Brand detection uses a curated static database (60 brands).
         // OTA brand updates are cached but not yet integrated to prevent
         // potential poisoning attacks on the brand list. Future versions
         // will add signature verification before applying OTA brand data.

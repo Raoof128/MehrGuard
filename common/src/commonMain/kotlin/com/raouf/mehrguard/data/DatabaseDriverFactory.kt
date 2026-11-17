@@ -24,7 +24,6 @@ import app.cash.sqldelight.db.SqlDriver
  * Each platform (Android, iOS, Desktop, Web) provides its own
  * actual implementation of this class.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 expect class DatabaseDriverFactory {

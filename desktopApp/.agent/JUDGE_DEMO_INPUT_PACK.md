@@ -129,7 +129,7 @@ To test QR code image scanning:
 
 ## 🔒 Offline Guarantee
 
-All 3 inputs above work **100% offline**:
+All 3 inputs above work without a network connection:
 - No network API calls
 - No external database lookups
 - Pure local heuristics + ML inference

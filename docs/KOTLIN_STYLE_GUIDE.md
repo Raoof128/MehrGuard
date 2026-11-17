@@ -122,7 +122,6 @@ val risky_tlds = setOf("tk", "ml")  // Duplicates SecurityConstants
  * ## Thread Safety
  * This class is thread-safe. All internal state is immutable.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  * @see HeuristicsEngine
  * @see BrandDetector

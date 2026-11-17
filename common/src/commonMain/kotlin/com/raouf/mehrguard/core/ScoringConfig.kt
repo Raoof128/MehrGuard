@@ -64,7 +64,6 @@ package com.raouf.mehrguard.core
  * @property suspiciousThreshold Score above which verdict is MALICIOUS (SUSPICIOUS in between)
  * @property baseConfidence Starting confidence value before adjustments
  *
- * @author Mehr Guard Security Team
  * @since 1.7.0
  * @see PhishingEngine
  * @see SecurityConstants

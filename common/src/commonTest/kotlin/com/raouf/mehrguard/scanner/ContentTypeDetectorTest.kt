@@ -26,7 +26,6 @@ import kotlin.test.assertEquals
  * Tests the content type detection from QR code payload strings.
  * This logic is shared across all platform scanner implementations.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class ContentTypeDetectorTest {

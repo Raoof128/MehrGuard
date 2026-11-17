@@ -24,14 +24,13 @@ import kotlin.test.assertTrue
 /**
  * Malicious URL CSV Proof Test
  * 
- * This test validates the PhishingEngine's ability to detect real-world
- * malicious URLs from a comprehensive dataset of 150+ threats.
- * 
- * **Judge Criteria:**
- * - Tests 150+ URLs covering 9 attack categories
- * - Enforces 95% detection threshold
- * - Prints clear pass/fail statistics
- * - Demonstrates production-grade robustness
+ * Runs the PhishingEngine over the phishing-shaped URLs embedded below (the same
+ * list as `malicious_urls.csv`) and fails if fewer than 80% are flagged.
+ *
+ * The URLs were written by the project's author to cover nine attack shapes.
+ * They are not taken from a phishing feed, so a pass is a regression guard and
+ * not a measurement of real-world detection. The test prints the count and the
+ * rate per category.
  * 
  * **Categories Tested:**
  * - HOMOGRAPH: Character substitution attacks (0 for O, 1 for l)
@@ -44,7 +43,6 @@ import kotlin.test.assertTrue
  * - SUSPICIOUS_PATH: Login/verify paths on untrusted domains
  * - COMBO: Multiple red flags combined
  * 
- * @author Mehr Guard Security Team
  * @since 1.17.31
  */
 class MaliciousUrlProofTest {
@@ -54,8 +52,7 @@ class MaliciousUrlProofTest {
     companion object {
         /** 
          * Minimum detection rate required to pass.
-         * Set to 80% to allow for edge cases while ensuring production-grade detection.
-         * The actual rate should be higher; this is a safety threshold.
+         * The floor this test enforces. The measured rate is printed by the test.
          */
         const val REQUIRED_DETECTION_RATE = 0.80 // 80%
         
@@ -243,28 +240,12 @@ https://skype-video-call.gq/answer,SUSPICIOUS,BRAND_IMPERSONATION,Skype scam
     }
 
     /**
-     * Main proof test: Validates 150+ malicious URLs against the engine.
-     * 
-     * **Output Format (for judges):**
-     * ```
-     * ═══════════════════════════════════════════════════════════════
-     *              Mehr Guard MALICIOUS URL PROOF TEST
-     * ═══════════════════════════════════════════════════════════════
-     * 
-     * ✅ Verified: 147/150 threats blocked (98.0%)
-     * 
-     * By Category:
-     *   HOMOGRAPH:          8/8   (100.0%)
-     *   TYPOSQUATTING:     12/12  (100.0%)
-     *   ...
-     * 
-     * Detection Rate: 98.0% (Required: 95.0%)
-     * Status: PASSED ✓
-     * ═══════════════════════════════════════════════════════════════
-     * ```
+     * Runs every listed URL through the engine, prints the number flagged overall
+     * and per category, and asserts the overall rate is at least
+     * [REQUIRED_DETECTION_RATE].
      */
     @Test
-    fun `proof test - detects 150 plus malicious URLs at 95 percent threshold`() {
+    fun `flags at least 80 percent of the listed phishing-shaped URLs`() {
         println()
         println("═══════════════════════════════════════════════════════════════")
         println("             Mehr Guard MALICIOUS URL PROOF TEST")

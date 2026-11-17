@@ -27,7 +27,6 @@ package com.raouf.mehrguard.core
  * - Safe patterns prevent ReDoS
  * - Null-safe handling throughout
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object UrlParser {

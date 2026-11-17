@@ -34,7 +34,6 @@ import kotlin.test.assertTrue
  * 3. Normalization stability (idempotent)
  * 4. Verdict consistency with score
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 class PropertyBasedTest {

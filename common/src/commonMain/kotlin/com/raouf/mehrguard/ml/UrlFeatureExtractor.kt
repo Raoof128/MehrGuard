@@ -22,7 +22,6 @@ import kotlin.math.sqrt
  * - Entropy features: host entropy, path entropy
  * - Pattern features: IP detection, punycode, suspicious keywords
  *
- * @author Mehr Guard Security Team
  * @since 1.19.0
  */
 class UrlFeatureExtractor {

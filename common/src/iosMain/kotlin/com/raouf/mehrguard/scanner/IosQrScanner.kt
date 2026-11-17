@@ -40,13 +40,12 @@ import kotlinx.coroutines.flow.flowOf
  * The SHARED business logic lives in `commonMain`:
  * - [com.raouf.mehrguard.core.PhishingEngine] - URL analysis
  * - [com.raouf.mehrguard.engine.HeuristicsEngine] - 25+ security heuristics
- * - [com.raouf.mehrguard.engine.BrandDetector] - 500+ brand fuzzy matching
+ * - [com.raouf.mehrguard.engine.BrandDetector] - matching against 60 listed brands
  * - [com.raouf.mehrguard.ml.LogisticRegressionModel] - ML scoring
  *
  * The Swift layer calls these Kotlin APIs directly via the KMP framework.
  * See: `iosApp/MehrGuard/Bridge/KMPBridge.swift` for the integration.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  * @see com.raouf.mehrguard.core.PhishingEngine
  */

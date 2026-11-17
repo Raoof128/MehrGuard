@@ -52,7 +52,6 @@ package com.raouf.mehrguard.adversarial
  * val attacks = normalizer.detectObfuscation(original)
  * ```
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 object AdversarialDefense {

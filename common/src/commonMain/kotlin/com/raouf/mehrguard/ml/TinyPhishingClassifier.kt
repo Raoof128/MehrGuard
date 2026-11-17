@@ -26,11 +26,10 @@ import kotlin.math.max
  * - b3: 1 float = 4 bytes
  * - Total: ~2.2 KB
  *
- * ## Training
- * Weights are pre-trained on a corpus of ~100K URLs
- * (50K phishing, 50K benign) and quantized for size.
+ * ## Weights
+ * The weights are constants written in this file. No training data or training
+ * code for them is in this repository, so treat them as hand-set.
  *
- * @author Mehr Guard Security Team
  * @since 1.19.0
  */
 class TinyPhishingClassifier private constructor(
@@ -159,7 +158,7 @@ class TinyPhishingClassifier private constructor(
         const val PHISHING_THRESHOLD = 0.5f
 
         /**
-         * Create classifier with pre-trained weights.
+         * Create classifier with the bundled weights.
          */
         fun create(): TinyPhishingClassifier {
             return TinyPhishingClassifier(
@@ -177,8 +176,8 @@ class TinyPhishingClassifier private constructor(
          */
         val default: TinyPhishingClassifier by lazy { create() }
 
-        // === Pre-trained Weights ===
-        // Trained on phishing corpus, optimized for F1 score
+        // === Weights ===
+        // Constants written here; no training data or code for them is in this repository.
 
         private fun createW1(): Array<FloatArray> {
             return Array(INPUT_SIZE) { i ->

@@ -204,7 +204,7 @@
     <string name="dev_mode_disable">無効に</string>
     <string name="verify_integrity_title">システム整合性を検証</string>
     <string name="verify_integrity_desc_running">検証を実行中…</string>
-    <string name="verify_integrity_desc_default">デバイス上で87%の精度を証明</string>
+    <string name="verify_integrity_desc_default">このデバイスで内蔵の精度チェックを実行</string>
     <string name="verification_dialog_healthy">システム正常 ✓</string>
     <string name="verification_dialog_complete">検証完了</string>
     <string name="verification_passed_tests">%1$d/%2$dテストに合格</string>
@@ -422,7 +422,7 @@
     <string name="privacy_offline_title">プライバシーとオフライン</string>
     <string name="privacy_hero_title">データは決して離れません</string>
     <string name="privacy_hero_desc">Mehr Guardはデバイス上で完全に動作します。クラウドなし。サーバーなし。データ収集なし。設計による完全なプライバシー。</string>
-    <string name="privacy_offline_badge">100%オフライン動作</string>
+    <string name="privacy_offline_badge">デバイス上で分析</string>
     <string name="privacy_architecture">プライバシーアーキテクチャ</string>
     <string name="privacy_local_db_title">ローカルデータベース</string>
     <string name="privacy_local_db_desc">脅威シグネチャはデバイス上に暗号化して保存。安全なオフラインインポートで更新。</string>
@@ -454,7 +454,7 @@
     <string name="feature_explainable_title">説明可能なセキュリティ</string>
     <string name="feature_explainable_desc">単なるブロックではありません。URLパラメータとリダイレクトの詳細なヒューリスティック分析を提供します。</string>
     <string name="feature_performance_title">高性能エンジン</string>
-    <string name="feature_performance_desc">モバイル環境に最適化。ネイティブKotlinプリミティブを使用して5ミリ秒未満でスキャンを処理します。</string>
+    <string name="feature_performance_desc">モバイル環境に最適化。ネイティブKotlinプリミティブを使用してスキャンを処理します。</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -612,7 +612,7 @@
     <string name="status_caution_advised">注意が必要</string>
     <string name="status_threat_detected">脅威検出</string>
     <string name="status_analysis_complete">分析完了</string>
-    <string name="meta_analyzed_offline">オフラインで5ms未満で分析</string>
+    <string name="meta_analyzed_offline">オフラインで分析</string>
     <string name="meta_no_data_leaves">データはデバイスから送信されません</string>
     <string name="top_analysis_factors_title">主要分析要因</string>
     <string name="factor_category_https">HTTPS</string>

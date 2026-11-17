@@ -26,7 +26,6 @@ import com.raouf.mehrguard.db.MehrGuardDatabase
  * Creates a Native SQLite driver using NativeSqliteDriver.
  * The database file is stored in the app's Documents directory.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 actual class DatabaseDriverFactory {

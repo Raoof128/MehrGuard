@@ -204,7 +204,7 @@
     <string name="dev_mode_disable">تعطيل</string>
     <string name="verify_integrity_title">التحقق من سلامة النظام</string>
     <string name="verify_integrity_desc_running">جاري التحقق…</string>
-    <string name="verify_integrity_desc_default">إثبات دقة 87% على الجهاز</string>
+    <string name="verify_integrity_desc_default">تشغيل فحص الدقة المدمج على هذا الجهاز</string>
     <string name="verification_dialog_healthy">النظام سليم ✓</string>
     <string name="verification_dialog_complete">اكتمل التحقق</string>
     <string name="verification_passed_tests">نجح %1$d/%2$d اختبار</string>
@@ -422,7 +422,7 @@
     <string name="privacy_offline_title">الخصوصية وبدون إنترنت</string>
     <string name="privacy_hero_title">بياناتك لا تغادر أبداً</string>
     <string name="privacy_hero_desc">يعمل Mehr Guard بالكامل على جهازك. بدون سحابة. بدون خوادم. بدون جمع بيانات. خصوصية كاملة بالتصميم.</string>
-    <string name="privacy_offline_badge">100% تشغيل بدون إنترنت</string>
+    <string name="privacy_offline_badge">تحليل على الجهاز</string>
     <string name="privacy_architecture">هندسة الخصوصية</string>
     <string name="privacy_local_db_title">قاعدة بيانات محلية</string>
     <string name="privacy_local_db_desc">توقيعات التهديدات مخزنة مشفرة على الجهاز. تُحدث عبر استيرادات آمنة بدون إنترنت.</string>
@@ -454,7 +454,7 @@
     <string name="feature_explainable_title">أمان قابل للتفسير</string>
     <string name="feature_explainable_desc">ليس مجرد حظر. نقدم تحليلات استدلالية مفصلة لمعلمات URL وعمليات إعادة التوجيه.</string>
     <string name="feature_performance_title">محرك عالي الأداء</string>
-    <string name="feature_performance_desc">محسّن لبيئات الهاتف المحمول. تتم معالجة عمليات المسح في أقل من 5 مللي ثانية باستخدام عناصر Kotlin الأصلية.</string>
+    <string name="feature_performance_desc">محسّن لبيئات الهاتف المحمول. تتم معالجة عمليات المسح باستخدام عناصر Kotlin الأصلية.</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -612,7 +612,7 @@
     <string name="status_caution_advised">يُنصح بالحذر</string>
     <string name="status_threat_detected">تم اكتشاف تهديد</string>
     <string name="status_analysis_complete">اكتمل التحليل</string>
-    <string name="meta_analyzed_offline">تم التحليل دون اتصال في أقل من 5 مللي ثانية</string>
+    <string name="meta_analyzed_offline">تم التحليل دون اتصال</string>
     <string name="meta_no_data_leaves">لا تغادر البيانات الجهاز</string>
     <string name="top_analysis_factors_title">أهم عوامل التحليل</string>
     <string name="factor_category_https">HTTPS</string>

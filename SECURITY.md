@@ -70,7 +70,7 @@ We recommend always using the latest version for the best security.
 
 | Feature | Implementation |
 |---------|----------------|
-| **Offline analysis** | 100% on-device, no network calls required |
+| **On-device analysis** | URL analysis runs on the device and makes no network calls |
 | **No telemetry** | Zero tracking, zero analytics |
 | **No accounts** | No user registration or login |
 | **Local storage only** | Data never leaves your device |

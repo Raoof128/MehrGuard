@@ -473,7 +473,7 @@ private fun DashboardContent(
                 FeatureCard(
                     icon = "speed",
                     title = t("High-Performance Engine"),
-                    body = t("Optimised for desktop environments. Scans are processed in under 5ms using native Kotlin Multiplatform binaries."),
+                    body = t("Optimised for desktop environments. Scans are processed using native Kotlin Multiplatform binaries."),
                     iconBg = colors.success.copy(alpha = 0.1f),
                     iconColor = colors.success,
                     ghostIcon = "bolt",

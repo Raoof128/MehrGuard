@@ -43,7 +43,6 @@ import java.util.UUID
  * - Proper API level checks
  * - Context-aware implementations
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 

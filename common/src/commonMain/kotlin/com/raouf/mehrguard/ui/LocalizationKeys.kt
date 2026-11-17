@@ -42,7 +42,6 @@ package com.raouf.mehrguard.ui
  * Text(LocalizationKeys.VERDICT_SAFE.defaultText)
  * ```
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 object LocalizationKeys {

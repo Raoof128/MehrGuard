@@ -15,7 +15,7 @@
 │                                                                             │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
 │  │                     SHARED LAYER (common module)                     │   │
-│  │                        ~80% of business logic                        │   │
+│  │                      all of the detection logic                      │   │
 │  │   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐                 │   │
 │  │   │  Detection  │  │  Ensemble   │  │   Data      │                 │   │
 │  │   │   Engine    │  │  ML Model   │  │   Layer     │                 │   │
@@ -64,9 +64,9 @@ All business logic lives in `common/src/commonMain/kotlin/`:
 |------|---------|-----|
 | `PhishingEngine.kt` | Main analysis orchestrator (suspend + blocking APIs) | ~400 |
 | `HeuristicsEngine.kt` | 25+ security heuristics | ~400 |
-| `BrandDetector.kt` | Static brand impersonation detection (60+ brands) | ~500 |
+| `BrandDetector.kt` | Static brand impersonation detection (60 brands) | ~380 |
 | `DynamicBrandDiscovery.kt` | Pattern-based brand detection for unknown brands | ~280 |
-| `BrandDatabase.kt` | 500+ brand patterns | ~600 |
+| `BrandDatabase.kt` | 60 brands with 484 listed lookalike patterns | ~600 |
 | `SecurityConstants.kt` | Centralized thresholds and weights | ~380 |
 
 ### Ensemble ML Model
@@ -189,28 +189,7 @@ expect fun getCurrentTimeMillis(): Long
 
 ## 📊 Code Distribution
 
-```
-Total Codebase: ~26,000 LOC
-
-┌────────────────────────────────────────────────────────┐
-│ SHARED (commonMain)                                    │
-│ ████████████████████████████████░░░░░░░░░░ ~80%       │
-│ • Detection engines                                    │
-│ • ML model                                            │
-│ • Business logic                                      │
-│ • Data layer                                          │
-└────────────────────────────────────────────────────────┘
-
-┌────────────────────────────────────────────────────────┐
-│ PLATFORM-SPECIFIC                                      │
-│ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░████████ ~20%         │
-│ • UI (Compose, SwiftUI, HTML)                         │
-│ • Camera/Scanner (ML Kit, AVFoundation, ZXing)        │
-│ • Database drivers                                    │
-└────────────────────────────────────────────────────────┘
-```
-
-Run `./scripts/loc_report.sh` for exact counts.
+Lines of code per module, counted from the repository, are in [SHARED_CODE_REPORT.md](SHARED_CODE_REPORT.md). The shared module holds all of the detection logic and about a sixth of the hand-written lines; the rest is user interface and platform code.
 
 ---
 
@@ -221,7 +200,7 @@ Run `./scripts/loc_report.sh` for exact counts.
 1. **Single Source of Truth**: Detection logic written once, tested once
 2. **Consistent Security**: Same analysis on all platforms
 3. **Faster Updates**: Fix a bug in common → fixed everywhere
-4. **Shared Tests**: 1,248+ tests run on all targets
+4. **Shared Tests**: the tests in `commonTest` are written once and compiled for each target
 
 ### iOS Decision: SwiftUI with KMP Integration
 

@@ -27,7 +27,6 @@ package com.raouf.mehrguard.ml
  * - All calculations use defensive bounds checking
  * - No exceptions thrown for malformed input
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class FeatureExtractor {

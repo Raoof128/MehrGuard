@@ -54,7 +54,6 @@ import androidx.compose.ui.unit.dp
  * @param cornerColor Color for the corner brackets
  * @param laserColor Color for the animated laser line
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 @Composable

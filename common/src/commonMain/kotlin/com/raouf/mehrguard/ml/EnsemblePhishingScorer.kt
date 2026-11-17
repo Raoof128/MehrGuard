@@ -22,7 +22,6 @@ package com.raouf.mehrguard.ml
  * val finalScore = heuristicScore * 0.7 + mlScore * 0.3
  * ```
  *
- * @author Mehr Guard Security Team
  * @since 1.19.0
  */
 class EnsemblePhishingScorer private constructor(

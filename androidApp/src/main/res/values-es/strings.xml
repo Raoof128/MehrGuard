@@ -204,7 +204,7 @@
     <string name="dev_mode_disable">desactivar</string>
     <string name="verify_integrity_title">Verificar integridad del sistema</string>
     <string name="verify_integrity_desc_running">Ejecutando verificación…</string>
-    <string name="verify_integrity_desc_default">Demostrar 87% de precisión en el dispositivo</string>
+    <string name="verify_integrity_desc_default">Ejecutar la comprobación de precisión integrada en este dispositivo</string>
     <string name="verification_dialog_healthy">Sistema saludable ✓</string>
     <string name="verification_dialog_complete">Verificación completada</string>
     <string name="verification_passed_tests">Pasadas %1$d/%2$d pruebas</string>
@@ -420,7 +420,7 @@
     <string name="privacy_offline_title">Privacidad y sin conexión</string>
     <string name="privacy_hero_title">Tus datos nunca salen</string>
     <string name="privacy_hero_desc">Mehr Guard opera completamente en tu dispositivo. Sin nube. Sin servidores. Sin recopilación de datos. Privacidad completa por diseño.</string>
-    <string name="privacy_offline_badge">100% operación sin conexión</string>
+    <string name="privacy_offline_badge">Análisis en el dispositivo</string>
     <string name="privacy_architecture">Arquitectura de privacidad</string>
     <string name="privacy_local_db_title">Base de datos local</string>
     <string name="privacy_local_db_desc">Firmas de amenazas almacenadas encriptadas en el dispositivo. Actualizadas mediante importaciones seguras offline.</string>
@@ -452,7 +452,7 @@
     <string name="feature_explainable_title">Seguridad Explicable</string>
     <string name="feature_explainable_desc">No solo un Bloquear. Proporcionamos desgloses heurísticos detallados de parámetros URL y redirecciones.</string>
     <string name="feature_performance_title">Motor de Alto Rendimiento</string>
-    <string name="feature_performance_desc">Optimizado para entornos móviles. Los escaneos se procesan en menos de 5ms usando primitivas nativas de Kotlin.</string>
+    <string name="feature_performance_desc">Optimizado para entornos móviles. Los escaneos se procesan usando primitivas nativas de Kotlin.</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -610,7 +610,7 @@
     <string name="status_caution_advised">Se Aconseja Precaución</string>
     <string name="status_threat_detected">Amenaza Detectada</string>
     <string name="status_analysis_complete">Análisis Completo</string>
-    <string name="meta_analyzed_offline">Analizado sin conexión en &lt;5ms</string>
+    <string name="meta_analyzed_offline">Analizado sin conexión</string>
     <string name="meta_no_data_leaves">Los datos no salen del dispositivo</string>
     <string name="top_analysis_factors_title">Principales Factores de Análisis</string>
     <string name="factor_category_https">HTTPS</string>

@@ -17,10 +17,8 @@ import kotlin.time.Duration.Companion.milliseconds
  * Verifies that the PhishingEngine produces IDENTICAL results across all KMP platforms.
  * This test runs the same 45 URLs and records verdicts + scores for comparison.
  * 
- * ## Judge Value
- * - Proves "KMP parity" claim
- * - Eliminates "platform differences" as a nitpick
- * - Shows production-grade cross-platform testing
+ * ## What it is for
+ * - Checks the shared engine's results on each target where this test is run
  * 
  * ## How to Run
  * ```bash
@@ -31,7 +29,6 @@ import kotlin.time.Duration.Companion.milliseconds
  * ./gradlew :common:allTests
  * ```
  * 
- * @author Mehr Guard Cross-Platform Team
  * @since 1.17.30
  */
 class PlatformParityProofTest {

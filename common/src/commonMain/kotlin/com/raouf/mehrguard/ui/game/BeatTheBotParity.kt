@@ -30,7 +30,6 @@ package com.raouf.mehrguard.ui.game
  * - webApp/src/jsMain/resources/visualizer.js
  * - webApp/src/jsMain/resources/game.js
  * 
- * @author Mehr Guard Cross-Platform Team
  * @since 1.17.30
  */
 object BeatTheBotParity {

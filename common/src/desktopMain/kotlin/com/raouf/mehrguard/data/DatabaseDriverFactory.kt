@@ -27,7 +27,6 @@ import java.io.File
  * Creates a JVM SQLite driver using JdbcSqliteDriver.
  * The database file is stored in the user's app data directory.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 actual class DatabaseDriverFactory {

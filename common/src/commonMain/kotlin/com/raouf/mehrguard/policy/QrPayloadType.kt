@@ -40,7 +40,6 @@ package com.raouf.mehrguard.policy
  * - WeChat Pay
  * - Alipay
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 enum class QrPayloadType(

@@ -26,7 +26,6 @@ import com.raouf.mehrguard.model.Verdict
  * Provides pre-defined gradients for backgrounds and effects.
  * Matches iOS Liquid Glass aesthetic.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object MehrGuardGradients {

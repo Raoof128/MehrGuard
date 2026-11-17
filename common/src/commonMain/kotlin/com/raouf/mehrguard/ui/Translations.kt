@@ -36,7 +36,6 @@ package com.raouf.mehrguard.ui
  * // Returns: "Sicher"
  * ```
  *
- * @author Mehr Guard Security Team
  * @since 1.6.2
  */
 object Translations {

@@ -24,8 +24,9 @@ import kotlin.test.assertTrue
 /**
  * Platform Parity Test
  *
- * Proves that the PhishingEngine produces consistent verdicts across all platforms.
- * This is the "KMP proof" - demonstrating that ~80% shared code actually works.
+ * Checks the PhishingEngine's verdicts on a fixed list of URLs. Because the test
+ * is in commonTest it is compiled for every target, and it shows parity for the
+ * targets whose tests are actually run (the JVM in CI).
  *
  * ## What This Tests
  *
@@ -36,8 +37,8 @@ import kotlin.test.assertTrue
  *
  * ## Why This Matters for Competition
  *
- * "80% shared code" is a hollow claim if platforms produce different results.
- * This test suite proves:
+ * Shared code is only useful if every platform gets the same results.
+ * This test suite checks, on each target where it runs:
  * - Same PhishingEngine.kt
  * - Same HeuristicsEngine.kt
  * - Same EnsembleModel.kt

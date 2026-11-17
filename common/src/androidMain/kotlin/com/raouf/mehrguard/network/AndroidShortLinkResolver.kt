@@ -27,7 +27,6 @@ import java.net.URL
  * Uses HttpURLConnection to perform HEAD requests and follow redirects.
  * Only extracts Location header, never downloads body content.
  *
- * @author Mehr Guard Security Team
  * @since 1.3.0
  */
 class AndroidShortLinkResolver : ShortLinkResolver {

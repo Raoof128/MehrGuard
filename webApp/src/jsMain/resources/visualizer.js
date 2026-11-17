@@ -12,7 +12,6 @@
  * - Explanation badges below the visual
  * - Accessible text description
  * 
- * @author Mehr Guard Team
  * @version 1.0.0
  */
 

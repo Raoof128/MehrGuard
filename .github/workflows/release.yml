@@ -250,8 +250,8 @@ jobs:
           
           - 🔍 **25+ Security Heuristics** - Comprehensive URL analysis
           - 🤖 **ML-Lite Detection** - Custom logistic regression (no external ML libs)
-          - 🏢 **Brand Impersonation** - 500+ brands monitored with fuzzy matching
-          - 🔒 **100% Offline** - No data leaves your device
+          - 🏢 **Brand Impersonation** - 60 listed brands, with fuzzy matching
+          - 🔒 **On-device analysis** - scanned URLs are not sent anywhere
           - 🌍 **True KMP** - 85% shared code across Android, iOS, Desktop, Web
           
           ---
@@ -271,7 +271,7 @@ jobs:
           sha256sum MehrGuard-*.apk
           ```
           
-          - Zero network permissions for core scanning
+          - URL analysis runs on the device; the Android app's only request is a startup check for rule updates
           - No telemetry or data collection
           - Open source - full audit transparency
           

@@ -35,7 +35,6 @@ import com.raouf.mehrguard.model.Verdict
  * 6. Server aggregates thousands of reports → Model improves
  * 7. User's URL is NEVER transmitted
  *
- * @author Mehr Guard Security Team
  * @since 1.3.0
  */
 class FeedbackManager(

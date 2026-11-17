@@ -61,7 +61,6 @@ import java.util.concurrent.atomic.AtomicBoolean
  * - Permissions are checked before camera access
  * - Image sizes are limited to prevent OOM
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class AndroidQrScanner(

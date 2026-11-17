@@ -479,7 +479,7 @@
     <string name="privacy_memory_only">فقط حافظه</string>
     <string name="privacy_no_retention_desc">تاریخچه اسکن فوراً قابل پاک‌سازی است. ما هیچ تله‌متری یا تحلیلی جمع‌آوری نمی‌کنیم.</string>
     <string name="privacy_no_retention_title">بدون نگهداری داده</string>
-    <string name="privacy_offline_badge">عملکرد ۱۰۰٪ آفلاین</string>
+    <string name="privacy_offline_badge">تحلیل روی دستگاه</string>
     <string name="privacy_offline_title">حریم خصوصی و آفلاین</string>
     <string name="privacy_on_device_ai_desc">مدل‌های ML به صورت محلی با استنتاج بهینه اجرا می‌شوند. بدون وابستگی ابری.</string>
     <string name="privacy_on_device_ai_title">هوش مصنوعی روی دستگاه</string>
@@ -633,7 +633,7 @@
     <string name="verification_dialog_complete">تأیید کامل شد</string>
     <string name="verification_dialog_healthy">سیستم سالم ✓</string>
     <string name="verification_passed_tests">قبول %1$d/%2$d آزمون</string>
-    <string name="verify_integrity_desc_default">اثبات ادعای دقت ۸۷٪٪ روی دستگاه</string>
+    <string name="verify_integrity_desc_default">اجرای بررسی دقت داخلی روی این دستگاه</string>
     <string name="verify_integrity_desc_running">در حال اجرای تأیید...</string>
     <string name="verify_integrity_title">تأیید یکپارچگی سیستم</string>
     <string name="view_certificate">مشاهده گواهی</string>

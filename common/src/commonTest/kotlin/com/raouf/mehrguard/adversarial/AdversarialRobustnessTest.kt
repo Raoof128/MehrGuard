@@ -30,7 +30,6 @@ import kotlin.test.assertEquals
  *
  * See: data/red_team_corpus.md for full corpus documentation.
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 class AdversarialRobustnessTest {

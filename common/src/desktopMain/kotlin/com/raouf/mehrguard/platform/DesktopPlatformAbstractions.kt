@@ -40,7 +40,6 @@ import java.util.logging.Logger
  * - Proper exception handling
  * - Thread-safe implementations
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 

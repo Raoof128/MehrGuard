@@ -57,7 +57,6 @@ import kotlin.test.assertTrue
  * This test generates reproducible evidence for judges.
  * Results are logged with full breakdown for verification.
  *
- * @author Mehr Guard Security Team
  * @since 1.17.31
  * @see FalsePositiveRateTest for extended legitimate URL testing
  */

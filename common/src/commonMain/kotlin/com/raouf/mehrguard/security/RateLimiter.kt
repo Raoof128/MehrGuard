@@ -35,7 +35,6 @@ import kotlinx.datetime.Clock
  * For thread-safe access in non-suspend contexts, use the
  * internal lock-free version where possible.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class RateLimiter(

@@ -20,7 +20,6 @@ package com.raouf.mehrguard.intel
  * 4. Re-run harness, lock config version
  * 5. Add regression gate in CI
  *
- * @author Mehr Guard Security Team
  * @since 1.19.0
  */
 data class RiskConfig(

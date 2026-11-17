@@ -38,7 +38,6 @@ package com.raouf.mehrguard.redteam
  * @see com.raouf.mehrguard.adversarial.AdversarialDefense
  * @see data/red_team_corpus.md
  *
- * @author Mehr Guard Security Team
  * @since 1.3.0
  */
 object RedTeamScenarios {

@@ -26,9 +26,9 @@ common/src/commonMain/kotlin/com/mehrguard/
 │   └── SecurityConstants.kt   ← Centralized thresholds
 ├── engine/
 │   ├── HeuristicsEngine.kt    ← 25+ detection rules
-│   ├── BrandDetector.kt       ← Static brand impersonation (500+ brands)
+│   ├── BrandDetector.kt       ← Static brand impersonation (60 brands)
 │   ├── DynamicBrandDiscovery.kt ← Pattern-based brand detection
-│   └── BrandDatabase.kt       ← 500+ brand patterns
+│   └── BrandDatabase.kt       ← 60 brands, 484 listed patterns
 ├── ml/
 │   ├── EnsembleModel.kt       ← 3-model ensemble
 │   ├── LogisticRegressionModel.kt  ← ML scoring
@@ -297,8 +297,8 @@ Compare precision/recall before and after your change:
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| Precision | 85.2% | ? | |
-| Recall | 89.1% | ? | |
+| Precision | run `./scripts/eval.sh` | ? | |
+| Recall | run `./scripts/eval.sh` | ? | |
 | F1 Score | 87 | ? | |
 
 A good rule should:

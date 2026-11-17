@@ -26,7 +26,7 @@ import com.raouf.mehrguard.core.SecurityConstants
  *
  * ## Why Dynamic Discovery?
  *
- * The static brand database (500+ entries) catches well-known brands, but:
+ * The static brand database (60 brands) catches well-known brands, but:
  * - New startups emerge daily
  * - Regional brands may not be in the database
  * - Attackers target niche brands
@@ -56,7 +56,6 @@ import com.raouf.mehrguard.core.SecurityConstants
  * Combined Risk Score
  * ```
  *
- * @author Mehr Guard Security Team
  * @since 1.6.1
  * @see BrandDetector
  * @see BrandDatabase
@@ -342,7 +341,7 @@ object DynamicBrandDiscovery {
     }
 
     private fun extractSubdomains(host: String): List<String> {
-        val parts = host.split(".")
-        return if (parts.size > 2) parts.dropLast(2) else emptyList()
+        // Split on the public suffix: in "www.example.com.au" the only subdomain is "www".
+        return PublicSuffixList.default.parse(host).subdomains
     }
 }

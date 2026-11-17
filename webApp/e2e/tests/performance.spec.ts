@@ -3,7 +3,6 @@
  * 
  * Tests for page load performance, responsiveness, and interaction timing.
  * 
- * @author Mehr Guard Team
  * @license Apache-2.0
  */
 

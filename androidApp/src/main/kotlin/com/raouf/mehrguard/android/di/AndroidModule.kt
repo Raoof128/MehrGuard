@@ -38,7 +38,6 @@ import org.koin.dsl.module
  * - Scanner implementation
  * - ViewModel with persistence
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 val androidModule = module {

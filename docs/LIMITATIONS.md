@@ -13,17 +13,7 @@ This document transparently describes the limitations of Mehr Guard's detection 
 ## 1. Hardcoded Brand Database
 
 ### Limitation
-The brand impersonation detection relies on a **hardcoded database of ~60 brands with 500+ patterns** in `BrandDatabase.kt`. This has several implications:
-
-```kotlin
-// Example from BrandDatabase.kt
-val BRANDS = mapOf(
-    "paypal" to "paypal.com",
-    "google" to listOf("google.com", "google.co.uk", ...),
-    "amazon" to listOf("amazon.com", "amazon.co.uk", ...),
-    // ~500 entries...
-)
-```
+The brand impersonation detection relies on a **hardcoded database of 60 brands with 484 listed lookalike patterns** in `BrandDatabase.kt` (counted 17 Nov 2026). Each entry lists the brand's official domains, misspellings, homographs and brand-plus-keyword names. This has several implications:
 
 ### Implications
 
@@ -32,7 +22,6 @@ val BRANDS = mapOf(
 | **New brands not covered** | A phishing site impersonating "CoolNewStartup.io" won't trigger brand detection | Other heuristics (TLD, entropy) still apply |
 | **Regional brands missing** | Local banks, retailers may be absent | Database is extensible via updates |
 | **Point-in-time snapshot** | Database was curated in Dec 2025 | Version updates can refresh |
-| **Storage overhead** | ~50KB for brand data | Acceptable for on-device detection |
 
 ### Why This Trade-off?
 
@@ -75,15 +64,17 @@ URL heuristics are **pattern-based rules** that can be:
 
 ### Mitigation Strategy
 
-We use **defense in depth** — no single heuristic is decisive:
+The score combines four components with the default weights in `ScoringConfig.kt`:
 
 ```
-Final Score = 
-    Heuristics (50%) +
-    Ensemble ML (25%) + 
-    Brand Detection (15%) +
-    TLD Scoring (10%)
+Final Score =
+    Heuristics (0.50) +
+    Scoring model (0.20) +
+    Brand detection (0.15) +
+    TLD scoring (0.15)
 ```
+
+The verdict is not a threshold on that score alone: a brand match or a risky TLD escalates on its own (`ScoreCalculator.kt`).
 
 If one layer is evaded, others may still catch the attack.
 
@@ -102,27 +93,18 @@ If one layer is evaded, others may still catch the attack.
 ## 3. ML Model Constraints
 
 ### Limitation
-The ensemble ML model combines three approaches but is **deliberately lightweight**:
+The scoring model is small and **nothing in it is learned from data**:
 
-- 15 features only
-- ~2KB weights total
-- Ensemble: Logistic Regression (40%) + Gradient Boosting (35%) + Decision Rules (25%)
-- No deep learning
+- 15 URL features
+- A logistic score with hand-set weights (0.40 of the blend)
+- Fifteen hand-written threshold rules (0.35 and 0.25 of the blend)
+- No training set, no held-out test set, no deep learning
 
-### Why Not Deep Learning?
+See [ML_TRAINING.md](ML_TRAINING.md).
 
-| Factor | Deep Learning | Our Approach |
-|--------|---------------|--------------|
-| Model size | 10-100MB | <2KB |
-| Inference time | 50-500ms | <5ms |
-| Explainability | Black box | Full transparency |
-| Cross-platform | TensorFlow Lite deps | Pure Kotlin |
+### Measured behaviour
 
-### Accuracy Trade-off
-
-Measured on the committed 100-URL set (`data/test_urls.csv`, 17 Nov 2026; see [EVALUATION.md](EVALUATION.md)): precision 84.5%, recall 98.0%, F1 90.7%. That set was written by the project's author and is not a held-out benchmark, so it is not comparable with published results for deep-learning models on live phishing feeds.
-
-**Decision:** The ensemble approach provides a good balance between accuracy, explainability, and cross-platform compatibility.
+On the committed 100-URL set every row is now classified as labelled (17 Nov 2026; see [EVALUATION.md](EVALUATION.md)). That set was written by the project's author and its last errors were fixed by looking at them, so it says little about unseen URLs. The model has not been evaluated on its own.
 
 ---
 
@@ -142,8 +124,8 @@ A brand-new phishing domain registered 1 hour ago will **not** be in any blockli
 
 | Benefit | Cost |
 |---------|------|
-| 100% offline operation | No real-time threat data |
-| Zero data collection | Miss newest threats |
+| Analysis needs no connection | No real-time threat data |
+| No scanned URL leaves the device | Miss newest threats |
 | No API keys required | No crowd-sourced intelligence |
 
 ### Mitigation
@@ -167,7 +149,7 @@ A brand-new phishing domain registered 1 hour ago will **not** be in any blockli
 - Camera API requires HTTPS and user permission
 - No file system access for batch scanning
 - jsQR library may miss damaged QR codes
-- **Single-threaded JavaScript execution**: Kotlin/JS runs on the main browser thread. If `PhishingEngine.analyze()` takes 50ms (as measured in benchmarks), it may cause brief UI jank during analysis. Web Workers could mitigate this but add significant complexity. Current implementation is acceptable for occasional scans but not optimized for batch processing.
+- **Single-threaded JavaScript execution**: Kotlin/JS runs on the main browser thread. Analysis time in a browser has not been measured; a slow analysis would block the page while it runs. Web Workers could mitigate this but add significant complexity. Current implementation is acceptable for occasional scans but not optimized for batch processing.
 
 ### Desktop
 - No native QR scanning (clipboard/file only)
@@ -210,7 +192,7 @@ A brand-new phishing domain registered 1 hour ago will **not** be in any blockli
 
 | Limitation | Severity | Mitigation |
 |------------|----------|------------|
-| Hardcoded brand database | Medium | Covers 500+ major brands |
+| Hardcoded brand database | Medium | Covers 60 listed brands |
 | Heuristic evasion | Medium | Multi-layer defense |
 | Simple ML model | Low | Explainability trade-off |
 | No real-time feeds | High | Privacy is a feature |
@@ -229,7 +211,15 @@ On Android the app checks GitHub Pages at startup for updated detection rules (`
 
 ## False alarms on legitimate sites
 
-On the committed dataset, 9 of 50 legitimate sites are returned as SUSPICIOUS, including all four Australian bank sites in the set (see [EVALUATION.md](EVALUATION.md)). A user who sees warnings on their own bank's site will learn to ignore them, so this is the limitation that most affects real use.
+Until 17 November 2026 the engine reported every site under a two-label public suffix (`.com.au`, `.co.uk`, `.co.jp`) as a brand lookalike, which flagged all four Australian bank sites in the committed dataset. That was a bug in how hosts were split and has been fixed ([EVALUATION.md](EVALUATION.md) has the details). No false-alarm rate on ordinary browsing has been measured, and the cases below are known to remain.
+
+**Brand names that are ordinary words.** The brand check reports a brand's exact name used as a site name, or as one hyphen-separated part of it, on a domain the brand does not own. Several listed brands are ordinary words (apple, amazon, zoom, steam, slack, stripe, ledger, crypto, uber). An unrelated site such as `zoom-photography.example` or `crypto-news.example` is therefore reported as SUSPICIOUS. How often this happens on real sites has not been measured.
+
+**Regional sites that are not listed.** A brand's official domains are listed by hand and only some regional domains are included. A real regional site that is not listed, for example a country domain of a listed bank or retailer, is reported as the brand's name on another domain.
+
+**Shared platforms.** A host on a listed brand's own domain is not checked against that brand. Phishing hosted on such a domain, for example a form on a shared documents service, is not caught by the brand check. Hosts under the shared hosting suffixes listed in `BrandDetector.kt` are the exception and are always checked.
+
+**Internationalised hosts.** Punycode hosts are decoded before the brand check, but only lookalikes listed for a brand are matched. An all-Cyrillic lookalike that is not in the list gets the generic punycode signal only, which by itself does not change the verdict.
 
 ---
 
@@ -247,4 +237,4 @@ For users who need 99.9% detection with real-time threat intelligence, we recomm
 
 ---
 
-*Document Version: 1.0 — December 2025*
+*First written December 2025. Revised 17 November 2026.*

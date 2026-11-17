@@ -42,7 +42,6 @@ import kotlin.test.assertTrue
  * ./gradlew :common:allTests --tests "*PerformanceRegressionTest*"
  * ```
  *
- * @author Mehr Guard Performance Team
  * @since 1.0.0
  */
 class PerformanceRegressionTest {

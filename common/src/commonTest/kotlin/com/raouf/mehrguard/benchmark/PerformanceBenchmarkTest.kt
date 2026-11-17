@@ -45,7 +45,6 @@ import kotlin.test.assertTrue
  * - ML inference: < 5ms per URL
  * - Brand detection: < 15ms per URL
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class PerformanceBenchmarkTest {

@@ -35,7 +35,6 @@ import kotlin.test.assertTrue
  * Tests the InMemoryHistoryRepository which is available in commonTest.
  * The same test patterns apply to SqlDelightHistoryRepository.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class HistoryRepositoryTest {

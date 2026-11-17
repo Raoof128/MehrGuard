@@ -204,7 +204,7 @@
     <string name="dev_mode_disable">禁用</string>
     <string name="verify_integrity_title">验证系统完整性</string>
     <string name="verify_integrity_desc_running">正在运行验证…</string>
-    <string name="verify_integrity_desc_default">证明设备上87%的准确率</string>
+    <string name="verify_integrity_desc_default">在此设备上运行内置准确率检查</string>
     <string name="verification_dialog_healthy">系统健康 ✓</string>
     <string name="verification_dialog_complete">验证完成</string>
     <string name="verification_passed_tests">通过%1$d/%2$d项测试</string>
@@ -422,7 +422,7 @@
     <string name="privacy_offline_title">隐私与离线</string>
     <string name="privacy_hero_title">您的数据永不外泄</string>
     <string name="privacy_hero_desc">Mehr Guard完全在您的设备上运行。无云端。无服务器。无数据收集。设计上完全保护隐私。</string>
-    <string name="privacy_offline_badge">100%离线运行</string>
+    <string name="privacy_offline_badge">设备端分析</string>
     <string name="privacy_architecture">隐私架构</string>
     <string name="privacy_local_db_title">本地数据库</string>
     <string name="privacy_local_db_desc">威胁签名在设备上加密存储。通过安全离线导入更新。</string>
@@ -454,7 +454,7 @@
     <string name="feature_explainable_title">可解释安全性</string>
     <string name="feature_explainable_desc">不仅仅是阻止。我们提供URL参数和重定向的详细启发式分析。</string>
     <string name="feature_performance_title">高性能引擎</string>
-    <string name="feature_performance_desc">针对移动环境优化。使用原生Kotlin原语在5毫秒内完成扫描处理。</string>
+    <string name="feature_performance_desc">针对移动环境优化。使用原生Kotlin原语完成扫描处理。</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -612,7 +612,7 @@
     <string name="status_caution_advised">建议谨慎</string>
     <string name="status_threat_detected">检测到威胁</string>
     <string name="status_analysis_complete">分析完成</string>
-    <string name="meta_analyzed_offline">离线分析用时 &lt;5ms</string>
+    <string name="meta_analyzed_offline">离线分析</string>
     <string name="meta_no_data_leaves">数据不会离开设备</string>
     <string name="top_analysis_factors_title">主要分析因素</string>
     <string name="factor_category_https">HTTPS</string>

@@ -71,7 +71,6 @@ import kotlin.random.Random
  * - Bonawitz, K., et al. (2017). "Practical Secure Aggregation for Privacy-Preserving ML"
  * - McMahan, H. B., et al. (2017). "Communication-Efficient Learning of Deep Networks"
  *
- * @author Mehr Guard Security Team
  * @since 1.3.0
  */
 class PrivacyPreservingAnalytics(
@@ -348,7 +347,7 @@ class PrivacyPreservingAnalytics(
         return mean + stdDev * z
     }
     
-    // Curve25519 ECDH for secure aggregation (production-ready)
+    // Curve25519 ECDH for secure aggregation
     private val ecdhKeyPair = com.raouf.mehrguard.crypto.SecureECDH.generateKeyPair()
     
     /**

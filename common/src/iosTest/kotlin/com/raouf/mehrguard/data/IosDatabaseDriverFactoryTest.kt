@@ -27,7 +27,6 @@ import kotlin.test.assertFailsWith
  * These tests verify that the iOS platform correctly implements
  * the expect/actual pattern for SQLDelight database access.
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class IosDatabaseDriverFactoryTest {

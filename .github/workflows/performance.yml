@@ -76,7 +76,7 @@ jobs:
           | Full URL Analysis | <50ms | ${{ env.PERFORMANCE_STATUS == 'pass' && '✅' || '❌' }} |
           | P99 Latency | <50ms | ${{ env.PERFORMANCE_STATUS == 'pass' && '✅' || '❌' }} |
           | Heuristics Engine | <10ms | ${{ env.PERFORMANCE_STATUS == 'pass' && '✅' || '❌' }} |
-          | ML Inference | <5ms | ${{ env.PERFORMANCE_STATUS == 'pass' && '✅' || '❌' }} |
+          | Scoring model inference | <5ms | ${{ env.PERFORMANCE_STATUS == 'pass' && '✅' || '❌' }} |
           | Brand Detection | <15ms | ${{ env.PERFORMANCE_STATUS == 'pass' && '✅' || '❌' }} |
           | Throughput | >100 URLs/sec | ${{ env.PERFORMANCE_STATUS == 'pass' && '✅' || '❌' }} |
           

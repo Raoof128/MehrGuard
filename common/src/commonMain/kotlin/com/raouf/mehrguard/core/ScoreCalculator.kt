@@ -33,7 +33,6 @@ import com.raouf.mehrguard.model.Verdict
  * - Produce bounded combined score
  *
  * @param config Scoring configuration with weights and thresholds
- * @author Mehr Guard Security Team
  * @since 1.7.0
  */
 class ScoreCalculator(
@@ -128,7 +127,6 @@ class ScoreCalculator(
  * 7. Standard threshold-based verdict
  *
  * @param config Scoring configuration with thresholds
- * @author Mehr Guard Security Team
  * @since 1.7.0
  */
 class VerdictDeterminer(

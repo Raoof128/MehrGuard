@@ -27,7 +27,6 @@ import kotlin.test.assertIs
  *
  * Tests the policy enforcement engine for enterprise deployments.
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 class OrgPolicyTest {

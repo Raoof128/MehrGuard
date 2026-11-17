@@ -27,7 +27,6 @@ package com.raouf.mehrguard.security
  * - Returns sealed class results for explicit error handling
  * - No exceptions thrown for invalid inputs
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 object InputValidator {

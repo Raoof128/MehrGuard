@@ -204,7 +204,7 @@
     <string name="dev_mode_disable">비활성화</string>
     <string name="verify_integrity_title">시스템 무결성 검증</string>
     <string name="verify_integrity_desc_running">검증 실행 중…</string>
-    <string name="verify_integrity_desc_default">기기에서 87% 정확도 입증</string>
+    <string name="verify_integrity_desc_default">이 기기에서 내장 정확도 검사 실행</string>
     <string name="verification_dialog_healthy">시스템 정상 ✓</string>
     <string name="verification_dialog_complete">검증 완료</string>
     <string name="verification_passed_tests">%1$d/%2$d 테스트 통과</string>
@@ -422,7 +422,7 @@
     <string name="privacy_offline_title">개인정보 및 오프라인</string>
     <string name="privacy_hero_title">데이터가 절대 나가지 않음</string>
     <string name="privacy_hero_desc">Mehr Guard는 기기에서만 작동합니다. 클라우드 없음. 서버 없음. 데이터 수집 없음. 설계부터 완전한 개인정보 보호.</string>
-    <string name="privacy_offline_badge">100% 오프라인 작동</string>
+    <string name="privacy_offline_badge">기기 내 분석</string>
     <string name="privacy_architecture">개인정보 아키텍처</string>
     <string name="privacy_local_db_title">로컬 데이터베이스</string>
     <string name="privacy_local_db_desc">위협 시그니처가 기기에 암호화 저장. 안전한 오프라인 가져오기로 업데이트.</string>
@@ -454,7 +454,7 @@
     <string name="feature_explainable_title">설명 가능한 보안</string>
     <string name="feature_explainable_desc">단순한 차단이 아닙니다. URL 매개변수와 리디렉션에 대한 상세한 휴리스틱 분석을 제공합니다.</string>
     <string name="feature_performance_title">고성능 엔진</string>
-    <string name="feature_performance_desc">모바일 환경에 최적화되었습니다. 네이티브 Kotlin 프리미티브를 사용하여 5ms 이내에 스캔을 처리합니다.</string>
+    <string name="feature_performance_desc">모바일 환경에 최적화되었습니다. 네이티브 Kotlin 프리미티브를 사용하여 스캔을 처리합니다.</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -612,7 +612,7 @@
     <string name="status_caution_advised">주의 권고</string>
     <string name="status_threat_detected">위협 감지됨</string>
     <string name="status_analysis_complete">분석 완료</string>
-    <string name="meta_analyzed_offline">오프라인에서 5ms 미만으로 분석됨</string>
+    <string name="meta_analyzed_offline">오프라인에서 분석됨</string>
     <string name="meta_no_data_leaves">데이터가 기기를 떠나지 않음</string>
     <string name="top_analysis_factors_title">주요 분석 요소</string>
     <string name="factor_category_https">HTTPS</string>

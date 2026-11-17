@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
 """
-Mehr Guard ML Model Training Script
+Toy logistic-regression fit. Not how the shipped weights were made.
 
-Trains a simple logistic regression model for phishing URL detection.
-This is a reference implementation - the actual model runs in Kotlin.
+The weights the app uses are constants set by hand in
+common/src/commonMain/kotlin/com/raouf/mehrguard/ml/LogisticRegressionModel.kt,
+mirrored in models/phishing_model_weights.json. This script does not produce
+them and does not overwrite that file.
+
+What it does: builds 1,000 samples by drawing from ten fixed URLs (five safe,
+five phishing), fits a logistic regression to them and prints the accuracy on
+those same samples. That number says nothing about detection quality. The
+script shows the feature extraction and the export format, and nothing more.
+Output goes to build/toy_model_weights.json.
 """
 
 import json
+import os
 import numpy as np
 from typing import List, Tuple
 import re
@@ -184,7 +193,7 @@ def generate_synthetic_dataset(n_samples: int = 1000) -> Tuple[np.ndarray, np.nd
 
 
 def main():
-    print("Mehr Guard ML Model Training")
+    print("Mehr Guard toy model fit (not the shipped weights; see the docstring)")
     print("=" * 40)
     
     # Generate training data
@@ -201,16 +210,17 @@ def main():
     binary_preds = (predictions > 0.5).astype(int)
     accuracy = np.mean(binary_preds == y_train)
     
-    print(f"Training accuracy: {accuracy:.2%}")
+    print(f"Accuracy on the same synthetic samples it was fitted to (not a quality measure): {accuracy:.2%}")
     print(f"\nModel weights: {model.weights}")
     print(f"Model bias: {model.bias:.4f}")
     
     # Export to JSON
     model_json = model.to_json()
-    with open("models/phishing_model_weights.json", "w") as f:
+    os.makedirs("build", exist_ok=True)
+    with open("build/toy_model_weights.json", "w") as f:
         json.dump(model_json, f, indent=2)
     
-    print("\nModel exported to models/phishing_model_weights.json")
+    print("\nToy weights written to build/toy_model_weights.json")
     
     # Test predictions
     print("\nTest predictions:")

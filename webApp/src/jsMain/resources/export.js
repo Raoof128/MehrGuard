@@ -4,7 +4,6 @@
  * Handles format selection, report generation,
  * export actions, and live preview updates.
  * 
- * @author Mehr Guard Team
  * @version 2.4.1
  */
 

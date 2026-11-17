@@ -26,7 +26,6 @@ package com.raouf.mehrguard.engine
  * - Dynamic updates via remote config
  * - Easy experimentation during development
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 data class HeuristicWeightsConfig(

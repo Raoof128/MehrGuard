@@ -54,7 +54,7 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
 }
 
 // ================================================================
-// Judge-Proof Evidence: Reproducible Builds
+// Reproducible Builds
 // ================================================================
 
 /**

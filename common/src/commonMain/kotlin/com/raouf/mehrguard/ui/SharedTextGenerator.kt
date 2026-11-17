@@ -38,7 +38,6 @@ import com.raouf.mehrguard.model.Verdict
  * val explanation = generator.getRiskExplanation(assessment)
  * ```
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 object SharedTextGenerator {

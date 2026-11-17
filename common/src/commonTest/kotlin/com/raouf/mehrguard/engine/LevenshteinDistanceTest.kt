@@ -30,7 +30,6 @@ import kotlin.test.assertTrue
  * - Security bounds (50 char limit)
  * - Performance considerations
  *
- * @author Mehr Guard Security Team
  * @since 1.0.0
  */
 class LevenshteinDistanceTest {

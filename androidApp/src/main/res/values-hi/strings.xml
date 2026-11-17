@@ -204,7 +204,7 @@
     <string name="dev_mode_disable">अक्षम</string>
     <string name="verify_integrity_title">सिस्टम अखंडता सत्यापित करें</string>
     <string name="verify_integrity_desc_running">सत्यापन चल रहा है…</string>
-    <string name="verify_integrity_desc_default">डिवाइस पर 87% सटीकता प्रमाणित करें</string>
+    <string name="verify_integrity_desc_default">इस डिवाइस पर अंतर्निहित सटीकता जाँच चलाएँ</string>
     <string name="verification_dialog_healthy">सिस्टम स्वस्थ ✓</string>
     <string name="verification_dialog_complete">सत्यापन पूर्ण</string>
     <string name="verification_passed_tests">%1$d/%2$d परीक्षण पास</string>
@@ -422,7 +422,7 @@
     <string name="privacy_offline_title">गोपनीयता और ऑफ़लाइन</string>
     <string name="privacy_hero_title">आपका डेटा कभी नहीं निकलता</string>
     <string name="privacy_hero_desc">Mehr Guard पूरी तरह से आपके डिवाइस पर काम करता है। कोई क्लाउड नहीं। कोई सर्वर नहीं। कोई डेटा संग्रह नहीं। डिज़ाइन द्वारा पूर्ण गोपनीयता।</string>
-    <string name="privacy_offline_badge">100% ऑफ़लाइन संचालन</string>
+    <string name="privacy_offline_badge">डिवाइस पर विश्लेषण</string>
     <string name="privacy_architecture">गोपनीयता आर्किटेक्चर</string>
     <string name="privacy_local_db_title">स्थानीय डेटाबेस</string>
     <string name="privacy_local_db_desc">खतरा हस्ताक्षर डिवाइस पर एन्क्रिप्टेड संग्रहीत। सुरक्षित ऑफ़लाइन आयात के माध्यम से अपडेट।</string>
@@ -454,7 +454,7 @@
     <string name="feature_explainable_title">स्पष्ट सुरक्षा</string>
     <string name="feature_explainable_desc">सिर्फ ब्लॉक नहीं। हम URL पैरामीटर और रीडायरेक्ट का विस्तृत ह्यूरिस्टिक विश्लेषण प्रदान करते हैं।</string>
     <string name="feature_performance_title">उच्च-प्रदर्शन इंजन</string>
-    <string name="feature_performance_desc">मोबाइल वातावरण के लिए अनुकूलित। नेटिव Kotlin प्रिमिटिव का उपयोग करके 5ms के भीतर स्कैन संसाधित होते हैं।</string>
+    <string name="feature_performance_desc">मोबाइल वातावरण के लिए अनुकूलित। नेटिव Kotlin प्रिमिटिव का उपयोग करके स्कैन संसाधित होते हैं।</string>
     <string name="blocklist_offline_synced">Offline-first • Synced</string>
     <string name="blocklist_manage_desc">Manage domains forbidden by local policy.</string>
     <string name="blocklist_active_rules">ACTIVE RULES</string>
@@ -612,7 +612,7 @@
     <string name="status_caution_advised">सावधानी की सलाह</string>
     <string name="status_threat_detected">खतरा पाया गया</string>
     <string name="status_analysis_complete">विश्लेषण पूर्ण</string>
-    <string name="meta_analyzed_offline">&lt;5ms में ऑफ़लाइन विश्लेषित</string>
+    <string name="meta_analyzed_offline"> में ऑफ़लाइन विश्लेषित</string>
     <string name="meta_no_data_leaves">कोई डेटा डिवाइस से बाहर नहीं जाता</string>
     <string name="top_analysis_factors_title">शीर्ष विश्लेषण कारक</string>
     <string name="factor_category_https">HTTPS</string>

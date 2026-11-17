@@ -28,8 +28,10 @@ import kotlin.test.assertTrue
  * Run with: `./gradlew :common:desktopTest --tests "*AccuracyVerificationTest*"`
  *
  * ## Purpose
- * Provides reproducible precision/recall/F1 metrics from CI logs.
- * Judges can verify claims by running this test suite.
+ * Prints precision, recall and F1 on the 41 URLs listed in this file and fails
+ * if they drop below the floors asserted further down. The URLs were written
+ * by the project's author, so this is a regression guard and not a benchmark.
+ * The larger committed set is measured by `DatasetEvaluationTest`.
  *
  * ## Metrics Calculated
  * - **Precision**: TP / (TP + FP) - How many flagged URLs are actually phishing
@@ -37,7 +39,6 @@ import kotlin.test.assertTrue
  * - **F1 Score**: Harmonic mean of precision and recall
  * - **Accuracy**: (TP + TN) / Total
  *
- * @author Mehr Guard Security Team
  * @since 1.2.0
  */
 class AccuracyVerificationTest {
@@ -53,8 +54,9 @@ class AccuracyVerificationTest {
     // ==================== Committed Test Dataset ====================
 
     /**
-     * Known phishing URLs (ground truth: MALICIOUS).
-     * Sources: PhishTank, OpenPhish, internal red-team corpus.
+     * Phishing-shaped URLs (ground truth: MALICIOUS).
+     * Written by the author as examples of common phishing URL shapes; they are
+     * not taken from a phishing feed.
      * All URLs are defanged for safety.
      */
     private val knownPhishingUrls = listOf(
