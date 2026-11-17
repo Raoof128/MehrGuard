@@ -1,5 +1,7 @@
 # 🔍 Judge Verification Summary
 
+> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](README.md#summary) and [EVALUATION.md](docs/EVALUATION.md).
+
 > **Audit Date:** 2026-01-03  
 > **Release Tag:** `v2.0.36-submission`  
 > **Commit:** `b66732c1d9e728ca2510af58b3cb196a1b37ba4a`  
@@ -11,10 +13,10 @@
 
 | Check | Status | Command | Result |
 |-------|--------|---------|--------|
-| Offline Analysis | ✅ PASSED | `./judge/verify_offline.sh` | Zero network calls during analysis |
-| Performance | ✅ PASSED | `./judge/verify_performance.sh` | <5ms P50 latency |
-| Accuracy | ✅ PASSED | `./judge/verify_accuracy.sh` | 87% F1 Score |
-| Platform Parity | ✅ PASSED | `./judge/verify_parity.sh` | Identical verdicts across 5 targets |
+| Offline Analysis | Timing check | `./judge/verify_offline.sh` | No HTTP client in the analysis module; the script is a timing sanity check |
+| Performance | Asserted in CI | `./judge/verify_performance.sh` | P99 under 50 ms per URL |
+| Accuracy | Measured in CI | `./judge/verify_accuracy.sh` | 90.7% F1 on 100 author-written URLs (17 Nov 2026) |
+| Platform Parity | JVM tests, other targets build | `./judge/verify_parity.sh` | Same Kotlin code compiled for each target |
 | Full Suite | ✅ PASSED | `./judge/verify_all.sh` | All 4 verifications passed |
 
 ---

@@ -221,7 +221,7 @@ A brand-new phishing domain registered 1 hour ago will **not** be in any blockli
 
 ## Rule updates are not signature-checked
 
-On Android the app checks GitHub Pages at startup for updated detection rules (`OtaUpdateManager`). The download relies on HTTPS alone: there is no checksum or signature on the rule file. Anyone able to change what that origin serves could change the app's detection rules. Signed rule manifests are the fix and are not implemented.
+On Android the app checks GitHub Pages at startup for updated detection rules (`OtaUpdateManager`). The download relies on HTTPS alone: there is no checksum or signature on the rule file. Anyone able to change what that origin serves could change the app's detection rules. Signed rule manifests are the fix and are not implemented: `data/updates/version.json` carries a placeholder checksum that nothing verifies.
 
 ## False alarms on legitimate sites
 

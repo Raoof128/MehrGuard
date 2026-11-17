@@ -1,5 +1,7 @@
 # Mehr Guard Competition Pitch
 
+> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](../README.md#summary) and [EVALUATION.md](../docs/EVALUATION.md).
+
 ## 30-Second Elevator Pitch
 
 > "QRishing attacks have exploded 587 since 2023. Every day, millions of people scan QR codes without thinking twice—at restaurants, parking meters, even in corporate emails. Attackers exploit this trust to steal credentials and install malware.

@@ -1,5 +1,7 @@
 # Mehr Guard: Privacy-First QR Phishing Detection
 
+> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](README.md#summary) and [EVALUATION.md](docs/EVALUATION.md).
+
 Mehr Guard started with a near-miss. My mother scanned a QR code on a parking meter and landed on a page that looked legitimate enough to fool anyone. As a cybersecurity and AI student at Macquarie University in Sydney, I wanted a tool that makes QR scams harder to pull off without requiring people to think like a SOC analyst.
 
 Mehr Guard is an offline-first, privacy-preserving QR phishing detector built with Kotlin Multiplatform. I chose KMP because security logic should not fork across platforms. The same detection engine runs in commonMain and ships to five targets: Android, iOS, Desktop, Web (JS) and Web (Wasm). A suspicious URL gets the same analysis everywhere, closing platform gaps attackers love.

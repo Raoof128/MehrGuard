@@ -138,3 +138,17 @@
   - AGENT.md, CHANGELOG.md
 - **Verification:** `DatasetEvaluationTest` passed in CI on pull request #3 and printed the figures above.
 - **Follow-ups:** Other contest-era documents (`docs/MASTER_PACK*.md`, `PRODUCTION_READINESS.md`, `ESSAY.md`, `docs/internal/`) still quote the old figures. Evaluate on an external phishing feed. Sign the OTA rule file. Fix the false alarms on Australian bank domains. Benchmark latency on a phone.
+
+## 2026-11-17 (Australia/Sydney)
+**Raouf:**
+- **Scope:** Model provenance, offline-check wording, judge files, contest-era banners
+- **Summary:** A second review compared the remaining documents with the code.
+  - **The model was never trained on real data.** `docs/ML_TRAINING.md` said it was ("YES, we trained it"), citing 10,000 URLs from PhishTank, OpenPhish and APWG, an AUC of 0.94 and two scripts that do not exist. `docs/ML_MODEL.md` cited 5,847 URLs with fold-by-fold precision. `models/phishing_model_weights.json` carried `accuracy 0.92` and `training_samples 50000`. In fact the weights are constants in `LogisticRegressionModel.kt`, and `scripts/generate_model.py` fits 1,000 samples drawn from ten fixed URLs. Both documents are rewritten to say this, and the metadata block is removed.
+  - **The README** described the ensemble as trained models with majority voting. It is a fixed weighted average (0.40 / 0.35 / 0.25) of a hand-weighted logistic score and fifteen hand-written threshold rules. The code-sharing table, whose line counts did not match the tree, is removed. The clone command pointed at a different repository.
+  - **The offline check** was described as using a network monitor. `OfflineOnlyTest` checks timing only, and the README quoted output the script never prints. Both now say it is a timing sanity check and that the evidence for offline analysis is the absence of an HTTP client.
+  - **`JUDGE_QUICKSTART.md` and `JUDGE_VERIFICATION_SUMMARY.md`** still showed 87% F1, under 5 ms and "zero network calls" as passed checks. They now show the measured or asserted figures.
+  - **`judge/verify_parity.sh`** could not fail (no `pipefail`); it now can.
+  - **44 contest-era documents** at the root and under `docs/` carry a banner saying they were written for the December 2025 submission, have not been re-verified, and where the measured figures are.
+- **Files Changed:** README.md, JUDGE_QUICKSTART.md, JUDGE_VERIFICATION_SUMMARY.md, docs/ML_MODEL.md, docs/ML_TRAINING.md, docs/LIMITATIONS.md, models/phishing_model_weights.json, judge/verify_offline.sh, judge/verify_parity.sh, banners on 44 documents, AGENT.md, CHANGELOG.md
+- **Verification:** CI on the pull request. No application code changed.
+- **Follow-ups:** The OTA update URL in `OtaUpdateManager.kt` points at a renamed GitHub Pages path and should be checked. Parse and validate a downloaded rule file before caching it. Train and evaluate a real model on a public feed with a held-out split, or remove the model.

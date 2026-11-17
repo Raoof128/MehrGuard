@@ -72,7 +72,7 @@ Mehr Guard is a QR code and URL phishing scanner written in Kotlin Multiplatform
 |------|--------|------|
 | **1** | 📱 [Download APK](https://github.com/Raoof128/Raoof128.github.io/releases/tag/v2.0.36-submission) | 10s |
 | **2** | 🌐 [Open Web Demo](https://raoof128.github.io) — paste `paypa1-secure.tk` | 20s |
-| **3** | ✅ Run `./judge/verify_offline.sh` (checks the engine makes no network calls) | 30s |
+| **3** | ✅ Run `./judge/verify_accuracy.sh` (prints the measured accuracy table) | 60s |
 
 > 📋 **Full Guide:** [JUDGE_QUICKSTART.md](JUDGE_QUICKSTART.md) • 📝 **Essay:** [ESSAY.md](ESSAY.md)
 
@@ -127,8 +127,8 @@ Install on any Android 8+ device. No build required.
 ### Clone Repository
 
 ```bash
-git clone https://github.com/Raoof128/Raoof128.github.io.git
-cd Raoof128.github.io
+git clone https://github.com/Raoof128/MehrGuard.git
+cd MehrGuard
 ```
 
 ### Platform Build Commands
@@ -245,16 +245,6 @@ open iosApp/MehrGuard.xcodeproj
               └───────────────────────────────────────────────┘
 ```
 
-### Code Sharing Metrics
-
-| Component | Lines | Shared |
-|-----------|-------|--------|
-| Detection Engine | ~11,000 | **100%** |
-| ML Models | ~1,400 | **100%** |
-| Heuristics | ~2,500 | **100%** |
-| Platform Code | ~12,500 | 0% |
-| **Total** | ~26,000 | **52%** |
-
 All security-critical logic lives in `common/src/commonMain/kotlin/`. Platform modules only implement camera/QR scanning and native UI.
 
 ---
@@ -271,10 +261,9 @@ All security-critical logic lives in `common/src/commonMain/kotlin/`. Platform m
    - @ symbol injection, URL shorteners, credential paths
 
 2. **Ensemble ML Model**
-   - Logistic Regression (speed)
-   - Gradient Boosting (accuracy)
-   - Decision Rules (explainability)
-   - Majority voting for final prediction
+   - A logistic score over fifteen URL features, with hand-set weights
+   - Fifteen hand-written threshold rules
+   - Blended as a fixed weighted average (0.40 / 0.35 / 0.25); nothing is learned from data
 
 3. **Verdict Determination**
    - Each component votes: SAFE / SUSPICIOUS / MALICIOUS
@@ -383,22 +372,20 @@ val result = phishingEngine.analyze(scenario.maliciousUrl)
 ./judge/verify_all.sh
 
 # Individual verifications:
-./judge/verify_offline.sh      # The engine makes no network calls
+./judge/verify_offline.sh      # Timing sanity check; the engine has no HTTP client
 ./judge/verify_performance.sh  # Latency assertions
 ./judge/verify_accuracy.sh     # Measured precision, recall and F1 on the committed dataset
-./judge/verify_parity.sh       # Identical verdicts across platforms
+./judge/verify_parity.sh       # The parity tests on the JVM, and that each other target builds
 ```
 
 ---
 
 ## Privacy Guarantee
 
-The detection engine makes **no network calls**: analysing a URL never contacts a server. Verification:
+The detection engine makes **no network calls**: analysing a URL never contacts a server. The evidence is the code: the analysis module has no HTTP client. The script below is a timing sanity check, not a network monitor:
 
 ```bash
 ./judge/verify_offline.sh
-# ✅ OFFLINE VERIFICATION PASSED
-# Analyzed 27 URLs, made 0 network calls
 ```
 
 The detection engine has no HTTP client dependencies. Separately from analysis, the Android app checks GitHub Pages at startup for updated detection rules; no scanned URL or other user data is part of that request.
@@ -439,7 +426,7 @@ All claims are backed by reproducible evidence:
 
 ```bash
 ./judge/verify_all.sh        # Run all verifications
-./judge/verify_offline.sh    # The engine makes no network calls
+./judge/verify_offline.sh    # Timing sanity check; the engine has no HTTP client
 ./judge/verify_performance.sh # Latency assertions
 ./judge/verify_accuracy.sh   # Measured precision, recall and F1
 ./judge/verify_parity.sh     # Cross-platform parity
@@ -455,7 +442,7 @@ All claims are backed by reproducible evidence:
 | [ESSAY.md](ESSAY.md) | Competition essay (300 words) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design |
 | [docs/SHARED_CODE_REPORT.md](docs/SHARED_CODE_REPORT.md) | KMP code sharing breakdown |
-| [docs/ML_MODEL.md](docs/ML_MODEL.md) | ML architecture details |
+| [docs/ML_MODEL.md](docs/ML_MODEL.md) | The scoring model, and why it is hand-set and not trained |
 
 ---
 
