@@ -39,7 +39,7 @@ jobs:
       - name: Run Energy & Performance Benchmarks
         run: |
           echo "🚀 Running Energy Proxy Benchmarks..."
-          ./gradlew :common:desktopTest --tests "com.mehrguard.benchmark.EnergyProxyBenchmark" --info | tee energy-output.txt || true
+          ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.benchmark.EnergyProxyBenchmark" --info | tee energy-output.txt || true
           cat energy-output.txt
           
       - name: Extract Metrics

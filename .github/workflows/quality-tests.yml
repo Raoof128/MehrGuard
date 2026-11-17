@@ -43,7 +43,7 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Run Property-Based Tests
-        run: ./gradlew :common:desktopTest --tests "com.mehrguard.core.PropertyBasedTest" --no-daemon
+        run: ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.core.PropertyBasedTest" --no-daemon
         continue-on-error: true
         
       - name: Upload Test Results
@@ -76,11 +76,11 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Run Performance Regression Tests
-        run: ./gradlew :common:desktopTest --tests "com.mehrguard.benchmark.PerformanceRegressionTest" --no-daemon
+        run: ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.benchmark.PerformanceRegressionTest" --no-daemon
         continue-on-error: true
         
       - name: Run Benchmark Tests
-        run: ./gradlew :common:desktopTest --tests "com.mehrguard.benchmark.PerformanceBenchmarkTest" --no-daemon
+        run: ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.benchmark.PerformanceBenchmarkTest" --no-daemon
         continue-on-error: true
         
       - name: Upload Test Results
