@@ -64,3 +64,9 @@
 - **Scope:** Model provenance, offline-check wording, judge files, contest-era banners
 - **Summary:** A second review found that two documents and the weights file described model training that never happened (a 50,000-sample training set, data from PhishTank, an AUC). The weights are set by hand. Those documents are rewritten to say so, the invented metadata is removed from the weights file, and the README describes the scoring model as a fixed weighted blend. The offline check is described as the timing check it is. 44 contest-era documents carry a banner pointing at the measured figures.
 - **Status:** No application code changed.
+
+### 2026-11-17 (Australia/Sydney)
+**Raouf:**
+- **Scope:** OTA rule updates are validated and checksum-verified before they are cached
+- **Summary:** `OtaUpdateManager` cached any download under 500 KB without parsing it, and its header said SHA-256 checking was unnecessary. It now parses the manifest and both data files (strict JSON, expected shape, size in bytes), checks each file's size and SHA-256 against `version.json`, refuses an update whose checksum is missing or a placeholder, and writes to the cache only when both files pass. Cached files are re-checked on load and ignored in favour of the bundled data if they fail. `data/updates/version.json` now carries the real checksums and sizes. The checksum comes from the same origin as the data, so it detects corruption, not a compromised origin; signed manifests are still not implemented. The update URL returned 404 at both candidate paths on 17 Nov 2026, so `UPDATE_BASE_URL` is unchanged and the docs say the check has no effect.
+- **Status:** Detection logic and weights unchanged.

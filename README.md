@@ -44,7 +44,7 @@ Mehr Guard is a QR code and URL phishing scanner written in Kotlin Multiplatform
 
 **What this does not show.** The author wrote both the dataset and the rules, so this checks that the rules fire on the patterns they were written for. It is not a held-out benchmark, and no live phishing feed has been evaluated. The nine false alarms include all four Australian bank sites in the set, which matters for a scanner aimed at Australian users. The one miss is a punycode domain. The model's weights were fitted to synthetic URLs.
 
-**Network use.** URL analysis runs on the device and scanned URLs are not sent anywhere. The Android app does make one kind of request: at startup it checks GitHub Pages for updated detection rules, which is why it holds the `INTERNET` permission. That download is not signature-checked yet; see [Limitations](docs/LIMITATIONS.md).
+**Network use.** URL analysis runs on the device and scanned URLs are not sent anywhere. The Android app does make one kind of request: at startup it checks GitHub Pages for updated detection rules, which is why it holds the `INTERNET` permission. A downloaded update is applied only if it matches a SHA-256 published in the manifest, which detects corruption but not a compromised origin; signed manifests are not implemented. As of 17 Nov 2026 the update endpoint returns 404, so the check has no effect. See [Limitations](docs/LIMITATIONS.md).
 
 **About the rest of this repository.** Mehr Guard was built for the KotlinConf 2025–26 student contest, and much of the documentation below and under `docs/` was written for that submission in December 2025. Where an older document quotes a figure that differs from this section, this section and the CI output are the ones to trust.
 

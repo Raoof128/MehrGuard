@@ -146,7 +146,8 @@ object AndroidOtaFactory {
     fun createUpdateManager(context: Context): OtaUpdateManager {
         return OtaUpdateManager(
             storage = AndroidOtaStorage(context.applicationContext),
-            httpClient = AndroidOtaHttpClient()
+            httpClient = AndroidOtaHttpClient(),
+            log = { message -> Log.w("OtaUpdate", message) }
         )
     }
 }
