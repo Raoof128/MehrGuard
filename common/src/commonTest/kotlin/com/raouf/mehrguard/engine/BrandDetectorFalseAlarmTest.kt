@@ -34,6 +34,11 @@ import kotlin.test.assertNull
  * 3. Two edits were allowed whatever the length of the brand, so three- and
  *    four-letter names matched almost anything (`cnn` against `anz`).
  *
+ * It also covers the rules that keep those fixes from opening a gap: a brand's
+ * own site is exempt only from checks for that brand, hosts under shared hosting
+ * suffixes are never exempt, and a brand's exact name on a domain it does not
+ * own is reported.
+ *
  * Most of the hosts below are not in the evaluation dataset.
  */
 class BrandDetectorFalseAlarmTest {
@@ -131,6 +136,88 @@ class BrandDetectorFalseAlarmTest {
 
         assertEquals("paypal", result.match)
         assertEquals(BrandDetector.MatchType.HOMOGRAPH, result.details?.matchType)
+    }
+
+    @Test
+    fun `a brand name under a shared hosting suffix is reported`() {
+        val hosts = listOf(
+            "paypal.cloudapp.azure.com",
+            "paypal.azurewebsites.net",
+            "paypal.sharepoint.com",
+            "paypal.blogspot.com",
+            "paypal.appspot.com",
+            "paypal.web.app",
+            "paypal.firebaseapp.com",
+            "paypal.github.io",
+            "paypal.herokuapp.com",
+            "paypal.s3.amazonaws.com",
+            "paypal.pages.dev",
+            "paypal.workers.dev",
+            "paypal.vercel.app",
+            "paypal.netlify.app"
+        )
+        for (host in hosts) {
+            assertEquals("paypal", detector.detect("https://$host/login").match, "Not reported: $host")
+        }
+    }
+
+    @Test
+    fun `a hosting suffix under an official domain does not exempt the brand that owns it`() {
+        // azure.com is an official Microsoft domain, but anyone can register a
+        // name under cloudapp.azure.com.
+        assertEquals("microsoft", detector.detect("https://microsoft.cloudapp.azure.com/login").match)
+    }
+
+    @Test
+    fun `the name of one brand on the official domain of another is reported`() {
+        val result = detector.detect("https://paypal.google.com/login")
+
+        assertEquals("paypal", result.match)
+        assertEquals(BrandDetector.MatchType.EXACT_IN_SUBDOMAIN, result.details?.matchType)
+    }
+
+    @Test
+    fun `the exact name of a brand on a domain it does not own is reported`() {
+        val cases = mapOf(
+            "https://commbank.co.uk/login" to "commbank",
+            "https://westpac.tk" to "westpac",
+            "https://paypal.co.nz" to "paypal",
+            "https://paypal-security.com" to "paypal",
+            "https://secure-paypal-verification.com/confirm" to "paypal",
+            "https://microsoft-update.com" to "microsoft",
+            "https://amazon-verify.com" to "amazon"
+        )
+        for ((url, brand) in cases) {
+            val result = detector.detect(url)
+            assertEquals(brand, result.match, "Wrong brand for $url")
+            assertEquals(BrandDetector.MatchType.EXACT_NAME, result.details?.matchType, "Wrong match type for $url")
+        }
+    }
+
+    @Test
+    fun `a brand name inside a longer word is not an exact-name match`() {
+        val sites = listOf(
+            "https://www.pineapple.com",
+            "https://www.snapple.com",
+            "https://www.paypalobjects.com/checkout.js"
+        )
+        for (site in sites) {
+            assertNull(detector.detect(site).match, "Reported a brand for $site")
+        }
+    }
+
+    @Test
+    fun `listed regional sites of a brand are not reported`() {
+        val sites = listOf(
+            "https://www.amazon.de/gp/cart",
+            "https://www.google.de",
+            "https://www.dhl.de",
+            "https://discord.gg/abc",
+            "https://www.medicare.gov"
+        )
+        for (site in sites) {
+            assertNull(detector.detect(site).match, "Reported a brand for $site")
+        }
     }
 
     @Test

@@ -33,6 +33,7 @@ package com.raouf.mehrguard.engine
     "MagicNumber",
     "ReturnCount",
     "CyclomaticComplexMethod",
+    "CognitiveComplexMethod",
     "NestedBlockDepth",
     "LoopWithTooManyJumpStatements",
     "ComplexCondition"

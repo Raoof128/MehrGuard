@@ -22,9 +22,10 @@ package com.raouf.mehrguard.engine
  * Detects when URLs attempt to impersonate well-known brands
  * using typosquatting, homographs, subdomain abuse, and fuzzy matching.
  *
- * Hosts are split on their public suffix ([PublicSuffixList]), internationalised
- * hosts are decoded first ([Punycode]), and a host on any listed brand's official
- * domain is never reported.
+ * Hosts are split on their public suffix ([PublicSuffixList]) and internationalised
+ * hosts are decoded first ([Punycode]). A host on a brand's official domain is not
+ * checked against that brand; it is still checked against the others. Hosts under
+ * shared hosting suffixes are never treated as official.
  *
  * SECURITY NOTES:
  * - All inputs are bounded to prevent DoS
@@ -58,13 +59,17 @@ class BrandDetector {
          */
         private const val FUZZY_CHARS_PER_EDIT = 3
 
-        /** Official domains of every brand in the database, lower case. */
-        private val ALL_OFFICIAL_DOMAINS: Set<String> by lazy {
-            BrandDatabase.brands.values
-                .flatMap { it.officialDomains }
-                .map { it.lowercase() }
-                .toSet()
-        }
+        /**
+         * Hosting services under which anyone can register a name. A host under one
+         * of these is never treated as a brand's own site, even where the suffix sits
+         * under an official domain (cloudapp.azure.com under azure.com).
+         */
+        private val USER_CONTENT_SUFFIXES = setOf(
+            "cloudapp.azure.com", "azurewebsites.net", "sharepoint.com",
+            "blogspot.com", "appspot.com", "web.app", "firebaseapp.com",
+            "github.io", "herokuapp.com", "amazonaws.com",
+            "pages.dev", "workers.dev", "vercel.app", "netlify.app"
+        )
 
         // === SCORING ===
 
@@ -73,6 +78,7 @@ class BrandDetector {
         const val SCORE_HOMOGRAPH = 40
         const val SCORE_COMBOSQUAT = 25
         const val SCORE_FUZZY_MATCH = 20
+        const val SCORE_EXACT_NAME = 30
     }
 
 
@@ -84,7 +90,10 @@ class BrandDetector {
         TYPOSQUAT,
         HOMOGRAPH,
         COMBO_SQUAT,
-        FUZZY_MATCH
+        FUZZY_MATCH,
+
+        /** The brand's name is the site name, or a hyphen-separated part of it, on a domain the brand does not own */
+        EXACT_NAME
     }
 
     /**
@@ -136,75 +145,84 @@ class BrandDetector {
             return DetectionResult(score = 0, match = null, details = null)
         }
 
-        // Decode xn-- labels first: the homograph patterns below are Unicode text,
-        // and links normally carry an internationalised host in its ASCII form.
+        // Decode xn-- labels first: the homograph patterns are Unicode text, and
+        // links normally carry an internationalised host in its ASCII form.
         val hostLower = Punycode.toUnicodeHost(host.lowercase()).lowercase()
-
-        // A site on a listed brand's own domain is not impersonating that brand,
-        // and it is not a misspelling of some other brand either.
-        if (isOfficialDomain(hostLower)) {
-            return DetectionResult(score = 0, match = null, details = null)
-        }
 
         // Split the host on its public suffix, so that in "www.example.com.au"
         // the site name is "example" and not "com".
         val parsedHost = PublicSuffixList.default.parse(hostLower)
 
-        // Check each brand from the database
+        // Anyone can register a name under a hosting service, so no host there
+        // counts as a brand's own site.
+        val userContentHost = USER_CONTENT_SUFFIXES.any { isOnDomain(hostLower, it) }
+
+        // Whether the host is the official site of some listed brand. Such a site
+        // name is a real brand's name, so it is not also a misspelling of another
+        // brand (spotify.com is not a typo of shopify). Only the fuzzy check is
+        // skipped; every other check still runs for the other brands.
+        val onListedOfficialSite = !userContentHost &&
+            BrandDatabase.brands.values.any { isOfficialFor(it, hostLower) }
+
         for ((brand, config) in BrandDatabase.brands) {
-            // 1. EXACT_IN_SUBDOMAIN - brand appears in subdomain
-            if (isBrandInSubdomain(parsedHost, brand)) {
-                return DetectionResult(
-                    score = SCORE_EXACT_SUBDOMAIN,
-                    match = brand,
-                    details = BrandMatch(brand, MatchType.EXACT_IN_SUBDOMAIN, brand, config.category)
-                )
-            }
+            // A brand's own site does not impersonate that brand. It is still
+            // checked against every other brand.
+            if (!userContentHost && isOfficialFor(config, hostLower)) continue
 
-            // 2. HOMOGRAPH - highest severity, check first
-            for (variant in config.homographs) {
-                if (hostLower.contains(variant.lowercase())) {
-                    return DetectionResult(
-                        score = SCORE_HOMOGRAPH,
-                        match = brand,
-                        details = BrandMatch(brand, MatchType.HOMOGRAPH, variant, config.category)
-                    )
-                }
-            }
-
-            // 3. TYPOSQUAT - character substitution
-            for (variant in config.typosquats) {
-                if (hostLower.contains(variant.lowercase())) {
-                    return DetectionResult(
-                        score = SCORE_TYPOSQUAT,
-                        match = brand,
-                        details = BrandMatch(brand, MatchType.TYPOSQUAT, variant, config.category)
-                    )
-                }
-            }
-
-            // 4. COMBOSQUAT - brand + keyword
-            for (combo in config.combosquats) {
-                if (hostLower.contains(combo.lowercase())) {
-                    return DetectionResult(
-                        score = SCORE_COMBOSQUAT,
-                        match = brand,
-                        details = BrandMatch(brand, MatchType.COMBO_SQUAT, combo, config.category)
-                    )
-                }
-            }
-
-            // 5. FUZZY MATCH - edit distance (expensive, check last)
-            if (isFuzzyMatch(parsedHost, brand)) {
-                return DetectionResult(
-                    score = SCORE_FUZZY_MATCH,
-                    match = brand,
-                    details = BrandMatch(brand, MatchType.FUZZY_MATCH, brand, config.category)
-                )
-            }
+            val match = matchBrand(brand, config, hostLower, parsedHost, allowFuzzy = !onListedOfficialSite)
+            if (match != null) return match
         }
 
         return DetectionResult(score = 0, match = null, details = null)
+    }
+
+    /**
+     * Check one brand against the host, strongest evidence first.
+     *
+     * 1. the brand name in a subdomain
+     * 2. a listed homograph, 3. a listed typosquat, 4. a listed brand-plus-keyword name
+     * 5. the brand name as the site name, or as one hyphen-separated part of it
+     *    (paypal-security.com)
+     * 6. a site name within a small edit distance of the brand
+     */
+    private fun matchBrand(
+        brand: String,
+        config: BrandDatabase.BrandConfig,
+        hostLower: String,
+        parsedHost: PublicSuffixList.ParseResult,
+        allowFuzzy: Boolean
+    ): DetectionResult? {
+        val siteName = parsedHost.registrableDomain.substringBefore('.')
+        val homograph = config.homographs.firstOrNull { hostLower.contains(it.lowercase()) }
+        val typosquat = config.typosquats.firstOrNull { hostLower.contains(it.lowercase()) }
+        val combosquat = config.combosquats.firstOrNull { hostLower.contains(it.lowercase()) }
+
+        val found: Pair<MatchType, String>? = when {
+            isBrandInSubdomain(parsedHost, brand) -> MatchType.EXACT_IN_SUBDOMAIN to brand
+            homograph != null -> MatchType.HOMOGRAPH to homograph
+            typosquat != null -> MatchType.TYPOSQUAT to typosquat
+            combosquat != null -> MatchType.COMBO_SQUAT to combosquat
+            hostLower.contains('.') && isBrandName(siteName, brand) -> MatchType.EXACT_NAME to siteName
+            allowFuzzy && isFuzzyMatch(parsedHost, brand) -> MatchType.FUZZY_MATCH to brand
+            else -> null
+        }
+
+        return found?.let { (type, pattern) ->
+            DetectionResult(
+                score = scoreFor(type),
+                match = brand,
+                details = BrandMatch(brand, type, pattern, config.category)
+            )
+        }
+    }
+
+    private fun scoreFor(type: MatchType): Int = when (type) {
+        MatchType.EXACT_IN_SUBDOMAIN -> SCORE_EXACT_SUBDOMAIN
+        MatchType.HOMOGRAPH -> SCORE_HOMOGRAPH
+        MatchType.TYPOSQUAT -> SCORE_TYPOSQUAT
+        MatchType.COMBO_SQUAT -> SCORE_COMBOSQUAT
+        MatchType.EXACT_NAME -> SCORE_EXACT_NAME
+        MatchType.FUZZY_MATCH -> SCORE_FUZZY_MATCH
     }
 
     /**
@@ -220,16 +238,35 @@ class BrandDetector {
     }
 
     /**
-     * True when [host] is an official domain of any listed brand, or a subdomain of one.
-     * The match is on whole labels: "evilpaypal.com" is not "paypal.com".
+     * True when [host] is [domain] or a subdomain of it. The match is on whole
+     * labels: "evilpaypal.com" is not on "paypal.com".
      */
-    private fun isOfficialDomain(host: String): Boolean {
-        return ALL_OFFICIAL_DOMAINS.any { host == it || host.endsWith(".$it") }
+    private fun isOnDomain(host: String, domain: String): Boolean {
+        return host == domain || host.endsWith(".$domain")
+    }
+
+    /**
+     * True when [host] is on one of the brand's official domains.
+     *
+     * Official entries are matched as whole-label suffixes and not by registrable
+     * domain, because some entries are narrower than a registrable domain
+     * (weixin.qq.com) and some are public suffixes themselves (gov.uk).
+     */
+    private fun isOfficialFor(config: BrandDatabase.BrandConfig, host: String): Boolean {
+        return config.officialDomains.any { isOnDomain(host, it.lowercase()) }
+    }
+
+    /**
+     * True when [brand] is the whole site name or one hyphen-separated part of it:
+     * "paypal" in "paypal" and in "secure-paypal-login", but not in "paypalobjects".
+     */
+    private fun isBrandName(siteName: String, brand: String): Boolean {
+        return siteName == brand || siteName.split('-').any { it == brand }
     }
 
     /**
      * Check if the brand name appears in the labels to the left of the registrable domain.
-     * Official domains are excluded before this is called.
+     * The brand's own official domains are excluded before this is called.
      */
     private fun isBrandInSubdomain(parsedHost: PublicSuffixList.ParseResult, brand: String): Boolean {
         if (parsedHost.subdomains.isEmpty()) return false

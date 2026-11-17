@@ -127,7 +127,10 @@ object BrandDatabase {
         // === TECH GIANTS ===
 
         "google" to BrandConfig(
-            officialDomains = setOf("google.com", "google.co.uk", "google.com.au", "gmail.com", "youtube.com"),
+            officialDomains = setOf(
+                "google.com", "google.co.uk", "google.com.au", "google.de", "google.fr", "google.ca",
+                "google.co.jp", "google.co.in", "google.com.br", "gmail.com", "youtube.com"
+            ),
             typosquats = listOf("g00gle", "googie", "goog1e", "gooogle", "goggle", "gogle", "ggole", "googel", "goolge"),
             homographs = listOf("gооgle", "googlе"), // Cyrillic 'о', 'е'
             combosquats = listOf("google-login", "google-verify", "google-account", "google-security", "google-alert"),
@@ -151,7 +154,10 @@ object BrandDatabase {
         ),
 
         "amazon" to BrandConfig(
-            officialDomains = setOf("amazon.com", "amazon.co.uk", "amazon.com.au", "aws.amazon.com", "amzn.com"),
+            officialDomains = setOf(
+                "amazon.com", "amazon.co.uk", "amazon.com.au", "amazon.de", "amazon.fr", "amazon.ca",
+                "amazon.co.jp", "amazon.in", "amazon.it", "amazon.es", "aws.amazon.com", "amzn.com"
+            ),
             typosquats = listOf("amaz0n", "arnazon", "amazom", "amazonn", "amazn"),
             homographs = listOf("аmazon", "amаzon"), // Cyrillic 'а'
             combosquats = listOf("amazon-prime", "amazon-order", "amazon-delivery", "amazon-login", "amazon-security"),
@@ -229,7 +235,7 @@ object BrandDatabase {
         ),
 
         "dhl" to BrandConfig(
-            officialDomains = setOf("dhl.com", "dhl.com.au"),
+            officialDomains = setOf("dhl.com", "dhl.com.au", "dhl.de"),
             typosquats = listOf("dh1", "dhll", "d-hl"),
             homographs = listOf("dһl"), // Cyrillic 'һ'
             combosquats = listOf("dhl-tracking", "dhl-delivery", "dhl-parcel"),
@@ -291,7 +297,8 @@ object BrandDatabase {
         // === HEALTHCARE ===
 
         "medicare" to BrandConfig(
-            officialDomains = setOf("servicesaustralia.gov.au", "humanservices.gov.au"),
+            // medicare.gov is the United States programme of the same name
+            officialDomains = setOf("servicesaustralia.gov.au", "humanservices.gov.au", "medicare.gov"),
             typosquats = listOf("medlcare", "med1care", "medicarre"),
             homographs = listOf("mediсare"), // Cyrillic 'с'
             combosquats = listOf("medicare-login", "medicare-claim", "medicare-rebate"),
@@ -353,7 +360,7 @@ object BrandDatabase {
         ),
 
         "telegram" to BrandConfig(
-            officialDomains = setOf("telegram.org", "t.me"),
+            officialDomains = setOf("telegram.org", "telegram.me", "t.me"),
             typosquats = listOf("te1egram", "telegran", "telegramm"),
             homographs = listOf("telеgram"), // Cyrillic 'е'
             combosquats = listOf("telegram-verify", "telegram-login", "telegram-web"),
@@ -363,7 +370,9 @@ object BrandDatabase {
         // === MORE E-COMMERCE ===
 
         "ebay" to BrandConfig(
-            officialDomains = setOf("ebay.com", "ebay.com.au", "ebay.co.uk"),
+            officialDomains = setOf(
+                "ebay.com", "ebay.com.au", "ebay.co.uk", "ebay.de", "ebay.fr", "ebay.it", "ebay.ca"
+            ),
             typosquats = listOf("ebaay", "eb4y", "ebbay"),
             homographs = listOf("ebаy"), // Cyrillic 'а'
             combosquats = listOf("ebay-login", "ebay-verify", "ebay-order"),
@@ -415,7 +424,7 @@ object BrandDatabase {
         ),
 
         "discord" to BrandConfig(
-            officialDomains = setOf("discord.com", "discordapp.com"),
+            officialDomains = setOf("discord.com", "discordapp.com", "discord.gg"),
             typosquats = listOf("dlscord", "disc0rd", "discrod"),
             homographs = listOf("disсord"), // Cyrillic 'с'
             combosquats = listOf("discord-nitro", "discord-gift", "discord-verify"),
@@ -545,7 +554,7 @@ object BrandDatabase {
         ),
 
         "airbnb" to BrandConfig(
-            officialDomains = setOf("airbnb.com"),
+            officialDomains = setOf("airbnb.com", "airbnb.co.uk", "airbnb.com.au"),
             typosquats = listOf("a1rbnb", "airnbnb", "airbnbb"),
             homographs = listOf("аirbnb"), // Cyrillic 'а'
             combosquats = listOf("airbnb-login", "airbnb-verify", "airbnb-booking"),
