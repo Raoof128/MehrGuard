@@ -46,3 +46,9 @@
 - **Scope:** CI workflow validity and licence text
 - **Summary:** Fixed the two workflow files GitHub rejected on every push (`ci.yml` used the `secrets` context in step-level `if:`; `performance.yml` used double-quoted strings inside an expression), and replaced the abridged `LICENSE` with the full canonical Apache License 2.0 text so the licence is detected correctly.
 - **Status:** Workflow files validate with actionlint; no application code changed.
+
+### 2026-11-17 (Australia/Sydney)
+**Raouf:**
+- **Scope:** CI now runs on `master`, the default branch
+- **Summary:** Extended the CI trigger to `master` and fixed what the first real run reported: a missing `VIBRATE` permission in the common library manifest, `--tests` filters pointing at a package that does not exist, missing token permissions for the PR comment and check steps, and an Android test summary step that failed when there were no report files.
+- **Status:** All CI jobs pass on the pull request.

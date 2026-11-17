@@ -2,10 +2,17 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, master, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
   workflow_dispatch:
+
+# The summary and coverage steps comment on pull requests and the test reporter
+# publishes a check run, so the token needs more than the read-only default.
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
 
 env:
   JAVA_VERSION: '17'
@@ -58,32 +65,32 @@ jobs:
     - name: Run Performance Benchmarks
       run: |
         echo "📊 Running Performance Benchmarks..."
-        ./gradlew :common:desktopTest --tests "com.mehrguard.benchmark.PerformanceBenchmarkTest" --info --no-daemon
+        ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.benchmark.PerformanceBenchmarkTest" --info --no-daemon
       continue-on-error: true  # Don't fail build on benchmark variance
 
     # Judge-Proof Verification: Accuracy
     - name: Verify Accuracy (Precision/Recall/F1)
       run: |
         echo "📊 Running Accuracy Verification..."
-        ./gradlew :common:desktopTest --tests "com.mehrguard.core.AccuracyVerificationTest" --info --no-daemon
+        ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.core.AccuracyVerificationTest" --info --no-daemon
 
     # Judge-Proof Verification: Offline Operation
     - name: Verify Offline Operation (No Network)
       run: |
         echo "🔒 Running Offline Verification..."
-        ./gradlew :common:desktopTest --tests "com.mehrguard.core.OfflineOnlyTest" --info --no-daemon
+        ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.core.OfflineOnlyTest" --info --no-daemon
 
     # Judge-Proof Verification: Threat Model Coverage
     - name: Verify Threat Model Coverage
       run: |
         echo "🛡️ Running Threat Model Verification..."
-        ./gradlew :common:desktopTest --tests "com.mehrguard.security.ThreatModelVerificationTest" --info --no-daemon
+        ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.security.ThreatModelVerificationTest" --info --no-daemon
 
     # Property-Based Tests (Invariants)
     - name: Verify Invariants (Property-Based Tests)
       run: |
         echo "🧪 Running Property-Based Tests..."
-        ./gradlew :common:desktopTest --tests "com.mehrguard.core.PropertyBasedTest" --info --no-daemon
+        ./gradlew :common:desktopTest --tests "com.raouf.mehrguard.core.PropertyBasedTest" --info --no-daemon
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
@@ -200,6 +207,8 @@ jobs:
         path: 'androidApp/build/test-results/**/TEST-*.xml'
         reporter: 'java-junit'
         fail-on-error: false
+        # androidApp has no local unit tests yet; an empty report set is not a failure.
+        fail-on-empty: false
 
   # ============================================
   # Desktop Build & Test
