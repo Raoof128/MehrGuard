@@ -120,11 +120,7 @@ The ensemble ML model combines three approaches but is **deliberately lightweigh
 
 ### Accuracy Trade-off
 
-| Metric | Mehr Guard (Ensemble) | Production DL Model |
-|--------|----------------------|---------------------|
-| Precision | ~85% | 92%+ |
-| Recall | ~89% | 95%+ |
-| F1 | ~0.87 | 0.93+ |
+Measured on the committed 100-URL set (`data/test_urls.csv`, 17 Nov 2026; see [EVALUATION.md](EVALUATION.md)): precision 84.5%, recall 98.0%, F1 90.7%. That set was written by the project's author and is not a held-out benchmark, so it is not comparable with published results for deep-learning models on live phishing feeds.
 
 **Decision:** The ensemble approach provides a good balance between accuracy, explainability, and cross-platform compatibility.
 
@@ -220,6 +216,16 @@ A brand-new phishing domain registered 1 hour ago will **not** be in any blockli
 | No real-time feeds | High | Privacy is a feature |
 | Platform gaps | Low | Graceful degradation |
 | False positives | Medium | Feedback mechanism |
+
+---
+
+## Rule updates are not signature-checked
+
+On Android the app checks GitHub Pages at startup for updated detection rules (`OtaUpdateManager`). The download relies on HTTPS alone: there is no checksum or signature on the rule file. Anyone able to change what that origin serves could change the app's detection rules. Signed rule manifests are the fix and are not implemented.
+
+## False alarms on legitimate sites
+
+On the committed dataset, 9 of 50 legitimate sites are returned as SUSPICIOUS, including all four Australian bank sites in the set (see [EVALUATION.md](EVALUATION.md)). A user who sees warnings on their own bank's site will learn to ignore them, so this is the limitation that most affects real use.
 
 ---
 

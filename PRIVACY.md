@@ -18,7 +18,7 @@
 
 ## 🛡️ Data We Never Collect
 
-**Mehr Guard makes zero network calls during operation.** This is enforced by architecture:
+**Analysing a URL makes no network calls.** This is enforced by architecture:
 
 1. **No HTTP client** in the analysis module
 2. **No telemetry SDK** included in dependencies
@@ -78,7 +78,7 @@ Cloud scanners build profiles they can sell, be subpoenaed for, or leak. **Mehr 
 
 ### In Transit
 
-**Not applicable.** Mehr Guard makes zero network calls.
+**Scanned data is never in transit.** The one network request the Android app makes is a startup check of GitHub Pages for updated detection rules. It sends no scanned URL and no identifier, and it is the reason the app holds the `INTERNET` permission.
 
 ### At Rest
 

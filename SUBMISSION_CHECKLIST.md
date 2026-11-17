@@ -137,7 +137,7 @@ cd mehrguard
 The screencast demonstrates:
 - Real-time QR scanning on all platforms
 - Phishing detection with explainable verdicts
-- Red Team developer mode with 19 attack scenarios
+- Red Team developer mode with 18 attack scenarios
 - Beat the Bot gamification feature
 - Cross-platform UI consistency
 

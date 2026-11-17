@@ -52,3 +52,9 @@
 - **Scope:** CI now runs on `master`, the default branch
 - **Summary:** Extended the CI trigger to `master` and fixed what the first real run reported: a missing `VIBRATE` permission in the common library manifest, `--tests` filters pointing at a package that does not exist, missing token permissions for the PR comment and check steps, and an Android test summary step that failed when there were no report files.
 - **Status:** All CI jobs pass on the pull request.
+
+### 2026-11-17 (Australia/Sydney)
+**Raouf:**
+- **Scope:** Accuracy, latency and network claims brought in line with what is measured
+- **Summary:** `scripts/eval.sh` and `judge/verify_accuracy.sh` printed fixed accuracy figures rather than computing them, and two documents quoted evaluation sets that are not in the repository. `DatasetEvaluationTest` now measures the engine on `data/test_urls.csv` in CI, and the README, evaluation, limitations and privacy documents state the measured figures and their limits.
+- **Status:** Measured on 17 Nov 2026: precision 84.5%, recall 98.0%, F1 90.7% on 100 author-written URLs; 9 of 50 legitimate sites flagged.

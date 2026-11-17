@@ -73,7 +73,7 @@ cd mehrguard
 | **Web** | Settings → Security Settings → "Enable Red Team Scenarios" toggle | Toggle ON/OFF |
 
 **What You'll See:**
-- 19 curated attack scenarios (homographs, IP obfuscation, TLD abuse, brand impersonation, URL shorteners, safe controls)
+- 18 curated attack scenarios (homographs, IP obfuscation, TLD abuse, brand impersonation, URL shorteners, safe controls)
 - One-tap testing of detection accuracy (bypasses camera, feeds URL directly to engine)
 - Useful for demonstrating engine capabilities to judges without needing QR codes
 

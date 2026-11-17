@@ -11,7 +11,7 @@
 # 4. Asserts P50 < 5ms (our claim) and P99 < 50ms
 # ==============================================================================
 
-set -e
+set -eo pipefail
 
 echo "Verifying performance claims..."
 echo ""
@@ -28,11 +28,9 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "✅ PERFORMANCE VERIFICATION PASSED"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "Expected results:"
-echo "  • P50 (median): < 5ms   ← Our claim"
-echo "  • P90:          < 10ms"
-echo "  • P99:          < 50ms"
-echo "  • Throughput:   > 200 URLs/sec"
+echo "What the tests assert (see PerformanceBenchmarkTest and PerformanceRegressionTest):"
+echo "  • Full analysis of one URL: P99 under 50 ms"
+echo "  • The measured values are in the test output above, not in this script"
 echo ""
 echo "Why this matters:"
 echo "  • Real-time feedback during QR scanning"

@@ -10,7 +10,7 @@
 # 3. Confirms all detection is purely algorithmic (heuristics + ML)
 # ==============================================================================
 
-set -e
+set -eo pipefail
 
 echo "Verifying offline-only analysis..."
 echo ""

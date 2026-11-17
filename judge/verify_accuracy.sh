@@ -2,43 +2,31 @@
 # ==============================================================================
 # Detection Accuracy Verification
 # ==============================================================================
-# Proves: 87%+ F1 score on curated test corpus
+# Runs two tests and prints what they measure. Nothing below is a fixed figure:
 #
-# This runs the AccuracyVerificationTest suite which:
-# 1. Tests against 100+ labeled URLs (50 phishing + 50 legitimate)
-# 2. Calculates confusion matrix (TP, FP, FN, TN)
-# 3. Reports Precision, Recall, F1 Score
-# 4. Asserts F1 >= 0.85
+# 1. AccuracyVerificationTest: 41 URLs written into the test (21 phishing,
+#    20 legitimate); asserts precision, recall and F1 floors.
+# 2. DatasetEvaluationTest: the committed dataset data/test_urls.csv
+#    (50 legitimate, 50 constructed phishing URLs); prints the confusion
+#    matrix, the metrics, a per-category breakdown and every misclassified row.
+#
+# Both sets were written by the project's author, who also wrote the rules.
+# These are checks on known patterns, not a held-out benchmark.
 # ==============================================================================
 
-set -e
+set -euo pipefail
 
-echo "Verifying detection accuracy..."
+echo "Running the accuracy tests..."
 echo ""
 
-# Run the accuracy verification tests
 ./gradlew :common:desktopTest \
     --tests "*AccuracyVerificationTest*" \
+    --tests "*DatasetEvaluationTest*" \
     --no-daemon \
-    --quiet \
-    2>&1 | tail -30
+    --quiet
 
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "✅ ACCURACY VERIFICATION PASSED"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "Measured on data/test_urls.csv:"
 echo ""
-echo "Expected results:"
-echo "  • Precision: ~85% (few false alarms)"
-echo "  • Recall:    ~89% (catches most phishing)"
-echo "  • F1 Score:  ~87% ← Our claim"
-echo ""
-echo "Test corpus includes:"
-echo "  • Brand impersonation (paypa1, amaz0n)"
-echo "  • Homograph attacks (Cyrillic characters)"
-echo "  • Suspicious TLDs (.tk, .ml, .ga)"
-echo "  • IP address hosts"
-echo "  • URL shorteners"
-echo "  • Legitimate major sites (Google, Apple, Microsoft)"
-echo "  • Government and educational sites"
+cat common/build/reports/dataset-evaluation.txt
 echo ""
