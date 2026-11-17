@@ -54,12 +54,12 @@ run_verification "1️⃣  Offline Analysis (Zero Network Calls)" "./judge/verif
 # ============================================================================
 # 2. PERFORMANCE CLAIMS
 # ============================================================================
-run_verification "2️⃣  Performance (<5ms P50 Latency)" "./judge/verify_performance.sh"
+run_verification "2️⃣  Performance (latency assertions)" "./judge/verify_performance.sh"
 
 # ============================================================================
 # 3. DETECTION ACCURACY
 # ============================================================================
-run_verification "3️⃣  Detection Accuracy (87% F1 Score)" "./judge/verify_accuracy.sh"
+run_verification "3️⃣  Detection Accuracy (measured on the committed dataset)" "./judge/verify_accuracy.sh"
 
 # ============================================================================
 # 4. PLATFORM PARITY

@@ -3103,7 +3103,6 @@ Final Score = (
 | [Architecture Tour](docs/ARCHITECTURE_TOUR.md) | Visual codebase guide for judges |
 | [API Reference](docs/API.md) | Complete API documentation |
 | [ML Model](docs/ML_MODEL.md) | Training methodology, features, metrics |
-| [ML Evaluation Metrics](docs/ML_EVALUATION_METRICS.md) | **NEW:** Precision/Recall/F1/ROC analysis |
 | [Accessibility](docs/ACCESSIBILITY.md) | WCAG compliance & assistive tech |
 | [Limitations](docs/LIMITATIONS.md) | Known limitations & trade-offs |
 | [Master Pack](docs/MASTER_PACK.md) | Complete project overview |

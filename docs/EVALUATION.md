@@ -6,145 +6,32 @@
 
 ## 📋 Summary
 
-| Metric | Value | Notes |
-|--------|-------|-------|
-| **Precision** | 91% | Of flagged URLs, 91% are actually malicious |
-| **Recall** | 87% | Of actual malicious URLs, we catch 87% |
-| **F1 Score** | 87% | Harmonic mean of precision and recall |
-| **False Positive Rate** | ~3% | Safe URLs incorrectly flagged |
-| **P50 Latency** | <3ms | Median analysis time |
-| **P99 Latency** | <5ms | 99th percentile analysis time |
+Measured on 17 November 2026 by [`DatasetEvaluationTest`](../common/src/desktopTest/kotlin/com/raouf/mehrguard/core/DatasetEvaluationTest.kt), which CI runs on every push:
 
----
+| Metric | Value | How it is computed |
+|--------|-------|--------------------|
+| **Dataset** | 100 URLs | `data/test_urls.csv`: 50 legitimate sites, 50 constructed phishing patterns |
+| **Recall** | 98.0% | 49 of 50 phishing URLs returned SUSPICIOUS or MALICIOUS |
+| **Precision** | 84.5% | 49 true detections against 9 legitimate sites flagged |
+| **F1 Score** | 90.7% | Harmonic mean of the two |
+| **Accuracy** | 90.0% | 90 of 100 rows correct |
+| **False alarms** | 18% | 9 of 50 legitimate sites returned SUSPICIOUS |
 
-## 🧪 Test Corpus
+A second, smaller check, `AccuracyVerificationTest`, holds 41 URLs inside the test itself (21 phishing, 20 legitimate) and asserts floors on precision, recall and F1. On the same date it measured precision 90.9%, recall 95.2% and F1 93.0%.
 
-Since we don't use external datasets (privacy-first means no phishing URL databases), we maintain a **curated local corpus** in `data/` (including `data/test_urls.csv` and `data/red_team_corpus.md`).
+Reproduce both with `./scripts/eval.sh` or `./judge/verify_accuracy.sh`.
 
-### Corpus Composition
+### What these figures do not show
 
-| Category | Count | Source |
-|----------|-------|--------|
-| **Benign URLs** | 100 | Alexa top domains, legitimate services |
-| **Malicious URLs** | 150 | Constructed phishing patterns |
-| **Edge Cases** | 50 | Homographs, encodings, unicode |
-| **False Positive Candidates** | 30 | Known tricky legitimate URLs |
-| **TOTAL** | **330** | |
+- **Not held-out.** The project's author wrote the URLs and the rules. The figures show that the rules fire on the patterns they were written for.
+- **No external data.** No PhishTank, OpenPhish or other live feed has been evaluated.
+- **The false alarms are not random.** All four Australian bank sites in the set are flagged, with two shops, two news sites and one streaming site.
+- **The one miss** is a punycode domain (`xn--pypal-4ve.com`).
+- **The model.** Its weights were fitted to synthetic URLs (`scripts/generate_model.py`), so the heuristics carry most of the result.
 
-### Sample Entries
+### Earlier figures
 
-**Benign (should be SAFE):**
-```
-https://google.com
-https://github.com/user/repo
-https://amazon.com.au/product/123
-https://docs.microsoft.com/en-us/dotnet/
-```
-
-**Malicious (should be MALICIOUS):**
-```
-http://192.168.1.1:8080/paypal-login
-https://paypa1-secure.tk/verify
-https://gооgle.com (Cyrillic о)
-https://bit.ly/3abc123-scam
-```
-
-**Edge Cases (should be SUSPICIOUS or better):**
-```
-http://localhost:3000/test
-https://xn--pypal-4ve.com
-https://192.168.0.1/internal
-```
-
----
-
-## 🔬 Methodology
-
-### Test Types
-
-#### 1. Unit Tests (Per Heuristic)
-
-Each heuristic has dedicated tests verifying:
-- Correct trigger conditions
-- Weight contribution
-- Edge case handling
-- False positive avoidance
-
-**Location:** `common/src/commonTest/kotlin/com/mehrguard/engine/`
-
-**Count:** 200+ tests
-
-#### 2. Integration Tests (Full Pipeline)
-
-End-to-end tests running URLs through complete `PhishingEngine`:
-
-```kotlin
-@Test
-fun `phishing URL with IP host produces MALICIOUS verdict`() {
-    val result = engine.analyzeBlocking("http://192.168.1.1/login")
-    assertEquals(Verdict.MALICIOUS, result.verdict)
-}
-```
-
-**Location:** `common/src/commonTest/kotlin/com/mehrguard/core/PhishingEngineTest.kt`
-
-**Count:** 50+ tests
-
-#### 3. Real-World Simulation Tests
-
-Tests against patterns observed in actual QRishing campaigns:
-
-```kotlin
-@Test
-fun `parking meter scam pattern detected`() {
-    // Pattern: QR on parking meter redirects to fake payment
-    val result = engine.analyzeBlocking("https://city-parking-pay.tk/meter/123")
-    assertEquals(Verdict.MALICIOUS, result.verdict)
-}
-```
-
-**Location:** `common/src/commonTest/kotlin/com/mehrguard/engine/RealWorldPhishingTest.kt`
-
-**Count:** 30+ scenarios
-
-#### 4. Property-Based Tests
-
-Fuzz testing to verify invariants hold for any input:
-
-```kotlin
-@Test
-fun `any URL produces valid verdict`() {
-    // Property: verdict is always SAFE, SUSPICIOUS, or MALICIOUS
-    checkAll(Arb.url()) { url ->
-        val result = engine.analyzeBlocking(url)
-        assertTrue(result.verdict in listOf(SAFE, SUSPICIOUS, MALICIOUS))
-    }
-}
-```
-
-**Location:** `common/src/commonTest/kotlin/com/mehrguard/core/PropertyBasedTest.kt`
-
-**Count:** 15+ properties
-
----
-
-## 📊 Results
-
-### Confusion Matrix (on curated corpus)
-
-|  | Predicted Safe | Predicted Suspicious | Predicted Malicious |
-|--|----------------|---------------------|---------------------|
-| **Actual Safe** | 94 | 4 | 2 |
-| **Actual Malicious** | 5 | 15 | 130 |
-
-### Metrics Breakdown
-
-| Verdict | Precision | Recall | F1 |
-|---------|-----------|--------|-----|
-| SAFE | 95% | 94% | 94% |
-| SUSPICIOUS | 75% | 78% | 76% |
-| MALICIOUS | 98% | 87 | 92% |
-| **Weighted Avg** | **91%** | **87** | **87** |
+Documents written for the December 2025 contest submission quote 87% F1, a 330-URL corpus and a 2,500-URL confusion matrix. Those sets are not in this repository and the figures cannot be reproduced from it. They have been removed here in favour of the measured table above.
 
 ---
 
@@ -154,7 +41,7 @@ fun `any URL produces valid verdict`() {
 
 **Issue:** We don't use PhishTank, OpenPhish, or similar databases.
 
-**Why:** Privacy-first architecture means no network calls, even for test data.
+**Why:** The evaluation set was written by hand so that it could be committed and re-run offline. That makes it reproducible and also makes it a weak test: see "What these figures do not show" above.
 
 **Mitigation:** Curated corpus with patterns from public security research.
 

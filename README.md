@@ -21,11 +21,36 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Kotlin-2.3.0-7F52FF?logo=kotlin&logoColor=white" alt="Kotlin">
   <img src="https://img.shields.io/badge/KMP_Targets-5-orange" alt="5 Platforms">
-  <img src="https://img.shields.io/badge/Offline-100%25-brightgreen" alt="Offline">
+  <img src="https://img.shields.io/badge/Analysis-on--device-brightgreen" alt="On-device analysis">
   <img src="https://img.shields.io/badge/Tests-1,248+-brightgreen" alt="Tests">
-  <img src="https://img.shields.io/badge/F1_Score-87%25-blue" alt="F1 Score">
+  <img src="https://img.shields.io/badge/F1-90.7%25_on_100_author--written_URLs-blue" alt="F1 90.7% on 100 author-written URLs">
   <img src="https://img.shields.io/badge/License-Apache_2.0-purple" alt="License">
 </p>
+
+---
+
+## Summary
+
+Mehr Guard is a QR code and URL phishing scanner written in Kotlin Multiplatform for Android, iOS, desktop (JVM) and the web (JS and Wasm). One shared engine scores a URL with 25 heuristics and a small on-device model, and returns SAFE, SUSPICIOUS or MALICIOUS with the reasons.
+
+**What is measured, and how to check it.** CI runs the engine over the committed dataset [`data/test_urls.csv`](data/test_urls.csv) and prints the result ([`DatasetEvaluationTest`](common/src/desktopTest/kotlin/com/raouf/mehrguard/core/DatasetEvaluationTest.kt)):
+
+| Measured on 17 Nov 2026 | Result |
+|---|---|
+| Dataset | 100 URLs: 50 legitimate sites, 50 constructed phishing patterns |
+| Phishing detected | 49 of 50 (recall 98.0%) |
+| Legitimate sites flagged | 9 of 50, all as SUSPICIOUS (precision 84.5%) |
+| F1 / accuracy | 90.7% / 90.0% |
+
+**What this does not show.** The author wrote both the dataset and the rules, so this checks that the rules fire on the patterns they were written for. It is not a held-out benchmark, and no live phishing feed has been evaluated. The nine false alarms include all four Australian bank sites in the set, which matters for a scanner aimed at Australian users. The one miss is a punycode domain. The model's weights were fitted to synthetic URLs.
+
+**Network use.** URL analysis runs on the device and scanned URLs are not sent anywhere. The Android app does make one kind of request: at startup it checks GitHub Pages for updated detection rules, which is why it holds the `INTERNET` permission. That download is not signature-checked yet; see [Limitations](docs/LIMITATIONS.md).
+
+**About the rest of this repository.** Mehr Guard was built for the KotlinConf 2025–26 student contest, and much of the documentation below and under `docs/` was written for that submission in December 2025. Where an older document quotes a figure that differs from this section, this section and the CI output are the ones to trust.
+
+```bash
+./gradlew :common:desktopTest --tests "*DatasetEvaluationTest*" --info   # prints the table above
+```
 
 ---
 
@@ -47,7 +72,7 @@
 |------|--------|------|
 | **1** | 📱 [Download APK](https://github.com/Raoof128/Raoof128.github.io/releases/tag/v2.0.36-submission) | 10s |
 | **2** | 🌐 [Open Web Demo](https://raoof128.github.io) — paste `paypa1-secure.tk` | 20s |
-| **3** | ✅ Run `./judge/verify_offline.sh` (proves zero network calls) | 30s |
+| **3** | ✅ Run `./judge/verify_offline.sh` (checks the engine makes no network calls) | 30s |
 
 > 📋 **Full Guide:** [JUDGE_QUICKSTART.md](JUDGE_QUICKSTART.md) • 📝 **Essay:** [ESSAY.md](ESSAY.md)
 
@@ -55,13 +80,13 @@
 
 ## What Is Mehr Guard?
 
-Mehr Guard is a **privacy-first QR code and URL security scanner** built with Kotlin Multiplatform. It detects phishing attacks, brand impersonation, and malicious redirects **entirely on-device** — no cloud APIs, no data collection, no network calls.
+Mehr Guard is a **privacy-first QR code and URL security scanner** built with Kotlin Multiplatform. It detects phishing attacks, brand impersonation, and malicious redirects **on the device**: no cloud API sees a scanned URL and nothing is collected. The Android app's only network request is a startup check for updated detection rules.
 
 **Core Value Proposition:**
-- **100% Offline Analysis** — Your scanned URLs never leave your device
+- **On-device analysis** — Your scanned URLs never leave your device
 - **5 Platform Targets** — Android, iOS, Desktop (JVM), Web (JS), Web (Wasm)
-- **87% F1 Score** — Ensemble ML + 25 heuristics detect real-world phishing
-- **<5ms Latency** — Real-time analysis during camera scanning
+- **90.7% F1 on the committed 100-URL set** — 25 heuristics plus a small model; author-written URLs, not a held-out benchmark
+- **Fast enough for live scanning** — CI asserts a 99th-percentile analysis time under 50 ms per URL
 
 ---
 
@@ -261,10 +286,11 @@ All security-critical logic lives in `common/src/commonMain/kotlin/`. Platform m
 
 | Metric | Value |
 |--------|-------|
-| P50 Latency | <1ms |
-| P99 Latency | <5ms |
-| F1 Score | 87% |
-| False Positive Rate | <5% on Alexa Top 100 |
+| P99 latency, one URL | under 50 ms, asserted in CI (`PerformanceRegressionTest`) on GitHub-hosted runners |
+| F1 on `data/test_urls.csv` | 90.7% (precision 84.5%, recall 98.0%) |
+| False alarms on the set's 50 legitimate sites | 9 (18%), all SUSPICIOUS |
+
+Latency on phones has not been benchmarked in this repository.
 
 ---
 
@@ -283,7 +309,7 @@ Red Team Mode is a **hidden developer feature** that exposes curated attack scen
 │  │              SHARED MODULE (common/redteam/)                  │  │
 │  │                                                               │  │
 │  │  RedTeamScenarios.kt                                          │  │
-│  │  ├── 19 curated attack scenarios (object SCENARIOS)          │  │
+│  │  ├── 18 curated attack scenarios (object SCENARIOS)          │  │
 │  │  ├── Scenario data class (id, category, url, expectedScore)  │  │
 │  │  ├── Categories: Homograph, IP Obfuscation, TLD, Brand, etc. │  │
 │  │  └── Utility: groupedByCategory(), getById()                 │  │
@@ -357,17 +383,17 @@ val result = phishingEngine.analyze(scenario.maliciousUrl)
 ./judge/verify_all.sh
 
 # Individual verifications:
-./judge/verify_offline.sh      # Proves zero network calls
-./judge/verify_performance.sh  # Proves <5ms latency
-./judge/verify_accuracy.sh     # Proves 87% F1 score on red team corpus
-./judge/verify_parity.sh       # Proves identical verdicts across platforms
+./judge/verify_offline.sh      # The engine makes no network calls
+./judge/verify_performance.sh  # Latency assertions
+./judge/verify_accuracy.sh     # Measured precision, recall and F1 on the committed dataset
+./judge/verify_parity.sh       # Identical verdicts across platforms
 ```
 
 ---
 
 ## Privacy Guarantee
 
-Mehr Guard makes **zero network calls** for analysis. Verification:
+The detection engine makes **no network calls**: analysing a URL never contacts a server. Verification:
 
 ```bash
 ./judge/verify_offline.sh
@@ -375,7 +401,7 @@ Mehr Guard makes **zero network calls** for analysis. Verification:
 # Analyzed 27 URLs, made 0 network calls
 ```
 
-The detection engine has no HTTP client dependencies. Privacy is architectural, not a policy.
+The detection engine has no HTTP client dependencies. Separately from analysis, the Android app checks GitHub Pages at startup for updated detection rules; no scanned URL or other user data is part of that request.
 
 ---
 
@@ -413,10 +439,10 @@ All claims are backed by reproducible evidence:
 
 ```bash
 ./judge/verify_all.sh        # Run all verifications
-./judge/verify_offline.sh    # Prove zero network calls
-./judge/verify_performance.sh # Prove <5ms latency
-./judge/verify_accuracy.sh   # Prove 87% F1 score
-./judge/verify_parity.sh     # Prove cross-platform parity
+./judge/verify_offline.sh    # The engine makes no network calls
+./judge/verify_performance.sh # Latency assertions
+./judge/verify_accuracy.sh   # Measured precision, recall and F1
+./judge/verify_parity.sh     # Cross-platform parity
 ```
 
 ---

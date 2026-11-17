@@ -117,3 +117,24 @@
   - CHANGELOG.md
 - **Verification:** On pull request #2 the common build and tests, accuracy, offline, threat-model and property-based verification, desktop, web and iOS builds, code quality, security scan and dependency audit all pass.
 - **Follow-ups:** `androidApp` has no local unit tests. `benchmark.yml` names an `EnergyProxyBenchmark` class that is not in the tree. `performance.yml`, `quality-tests.yml`, `benchmark.yml` and `pages.yml` still trigger on `main` only.
+
+## 2026-11-17 (Australia/Sydney)
+**Raouf:**
+- **Scope:** Accuracy, latency and network claims
+- **Summary:** An audit found that the headline "87% F1" could not be reproduced. `scripts/eval.sh` and `judge/verify_accuracy.sh` printed fixed figures after running unrelated tests, `docs/EVALUATION.md` described a 330-URL corpus and `docs/ML_EVALUATION_METRICS.md` a 2,500-URL confusion matrix, and neither set is in the repository. The judge scripts also could not fail, because a pipe to `tail` hid Gradle's exit code.
+  - Added `DatasetEvaluationTest` (desktop), which runs the engine over the committed `data/test_urls.csv` and prints the confusion matrix, metrics, per-category breakdown and every misclassified row. CI runs it and prints the report.
+  - Measured on 17 Nov 2026: TP 49, FN 1, TN 41, FP 9. Precision 84.5%, recall 98.0%, F1 90.7%, accuracy 90.0%. The nine false alarms include all four Australian bank sites in the set; the miss is a punycode domain.
+  - README: new Summary section with the measured table and its limits; the 87% F1, "<5ms" and "<5% false positive" figures are replaced by measured or asserted ones; 19 red-team scenarios corrected to 18 (the count in `RedTeamScenarios.kt`).
+  - "Zero network calls" now says what is true: analysing a URL makes none, and the Android app checks GitHub Pages at startup for updated rules, which is why it holds `INTERNET`. `docs/LIMITATIONS.md` records that the rule download is not signature-checked.
+  - `scripts/eval.sh` and `judge/verify_accuracy.sh` print the measured report; the judge scripts use `pipefail`.
+  - Removed `docs/ML_EVALUATION_METRICS.md`, whose figures had no data behind them.
+- **Files Changed:**
+  - common/src/desktopTest/kotlin/com/raouf/mehrguard/core/DatasetEvaluationTest.kt (new)
+  - .github/workflows/ci.yml
+  - README.md, PRIVACY.md, JUDGE_QUICKSTART.md, SUBMISSION_CHECKLIST.md
+  - docs/EVALUATION.md, docs/LIMITATIONS.md, docs/internal/README_FULL.md
+  - docs/ML_EVALUATION_METRICS.md (removed)
+  - scripts/eval.sh, judge/verify_accuracy.sh, judge/verify_all.sh, judge/verify_offline.sh, judge/verify_performance.sh
+  - AGENT.md, CHANGELOG.md
+- **Verification:** `DatasetEvaluationTest` passed in CI on pull request #3 and printed the figures above.
+- **Follow-ups:** Other contest-era documents (`docs/MASTER_PACK*.md`, `PRODUCTION_READINESS.md`, `ESSAY.md`, `docs/internal/`) still quote the old figures. Evaluate on an external phishing feed. Sign the OTA rule file. Fix the false alarms on Australian bank domains. Benchmark latency on a phone.
