@@ -7,6 +7,13 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+# The summary and coverage steps comment on pull requests and the test reporter
+# publishes a check run, so the token needs more than the read-only default.
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
 env:
   JAVA_VERSION: '17'
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true
