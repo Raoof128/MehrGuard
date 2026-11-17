@@ -152,3 +152,25 @@
 - **Files Changed:** README.md, JUDGE_QUICKSTART.md, JUDGE_VERIFICATION_SUMMARY.md, docs/ML_MODEL.md, docs/ML_TRAINING.md, docs/LIMITATIONS.md, models/phishing_model_weights.json, judge/verify_offline.sh, judge/verify_parity.sh, banners on 44 documents, AGENT.md, CHANGELOG.md
 - **Verification:** CI on the pull request. No application code changed.
 - **Follow-ups:** The OTA update URL in `OtaUpdateManager.kt` points at a renamed GitHub Pages path and should be checked. Parse and validate a downloaded rule file before caching it. Train and evaluate a real model on a public feed with a held-out split, or remove the model.
+
+## 2026-11-17 (Australia/Sydney)
+**Raouf:**
+- **Scope:** OTA rule updates: validation, SHA-256 verification, endpoint status
+- **Summary:** A review of the Android rule-update path found three problems, and this change fixes the two that code can fix.
+  - **Unvalidated cache.** `downloadAndCache` stored any response under 500 KB. Now the manifest and each data file are parsed with a strict JSON parser (`OtaJson`) and checked for shape (`OtaValidator`): a manifest with a plain `.json` filename and a version for each of `brand_db` and `heuristics`; a brand database whose brands each list official domains; a heuristics file holding every weight the engine's config reads, as integers from 0 to 50. Size is measured in bytes, not characters. Both files are downloaded and verified in memory and cached together, manifest last; a failed or invalid download never replaces a cached file.
+  - **Load time.** `getCachedBrandDb`, `getCachedHeuristics` and `hasCachedData` re-check the cached manifest, the file's SHA-256 and size, and its shape, and return nothing if any fail, so the bundled data is used. A cache written by an earlier build (placeholder checksums) is ignored and does not block a verified update of the same version.
+  - **Checksum.** The common module had no SHA-256 (the HMAC in `SecureBundleLoader` is a stub), so `Sha256` is a pure-Kotlin implementation that needs no dependency and runs on every target. If the manifest lists a `sha256:<64 hex>` for a file, the download must match it. A missing or placeholder checksum means unverified, and the update is refused before anything is downloaded; the reason is logged and shown in `UpdateState.Error`. `OtaUpdateManager` takes an optional `log` callback, which the Android factory sends to `Log.w`. The header comment, which said verification was unnecessary, now describes this behaviour.
+  - **Manifest.** `data/updates/version.json` now lists the real SHA-256 and size of `brand_db_v2.json` and `heuristics_v2.json`.
+  - **What the checksum does not do.** It is fetched from the same origin as the data, so it detects corruption and truncation but not a compromised origin. Signed manifests remain unimplemented; `docs/LIMITATIONS.md` and the README say so.
+  - **Endpoint.** `https://raoof128.github.io/QDKMP-KotlinConf-2026-/data/updates/version.json` and `https://raoof128.github.io/data/updates/version.json` both returned HTTP 404 on 17 Nov 2026 (the files exist in the `Raoof128.github.io` repository but its Pages site does not serve them). No working URL was confirmed, so `UPDATE_BASE_URL` is unchanged and the documents say the check currently has no effect.
+- **Files Changed:**
+  - common/src/commonMain/kotlin/com/raouf/mehrguard/ota/OtaUpdateManager.kt
+  - common/src/commonMain/kotlin/com/raouf/mehrguard/ota/Sha256.kt (new), OtaJson.kt (new), OtaValidator.kt (new)
+  - androidApp/src/main/kotlin/com/raouf/mehrguard/android/ota/AndroidOta.kt
+  - data/updates/version.json
+  - common/src/commonTest/kotlin/com/raouf/mehrguard/ota/Sha256Test.kt, OtaJsonTest.kt, OtaUpdateManagerTest.kt (new)
+  - common/src/desktopTest/kotlin/com/raouf/mehrguard/ota/OtaPublishedFilesTest.kt (new)
+  - docs/LIMITATIONS.md, README.md
+  - AGENT.md, CHANGELOG.md
+- **Verification:** The OTA sources and tests were compiled with a standalone Kotlin 2.3.0 compiler and the 43 tests run on the JVM and passed, including SHA-256 against the NIST vectors and against `shasum -a 256`. Making the manager skip the checksum comparison, or the unverified check, makes the corresponding tests fail. detekt-cli 1.23.7 with the repository's `detekt.yml` and baseline reports no issues in the OTA directories. The Gradle build and CI run on the pull request.
+- **Follow-ups:** Serve `data/updates/` from a URL that returns 200 (or fix the Pages site for `Raoof128.github.io`) and then point `UPDATE_BASE_URL` at it. Sign the manifest with a key whose public half ships in the app. The brand database is still cached but not applied by `LivingEngineFactory`, and the heuristics weights are cached but not applied, so an accepted update does not yet change detection.

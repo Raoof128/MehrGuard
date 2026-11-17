@@ -219,9 +219,13 @@ A brand-new phishing domain registered 1 hour ago will **not** be in any blockli
 
 ---
 
-## Rule updates are not signature-checked
+## Rule updates: checksum only, no signature, and the endpoint is not serving
 
-On Android the app checks GitHub Pages at startup for updated detection rules (`OtaUpdateManager`). The download relies on HTTPS alone: there is no checksum or signature on the rule file. Anyone able to change what that origin serves could change the app's detection rules. Signed rule manifests are the fix and are not implemented: `data/updates/version.json` carries a placeholder checksum that nothing verifies.
+On Android the app checks GitHub Pages at startup for updated detection rules (`OtaUpdateManager`). Before it caches an update it checks that the manifest and both data files are well-formed JSON of the expected shape, that each file is at most 500 KB, and that each file's size and SHA-256 equal the `sizeBytes` and `sha256:<hex>` listed in `version.json`. A manifest with a missing or placeholder checksum is treated as unverified and the update is not applied. A rejected download never replaces a cached file, and a cached file is re-checked on every load and ignored (the bundled data is used) if it fails.
+
+**What the checksum does and does not do.** The checksum is fetched from the same origin as the data. It detects corruption and truncation, and a data file that does not match its manifest. It does not protect against a compromised origin: anyone who can change the data file there can change the manifest to match. Signed manifests are not implemented, so anyone able to change what that origin serves could still change the app's detection rules.
+
+**The update endpoint is currently not serving.** `UPDATE_BASE_URL` points at a GitHub Pages path under a repository name that no longer exists. On 17 November 2026 both `https://raoof128.github.io/QDKMP-KotlinConf-2026-/data/updates/version.json` and `https://raoof128.github.io/data/updates/version.json` returned HTTP 404, so the check has no effect and the app runs on its bundled rules. The constant has not been changed because no URL that serves the file has been confirmed.
 
 ## False alarms on legitimate sites
 

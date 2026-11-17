@@ -6,14 +6,14 @@
         "brand_db": {
             "version": 2,
             "filename": "brand_db_v2.json",
-            "checksum": "sha256:placeholder",
-            "sizeBytes": 0
+            "checksum": "sha256:a840a52db7fb547c23c0a7b0c138e9462ea49f001c024024a91ac12d2c485662",
+            "sizeBytes": 8628
         },
         "heuristics": {
             "version": 2,
             "filename": "heuristics_v2.json",
-            "checksum": "sha256:placeholder",
-            "sizeBytes": 0
+            "checksum": "sha256:46f781bd08306227bf32f0aff94a41d4b85de4dca6310f9808b3b45a1b4f84aa",
+            "sizeBytes": 2549
         }
     },
     "releaseNotes": [

@@ -27,28 +27,40 @@ import kotlinx.coroutines.flow.asStateFlow
  * - Brand database (brand_db_v2.json)
  * - Heuristics weights (heuristics_v2.json)
  *
- * ## Why This Matters
- * The "Static Database" criticism is that security apps become stale without updates.
- * This Living Engine fetches fresh detection rules from GitHub Pages, allowing the
- * app to stay current even between app store releases.
- *
  * ## Architecture
- * - **Versioning**: Server hosts `version.json` with current version numbers
- * - **Offline-First**: App works with bundled data if network unavailable
- * - **Cache Layer**: Downloaded updates saved to local storage
- * - **Priority Loading**: Cached > Bundled resources
+ * - **Versioning**: the origin hosts `version.json` with a version number and, per data
+ *   file, a filename, a `sha256:<hex>` checksum and a size in bytes
+ * - **Offline-First**: the app works with bundled data if the network is unavailable
+ *   or an update is rejected
+ * - **Cache Layer**: accepted updates are saved to local storage
+ * - **Priority Loading**: a cached file is used only if it still passes every check
+ *   below at load time; otherwise the bundled defaults are used
  *
- * ## Security Considerations
- * - HTTPS-only connections (TLS ensures transport integrity)
- * - Version comparison prevents downgrade attacks
- * - Max file size limits to prevent DoS
+ * ## What is checked before an update is applied
+ * 1. The manifest is well-formed JSON of the expected shape (strict parse, required
+ *    fields, plain `.json` filenames, version within range).
+ * 2. The manifest version is newer than the current one (no downgrade).
+ * 3. Every listed file has a real `sha256:<64 hex>` checksum. A missing or placeholder
+ *    checksum means the file is unverified, and the whole update is refused (fail
+ *    closed) with the reason logged.
+ * 4. Each download is at most [MAX_FILE_SIZE] bytes, its byte size equals `sizeBytes`,
+ *    and its SHA-256 equals the listed checksum.
+ * 5. Each file parses as JSON of the expected shape (see [OtaValidator]).
  *
- * **Design Decision (Checksum Verification):**
- * SHA-256 verification was evaluated but deemed unnecessary for competition:
- * 1. HTTPS already provides integrity via TLS certificate chain
- * 2. GitHub Pages is a trusted origin with built-in CDN integrity
- * 3. Adding crypto dependencies would bloat the multiplatform bundle
- * Future production deployments may add Ed25519 signatures for supply chain security.
+ * Only when all of that passes for both files are they written to the cache, together
+ * with the manifest. A failed or invalid download never replaces a cached file. The
+ * cached manifest is written last, so an interrupted write leaves a cache that fails
+ * the load-time check and is ignored.
+ *
+ * ## What this does and does not protect against
+ * The checksum comes from the same origin as the data. It detects corruption and
+ * truncation in transit or at rest, and a data file that does not match its manifest.
+ * It does NOT protect against a compromised origin: whoever can change the data file
+ * can change the manifest to match. Signed manifests (for example Ed25519, with the
+ * public key shipped in the app) are not implemented. The SHA-256 is implemented in
+ * Kotlin in this module ([Sha256]) so it needs no dependency and runs on every target.
+ *
+ * Transport is HTTPS (TLS). The size cap limits memory use on a hostile response.
  *
  * @see OtaStorage for platform-specific storage implementation
  *
@@ -57,17 +69,28 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 class OtaUpdateManager(
     private val storage: OtaStorage,
-    private val httpClient: OtaHttpClient
+    private val httpClient: OtaHttpClient,
+    /** Receives the reason whenever an update is refused or a cached file is ignored. */
+    private val log: (String) -> Unit = {}
 ) {
 
     companion object {
-        /** Base URL for OTA updates (GitHub Pages) */
+        /**
+         * Base URL for OTA updates (GitHub Pages).
+         *
+         * Checked on 17 Nov 2026: `<this URL>/version.json` and
+         * `https://raoof128.github.io/data/updates/version.json` both return HTTP 404,
+         * so the update check currently has no effect and the app runs on bundled data.
+         * The path names a repository that no longer exists; the files now live in
+         * Raoof128/Raoof128.github.io under `data/updates/` but are not served by its
+         * Pages site. Change this constant only once a URL is confirmed to serve the file.
+         */
         const val UPDATE_BASE_URL = "https://raoof128.github.io/QDKMP-KotlinConf-2026-/data/updates"
 
         /** Version manifest filename */
         const val VERSION_MANIFEST = "version.json"
 
-        /** Maximum file size for downloads (500KB) */
+        /** Maximum file size for downloads (500KB), measured in bytes */
         const val MAX_FILE_SIZE = 500 * 1024
 
         /** Current bundled version */
@@ -97,6 +120,11 @@ class OtaUpdateManager(
     private val _currentVersion = MutableStateFlow(BUNDLED_VERSION)
     val currentVersion: StateFlow<Int> = _currentVersion.asStateFlow()
 
+    /** Thrown inside an update attempt to refuse it; [checkAndUpdate] turns it into [UpdateState.Error]. */
+    private class UpdateRejected(message: String) : Exception(message)
+
+    private fun rejectUpdate(message: String): Nothing = throw UpdateRejected(message)
+
     /**
      * Check for and apply updates.
      *
@@ -105,70 +133,90 @@ class OtaUpdateManager(
     suspend fun checkAndUpdate() {
         _updateState.value = UpdateState.Checking
 
-        try {
-            // 1. Load cached version if available
-            loadCachedVersion()
-
-            // 2. Fetch remote version manifest
-            val manifest = fetchVersionManifest()
-            if (manifest == null) {
-                _updateState.value = UpdateState.NoUpdateNeeded
-                return
-            }
-
-            // 3. Compare versions
-            val remoteVersion = parseVersion(manifest)
-            if (remoteVersion <= _currentVersion.value) {
-                _updateState.value = UpdateState.NoUpdateNeeded
-                return
-            }
-
-            // 4. Download updates
-            _updateState.value = UpdateState.Downloading
-
-            val brandDbSuccess = downloadAndCache(
-                filename = parseBrandDbFilename(manifest),
-                cacheFile = CACHED_BRAND_DB
-            )
-
-            val heuristicsSuccess = downloadAndCache(
-                filename = parseHeuristicsFilename(manifest),
-                cacheFile = CACHED_HEURISTICS
-            )
-
-            // 5. Save version if any update succeeded
-            if (brandDbSuccess || heuristicsSuccess) {
-                storage.write(CACHED_VERSION, manifest)
-                _currentVersion.value = remoteVersion
-                _updateState.value = UpdateState.Success(remoteVersion)
-            } else {
-                _updateState.value = UpdateState.Error("Download failed")
-            }
-
+        _updateState.value = try {
+            performUpdate()
+        } catch (e: UpdateRejected) {
+            failed(e.message ?: "update rejected")
         } catch (e: Exception) {
-            _updateState.value = UpdateState.Error(e.message ?: "Unknown error")
+            failed("update failed: ${e.message ?: "unknown error"}")
+        }
+    }
+
+    private fun failed(message: String): UpdateState {
+        log("OTA $message")
+        return UpdateState.Error(message)
+    }
+
+    private suspend fun performUpdate(): UpdateState {
+        // 1. Load the cached version if it is still trustworthy
+        loadCachedVersion()
+
+        // 2. Fetch and validate the remote manifest
+        val manifestText = fetchVersionManifest() ?: return UpdateState.NoUpdateNeeded
+        val manifest = when (val parsed = OtaValidator.parseManifest(manifestText)) {
+            is OtaValidation.Ok -> parsed.value
+            is OtaValidation.Rejected -> rejectUpdate("manifest rejected: ${parsed.reason}")
+        }
+
+        // 3. Compare versions
+        if (manifest.version <= _currentVersion.value) return UpdateState.NoUpdateNeeded
+
+        // 4. Fail closed: refuse before downloading if either file is unverified
+        requireChecksums(manifest)
+
+        // 5. Download and verify both files in memory; nothing is cached yet
+        _updateState.value = UpdateState.Downloading
+        val brandDb = downloadVerified("brand_db", manifest.brandDb) {
+            OtaValidator.validateBrandDb(it, manifest.brandDb.version)
+        }
+        val heuristics = downloadVerified("heuristics", manifest.heuristics) {
+            OtaValidator.validateHeuristics(it, manifest.heuristics.version)
+        }
+
+        // 6. Cache both files, the manifest last
+        storage.write(CACHED_BRAND_DB, brandDb)
+        storage.write(CACHED_HEURISTICS, heuristics)
+        storage.write(CACHED_VERSION, manifestText)
+        _currentVersion.value = manifest.version
+        return UpdateState.Success(manifest.version)
+    }
+
+    private fun requireChecksums(manifest: OtaManifest) {
+        val unverified = listOf("brand_db" to manifest.brandDb, "heuristics" to manifest.heuristics)
+            .firstOrNull { it.second.sha256 == null }
+        if (unverified != null) {
+            rejectUpdate(
+                "update to version ${manifest.version} not applied: " +
+                    "${unverified.first} has no valid sha256 checksum (unverified)"
+            )
         }
     }
 
     /**
-     * Get cached brand database JSON, or null if not available.
+     * Get cached brand database JSON, or null if none is cached or the cached copy
+     * fails validation (the caller then uses the bundled data).
      */
     fun getCachedBrandDb(): String? {
-        return storage.read(CACHED_BRAND_DB)
+        return loadVerifiedCache(CACHED_BRAND_DB, { it.brandDb }) { text, entry ->
+            OtaValidator.validateBrandDb(text, entry.version)
+        }
     }
 
     /**
-     * Get cached heuristics JSON, or null if not available.
+     * Get cached heuristics JSON, or null if none is cached or the cached copy
+     * fails validation (the caller then uses the bundled data).
      */
     fun getCachedHeuristics(): String? {
-        return storage.read(CACHED_HEURISTICS)
+        return loadVerifiedCache(CACHED_HEURISTICS, { it.heuristics }) { text, entry ->
+            OtaValidator.validateHeuristics(text, entry.version)
+        }
     }
 
     /**
-     * Check if cached data is available.
+     * Check if usable cached data is available.
      */
     fun hasCachedData(): Boolean {
-        return storage.exists(CACHED_BRAND_DB) || storage.exists(CACHED_HEURISTICS)
+        return getCachedBrandDb() != null || getCachedHeuristics() != null
     }
 
     /**
@@ -183,76 +231,95 @@ class OtaUpdateManager(
 
     // === PRIVATE METHODS ===
 
+    /** The cached manifest if it is valid and lists a real checksum for both files, else null. */
+    private fun readTrustedCachedManifest(): OtaManifest? {
+        val cached = storage.read(CACHED_VERSION) ?: return null
+        val manifest = (OtaValidator.parseManifest(cached) as? OtaValidation.Ok)?.value
+        // A manifest without real checksums comes from a build that cached unverified downloads.
+        val trusted = manifest?.takeIf { it.brandDb.sha256 != null && it.heuristics.sha256 != null }
+        if (trusted == null) log("OTA cached manifest is invalid or unverified, ignoring the cache")
+        return trusted
+    }
+
     private fun loadCachedVersion() {
-        val cached = storage.read(CACHED_VERSION)
-        if (cached != null) {
-            _currentVersion.value = parseVersion(cached)
-        }
+        _currentVersion.value = readTrustedCachedManifest()?.version ?: BUNDLED_VERSION
     }
 
     private suspend fun fetchVersionManifest(): String? {
         return try {
-            val url = "$UPDATE_BASE_URL/$VERSION_MANIFEST"
-            val response = httpClient.get(url)
-
-            if (response.length > MAX_FILE_SIZE) {
-                null // File too large, reject
-            } else {
-                response
-            }
+            val response = httpClient.get("$UPDATE_BASE_URL/$VERSION_MANIFEST")
+            response.takeIf { it.encodeToByteArray().size <= MAX_FILE_SIZE }
+                ?: run {
+                    log("OTA manifest ignored: larger than $MAX_FILE_SIZE bytes")
+                    null
+                }
         } catch (e: Exception) {
             null // Network error, use cached/bundled
         }
     }
 
-    private suspend fun downloadAndCache(filename: String, cacheFile: String): Boolean {
-        return try {
-            val url = "$UPDATE_BASE_URL/$filename"
-            val content = httpClient.get(url)
-
-            if (content.length > MAX_FILE_SIZE) {
-                return false // File too large
-            }
-
-            storage.write(cacheFile, content)
-            true
+    /**
+     * Download one data file and check size, checksum and shape. Returns the content or
+     * throws [UpdateRejected]. Never touches the cache.
+     */
+    private suspend fun downloadVerified(
+        name: String,
+        entry: OtaFileEntry,
+        validate: (String) -> OtaValidation<Unit>
+    ): String {
+        val content = try {
+            httpClient.get("$UPDATE_BASE_URL/${entry.filename}")
         } catch (e: Exception) {
-            false
+            rejectUpdate("$name download failed: ${e.message ?: "network error"}")
         }
+
+        val bytes = content.encodeToByteArray()
+        if (bytes.size > MAX_FILE_SIZE) {
+            rejectUpdate("$name rejected: ${bytes.size} bytes is over the $MAX_FILE_SIZE byte limit")
+        }
+        val declared = entry.sizeBytes
+        if (declared == null || declared <= 0L || declared != bytes.size.toLong()) {
+            rejectUpdate("$name rejected: manifest sizeBytes ($declared) does not match ${bytes.size} bytes downloaded")
+        }
+        if (Sha256.hexDigest(bytes) != entry.sha256) {
+            rejectUpdate("$name rejected: SHA-256 does not match the manifest")
+        }
+        (validate(content) as? OtaValidation.Rejected)?.let { rejectUpdate("$name rejected: ${it.reason}") }
+        return content
     }
 
     /**
-     * Parse version number from manifest JSON.
-     * Simple extraction without full JSON parsing.
+     * Read a cached data file only if the cached manifest is valid, the file's SHA-256
+     * and size match it, and its content still passes validation.
      */
-    private fun parseVersion(json: String): Int {
-        // Simple string-based extraction for multiplatform compatibility
-        val versionPattern = """"version"\s*:\s*(\d+)"""
-        val regex = Regex(versionPattern)
-        val matchResult = regex.find(json) ?: return BUNDLED_VERSION
-        val groups = matchResult.groups
-        val versionGroup = groups[1] ?: return BUNDLED_VERSION
-        return versionGroup.value.toIntOrNull() ?: BUNDLED_VERSION
+    private fun loadVerifiedCache(
+        cacheFile: String,
+        pick: (OtaManifest) -> OtaFileEntry,
+        validate: (String, OtaFileEntry) -> OtaValidation<Unit>
+    ): String? {
+        return try {
+            readVerifiedCache(cacheFile, pick, validate)
+        } catch (e: Exception) {
+            log("OTA cached $cacheFile ignored: ${e.message ?: "read error"}")
+            null
+        }
     }
 
-    private fun parseBrandDbFilename(manifest: String): String {
-        // Look for filename in brand_db section
-        val pattern = """"brand_db"[^}]*"filename"\s*:\s*"([^"]+)""""
-        val regex = Regex(pattern)
-        val matchResult = regex.find(manifest) ?: return "brand_db_v2.json"
-        val groups = matchResult.groups
-        val filenameGroup = groups[1] ?: return "brand_db_v2.json"
-        return filenameGroup.value
-    }
-
-    private fun parseHeuristicsFilename(manifest: String): String {
-        // Look for filename in heuristics section
-        val pattern = """"heuristics"[^}]*"filename"\s*:\s*"([^"]+)""""
-        val regex = Regex(pattern)
-        val matchResult = regex.find(manifest) ?: return "heuristics_v2.json"
-        val groups = matchResult.groups
-        val filenameGroup = groups[1] ?: return "heuristics_v2.json"
-        return filenameGroup.value
+    private fun readVerifiedCache(
+        cacheFile: String,
+        pick: (OtaManifest) -> OtaFileEntry,
+        validate: (String, OtaFileEntry) -> OtaValidation<Unit>
+    ): String? {
+        val entry = readTrustedCachedManifest()?.let(pick) ?: return null
+        val content = storage.read(cacheFile) ?: return null
+        val bytes = content.encodeToByteArray()
+        val problem = if (bytes.size > MAX_FILE_SIZE || Sha256.hexDigest(bytes) != entry.sha256) {
+            "does not match the cached manifest"
+        } else {
+            (validate(content, entry) as? OtaValidation.Rejected)?.reason
+        }
+        if (problem != null) log("OTA cached $cacheFile ignored: $problem")
+        return content.takeIf { problem == null }
     }
 }
 
