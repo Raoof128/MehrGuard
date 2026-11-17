@@ -1,5 +1,7 @@
 # 🛡️ Mehr Guard
 
+> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](../../README.md#summary) and [EVALUATION.md](../../docs/EVALUATION.md).
+
 > **Kotlin Multiplatform security app detecting QR phishing attacks entirely offline.** Protects users' privacy (no URL ever leaves device) while achieving 87 F1 score on real phishing samples. One shared detection engine across Android, iOS, Desktop, and Web.
 
 [![Test Coverage](https://img.shields.io/badge/coverage-89%25-brightgreen)](https://github.com/Raoof128/Raoof128.github.io/actions/workflows/kover.yml)

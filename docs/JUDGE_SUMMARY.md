@@ -1,5 +1,7 @@
 # 🧑‍⚖️ Mehr Guard — Judge Summary Card
 
+> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](../README.md#summary) and [EVALUATION.md](../docs/EVALUATION.md).
+
 > **30-second pitch:** Mehr Guard is a Kotlin Multiplatform security app that detects phishing in QR codes across Android, iOS, Desktop, and Web—entirely offline, with a single shared detection engine using an ensemble ML architecture.
 
 ---

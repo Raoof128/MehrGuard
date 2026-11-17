@@ -1,5 +1,7 @@
 # 🚀 Mehr Guard Production Readiness Report
 
+> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](README.md#summary) and [EVALUATION.md](docs/EVALUATION.md).
+
 **Date:** December 17, 2025
 **Version:** 1.17.34 (Build 17)
 **Platforms:** Android, iOS, Desktop, Web

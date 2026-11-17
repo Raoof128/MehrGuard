@@ -2,12 +2,12 @@
 # ==============================================================================
 # Offline Capability Verification
 # ==============================================================================
-# Proves: Zero network calls during URL analysis
+# A timing sanity check, not a network monitor.
 #
-# This runs the OfflineOnlyTest suite which:
-# 1. Analyzes 100+ URLs with a network monitor
-# 2. Verifies no DNS lookups, HTTP requests, or socket connections
-# 3. Confirms all detection is purely algorithmic (heuristics + ML)
+# This runs OfflineOnlyTest, which analyses a set of URLs and checks that each
+# analysis finishes quickly and consistently. It cannot observe DNS lookups or
+# sockets. The evidence that analysis is offline is the code itself: the
+# analysis module has no HTTP client.
 # ==============================================================================
 
 set -eo pipefail
@@ -27,9 +27,9 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "✅ OFFLINE VERIFICATION PASSED"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "Proven capabilities:"
-echo "  • Zero network calls during PhishingEngine.analyze()"
+echo "What this check shows:"
+echo "  • Analysis timings consistent with purely local computation"
 echo "  • All detection runs locally (heuristics + on-device ML)"
 echo "  • Works in airplane mode"
-echo "  • No URL data ever leaves the device"
+echo "  • (No network monitor is involved; see the header of this script)"
 echo ""

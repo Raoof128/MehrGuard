@@ -1,5 +1,7 @@
 # 🏆 Judge's Quick Start Guide
 
+> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](README.md#summary) and [EVALUATION.md](docs/EVALUATION.md).
+
 > **Start Here** — Verify Mehr Guard in under 5 minutes.
 
 ---
@@ -45,9 +47,9 @@ cd mehrguard
 ./judge/verify_all.sh
 
 # Or run individual checks:
-./judge/verify_offline.sh      # Proves zero network calls
-./judge/verify_performance.sh  # Proves <5ms latency
-./judge/verify_accuracy.sh     # Proves 87 F1 score
+./judge/verify_offline.sh      # Timing sanity check; the engine has no HTTP client
+./judge/verify_performance.sh  # Latency assertions (P99 under 50 ms)
+./judge/verify_accuracy.sh     # Prints the measured accuracy table
 ./judge/verify_parity.sh       # Proves cross-platform parity
 ```
 
@@ -90,8 +92,8 @@ cd mehrguard
 |--------|-------|----------|
 | **Test Coverage** | 89% | [Kover Report](https://github.com/Raoof128/Raoof128.github.io/actions/workflows/kover.yml) |
 | **Total Tests** | 1,248 | `./gradlew :common:desktopTest` |
-| **Analysis Latency** | <5ms P95 | [BENCHMARKS.md](docs/BENCHMARKS.md) |
-| **Detection Rate** | 87 F1 | [EVALUATION.md](docs/EVALUATION.md) |
+| **Analysis Latency** | P99 under 50 ms, asserted in CI | [EVALUATION.md](docs/EVALUATION.md) |
+| **Detection Rate** | 90.7% F1 on 100 author-written URLs | [EVALUATION.md](docs/EVALUATION.md) |
 | **False Positive Rate** | <5% | [AlexaTop100FPTest.kt](common/src/commonTest/kotlin/com/mehrguard/benchmark/AlexaTop100FPTest.kt) |
 | **Shared Code** | ~11,000 LOC | [SHARED_CODE_REPORT.md](docs/SHARED_CODE_REPORT.md) |
 | **Platforms** | 5 (Android, iOS, Desktop, JS, Wasm) | All build successfully |
@@ -164,7 +166,7 @@ Use the web demo at [raoof128.github.io](https://raoof128.github.io)—it uses t
 
 ### "Is this really 100% offline?"
 
-Yes! Run `./judge/verify_offline.sh` to prove zero network calls. The analysis module has no HTTP client dependencies.
+URL analysis is: the analysis module has no HTTP client, so a scanned URL is never sent anywhere. The Android app does make one request of its own, a startup check of GitHub Pages for updated detection rules.
 
 ### "How long did this take to build?"
 

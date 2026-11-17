@@ -1,5 +1,7 @@
 # Cross-Platform Parity Report
 
+> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](../README.md#summary) and [EVALUATION.md](../docs/EVALUATION.md).
+
 > **Version**: 1.20.30  
 > **Last Updated**: December 31, 2025  
 > **Status**: ✅ All 5 Platforms Verified

@@ -1,5 +1,7 @@
 # Mehr Guard Android App - Agent Guide
 
+> **Contest-era document.** Written for the KotlinConf 2025–26 student contest submission and not re-verified since. An audit in November 2026 could not reproduce some figures found in documents of this period (accuracy, latency, corpus and training-set sizes, "zero network calls"). The measured figures are in the [README summary](../../README.md#summary) and [EVALUATION.md](../../docs/EVALUATION.md).
+
 ## Project Overview
 
 **Mehr Guard** is a Kotlin Multiplatform (KMP) phishing detection app for scanning QR codes and analyzing URLs for security threats. The Android app is built with Jetpack Compose and follows Material 3 design guidelines.
