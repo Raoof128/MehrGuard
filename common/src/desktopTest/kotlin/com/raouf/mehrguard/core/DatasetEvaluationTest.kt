@@ -45,7 +45,7 @@ class DatasetEvaluationTest {
 
     private data class Row(val url: String, val phishing: Boolean, val category: String)
 
-    private data class Outcome(val row: Row, val verdict: Verdict) {
+    private data class Outcome(val row: Row, val verdict: Verdict, val score: Int, val flags: List<String>) {
         val flagged: Boolean = verdict == Verdict.MALICIOUS || verdict == Verdict.SUSPICIOUS
         val correct: Boolean = if (row.phishing) flagged else verdict == Verdict.SAFE
     }
@@ -81,7 +81,10 @@ class DatasetEvaluationTest {
         assertEquals(100, rows.size, "data/test_urls.csv should hold 100 labelled URLs")
         assertEquals(50, rows.count { it.phishing }, "data/test_urls.csv should hold 50 phishing URLs")
 
-        val outcomes = rows.map { Outcome(it, engine.analyzeBlocking(it.url).verdict) }
+        val outcomes = rows.map { row ->
+            val assessment = engine.analyzeBlocking(row.url)
+            Outcome(row, assessment.verdict, assessment.score, assessment.flags)
+        }
 
         val tp = outcomes.count { it.row.phishing && it.flagged }
         val fn = outcomes.count { it.row.phishing && !it.flagged }
@@ -110,7 +113,10 @@ class DatasetEvaluationTest {
             }
             val misses = outcomes.filterNot { it.correct }
             appendLine("misclassified rows: ${misses.size}")
-            misses.forEach { appendLine("  ${if (it.row.phishing) "MISSED" else "FALSE-ALARM"} ${it.verdict} ${it.row.category} ${it.row.url}") }
+            misses.forEach {
+                appendLine("  ${if (it.row.phishing) "MISSED" else "FALSE-ALARM"} ${it.verdict} ${it.row.category} ${it.row.url}")
+                appendLine("    score=${it.score} signals=${it.flags.joinToString(" | ").ifEmpty { "(none)" }}")
+            }
             append("END MEHR GUARD DATASET EVALUATION")
         }
 
