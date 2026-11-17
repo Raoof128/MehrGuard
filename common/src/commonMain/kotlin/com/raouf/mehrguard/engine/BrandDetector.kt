@@ -22,6 +22,10 @@ package com.raouf.mehrguard.engine
  * Detects when URLs attempt to impersonate well-known brands
  * using typosquatting, homographs, subdomain abuse, and fuzzy matching.
  *
+ * Hosts are split on their public suffix ([PublicSuffixList]), internationalised
+ * hosts are decoded first ([Punycode]), and a host on any listed brand's official
+ * domain is never reported.
+ *
  * SECURITY NOTES:
  * - All inputs are bounded to prevent DoS
  * - Brand database is immutable
@@ -42,8 +46,25 @@ class BrandDetector {
         /** Maximum host length to process */
         private const val MAX_HOST_LENGTH = 255
 
-        /** Minimum edit distance threshold for fuzzy matching */
+        /** Largest edit distance that fuzzy matching ever accepts */
         private const val FUZZY_MATCH_THRESHOLD = 2
+
+        /**
+         * A fuzzy match may differ from the brand in at most one character per
+         * this many characters of the brand name. With 3, brands of three to five
+         * letters allow one edit and longer ones allow two. Without this scaling a
+         * three-letter brand matched any three-letter name that shared one letter
+         * with it ("cnn" against "anz", "ibm" against "irs").
+         */
+        private const val FUZZY_CHARS_PER_EDIT = 3
+
+        /** Official domains of every brand in the database, lower case. */
+        private val ALL_OFFICIAL_DOMAINS: Set<String> by lazy {
+            BrandDatabase.brands.values
+                .flatMap { it.officialDomains }
+                .map { it.lowercase() }
+                .toSet()
+        }
 
         // === SCORING ===
 
@@ -115,12 +136,24 @@ class BrandDetector {
             return DetectionResult(score = 0, match = null, details = null)
         }
 
-        val hostLower = host.lowercase()
+        // Decode xn-- labels first: the homograph patterns below are Unicode text,
+        // and links normally carry an internationalised host in its ASCII form.
+        val hostLower = Punycode.toUnicodeHost(host.lowercase()).lowercase()
+
+        // A site on a listed brand's own domain is not impersonating that brand,
+        // and it is not a misspelling of some other brand either.
+        if (isOfficialDomain(hostLower)) {
+            return DetectionResult(score = 0, match = null, details = null)
+        }
+
+        // Split the host on its public suffix, so that in "www.example.com.au"
+        // the site name is "example" and not "com".
+        val parsedHost = PublicSuffixList.default.parse(hostLower)
 
         // Check each brand from the database
         for ((brand, config) in BrandDatabase.brands) {
             // 1. EXACT_IN_SUBDOMAIN - brand appears in subdomain
-            if (isBrandInSubdomain(hostLower, brand, config.officialDomains)) {
+            if (isBrandInSubdomain(parsedHost, brand)) {
                 return DetectionResult(
                     score = SCORE_EXACT_SUBDOMAIN,
                     match = brand,
@@ -162,7 +195,7 @@ class BrandDetector {
             }
 
             // 5. FUZZY MATCH - edit distance (expensive, check last)
-            if (isFuzzyMatch(hostLower, brand)) {
+            if (isFuzzyMatch(parsedHost, brand)) {
                 return DetectionResult(
                     score = SCORE_FUZZY_MATCH,
                     match = brand,
@@ -187,41 +220,44 @@ class BrandDetector {
     }
 
     /**
-     * Check if brand appears in subdomain but not on official domain.
+     * True when [host] is an official domain of any listed brand, or a subdomain of one.
+     * The match is on whole labels: "evilpaypal.com" is not "paypal.com".
      */
-    private fun isBrandInSubdomain(host: String, brand: String, officialDomains: Set<String>): Boolean {
-        // If this is an official domain, not impersonation
-        if (officialDomains.any { host.endsWith(it) }) {
-            return false
-        }
+    private fun isOfficialDomain(host: String): Boolean {
+        return ALL_OFFICIAL_DOMAINS.any { host == it || host.endsWith(".$it") }
+    }
 
-        val parts = host.split(".")
-        if (parts.size < 3) return false
-
-        // Check subdomains for brand name
-        val subdomains = parts.dropLast(2).joinToString(".")
-        return subdomains.contains(brand)
+    /**
+     * Check if the brand name appears in the labels to the left of the registrable domain.
+     * Official domains are excluded before this is called.
+     */
+    private fun isBrandInSubdomain(parsedHost: PublicSuffixList.ParseResult, brand: String): Boolean {
+        if (parsedHost.subdomains.isEmpty()) return false
+        return parsedHost.subdomains.joinToString(".").contains(brand)
     }
 
     /**
      * Calculate Levenshtein distance for fuzzy matching.
      * Limited to short strings for performance.
      */
-    private fun isFuzzyMatch(host: String, brand: String): Boolean {
-        // Only check domain part, not full host
-        val parts = host.split(".")
-        if (parts.size < 2) return false
+    private fun isFuzzyMatch(parsedHost: PublicSuffixList.ParseResult, brand: String): Boolean {
+        // A host with a single label has no site name to compare
+        if (!parsedHost.host.contains('.')) return false
 
-        val domain = parts[parts.size - 2].lowercase()
+        // Compare the site name only: the first label of the registrable domain
+        val domain = parsedHost.registrableDomain.substringBefore('.')
+
+        // Shorter brands tolerate fewer edits (see FUZZY_CHARS_PER_EDIT)
+        val maxDistance = minOf(FUZZY_MATCH_THRESHOLD, brand.length / FUZZY_CHARS_PER_EDIT)
 
         // Skip if lengths are too different
-        if (kotlin.math.abs(domain.length - brand.length) > FUZZY_MATCH_THRESHOLD) {
+        if (kotlin.math.abs(domain.length - brand.length) > maxDistance) {
             return false
         }
 
         // Calculate edit distance
         val distance = levenshteinDistance(domain, brand)
-        return distance in 1..FUZZY_MATCH_THRESHOLD
+        return distance in 1..maxDistance
     }
 
     /**

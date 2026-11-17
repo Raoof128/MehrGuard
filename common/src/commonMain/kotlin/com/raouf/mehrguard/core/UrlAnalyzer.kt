@@ -16,6 +16,8 @@
 
 package com.raouf.mehrguard.core
 
+import com.raouf.mehrguard.engine.PublicSuffixList
+
 /**
  * URL Analyzer for Mehr Guard
  *
@@ -150,13 +152,12 @@ class UrlAnalyzer {
             // Parse domain structure with depth limit
             val hostParts = host.split(".").take(MAX_SUBDOMAIN_DEPTH)
             val tld = hostParts.lastOrNull()?.lowercase() ?: ""
-            val domain = if (hostParts.size >= 2) {
-                "${hostParts[hostParts.size - 2]}.$tld"
-            } else host.lowercase()
 
-            val subdomains = if (hostParts.size > 2) {
-                hostParts.dropLast(2)
-            } else emptyList()
+            // Split on the public suffix, so "www.example.com.au" has the domain
+            // "example.com.au" and the single subdomain "www".
+            val suffixSplit = PublicSuffixList.default.parse(hostParts.joinToString("."))
+            val domain = if (hostParts.size >= 2) suffixSplit.registrableDomain else host.lowercase()
+            val subdomains = suffixSplit.subdomains
 
             ParsedUrl(
                 original = url.take(MAX_URL_LENGTH), // Ensure bounded

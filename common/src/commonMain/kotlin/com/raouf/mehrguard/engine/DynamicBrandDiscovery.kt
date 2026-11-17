@@ -342,7 +342,7 @@ object DynamicBrandDiscovery {
     }
 
     private fun extractSubdomains(host: String): List<String> {
-        val parts = host.split(".")
-        return if (parts.size > 2) parts.dropLast(2) else emptyList()
+        // Split on the public suffix: in "www.example.com.au" the only subdomain is "www".
+        return PublicSuffixList.default.parse(host).subdomains
     }
 }

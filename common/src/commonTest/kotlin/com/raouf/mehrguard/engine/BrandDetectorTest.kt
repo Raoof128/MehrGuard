@@ -170,9 +170,9 @@ class BrandDetectorTest {
     fun `official CommBank domain not flagged`() {
         val result = detector.detect("https://www.commbank.com.au/netbank")
 
-        // Official domain should not be flagged as impersonation
-        // May have minor score due to brand presence detection, but not high-risk impersonation
-        assertTrue(result.score <= 25, "Official domain should have low score, got: ${result.score}")
+        // The bank's own site is not an impersonation of any brand
+        assertNull(result.match, "Official domain reported as impersonating: ${result.match}")
+        assertEquals(0, result.score)
     }
 
     // === AU GOVERNMENT DETECTION ===

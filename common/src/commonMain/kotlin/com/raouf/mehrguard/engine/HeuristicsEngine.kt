@@ -442,10 +442,16 @@ class HeuristicsEngine(
 
     /**
      * Count TLD-like segments in host.
+     *
+     * A public suffix of several labels, such as "co.uk", counts once: it is one
+     * TLD, not a sign that a second domain name is embedded in the host.
      */
     private fun countTldLikeSegments(host: String): Int {
-        val parts = host.split(".")
-        return parts.count { it.lowercase() in COMMON_TLDS }
+        val labels = host.lowercase().split(".").filter { it.isNotEmpty() }
+        val suffixLabels = PublicSuffixList.default.getEffectiveTld(host).split(".").filter { it.isNotEmpty() }
+        val beforeSuffix = labels.dropLast(suffixLabels.size)
+        val suffixCount = if (suffixLabels.any { it in COMMON_TLDS }) 1 else 0
+        return beforeSuffix.count { it in COMMON_TLDS } + suffixCount
     }
 
     /**
